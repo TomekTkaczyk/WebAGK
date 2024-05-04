@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGK.RestAPI", "AGK.RestAPI\AGK.RestAPI.csproj", "{000BA27B-E69E-4816-AC7B-72F415D79C3F}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "agk.webclient", "AGK.WebClient\agk.webclient.esproj", "{995B1D9B-F166-4735-9629-E8477D060A79}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{000BA27B-E69E-4816-AC7B-72F415D79C3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{000BA27B-E69E-4816-AC7B-72F415D79C3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{000BA27B-E69E-4816-AC7B-72F415D79C3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{000BA27B-E69E-4816-AC7B-72F415D79C3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{995B1D9B-F166-4735-9629-E8477D060A79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{995B1D9B-F166-4735-9629-E8477D060A79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{995B1D9B-F166-4735-9629-E8477D060A79}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{995B1D9B-F166-4735-9629-E8477D060A79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{995B1D9B-F166-4735-9629-E8477D060A79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{995B1D9B-F166-4735-9629-E8477D060A79}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E46F4576-306F-4253-9B1F-98F3829CBB0A}
+	EndGlobalSection
+EndGlobal

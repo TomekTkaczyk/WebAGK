@@ -1,0 +1,6 @@
+@AGK.RestAPI_HostAddress = http://localhost:5095
+
+GET {{AGK.RestAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
