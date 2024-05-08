@@ -1,19 +1,16 @@
 <script setup lang="ts">
-    import Navbar from './common/Navbar.vue'
+    import Navbar from './components/navbar.vue'
 </script>
 
 <template>
     <Navbar />
-    <main class="main-content">
+    <main>
         <router-view />
     </main>
 </template>
 
 <style scoped>
-    .main-content {
-        position: fixed;
-        top: 60px;
-        left: 0;
-        width: 100%;
+    #app {
+        font-family: Roboto, Helvetica, Arial, sans-serif;
     }
 </style>

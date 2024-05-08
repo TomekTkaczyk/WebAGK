@@ -3,5 +3,5 @@
 </script>
 
 <template>
-    <h1>About</h1>
+    Polisy in modules !!!!!!
 </template>

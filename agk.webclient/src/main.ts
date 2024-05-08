@@ -1,31 +1,19 @@
-import './assets/main.css'
+import "mdb-vue-ui-kit/css/mdb.min.css";
+import "./style.css";
 
-import { createApp } from 'vue'
+import { createApp } from "vue";
+import App from "@/App.vue";
 
-// Vuetify
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
-
-// Pinia
 import { createPinia } from 'pinia';
 
-// Router
-import router from './router'
-
-// Components
-import App from './App.vue'
-
-const vuetify = createVuetify({
-    components,
-    directives,
-})
+import router, { setupRouter } from "@/router";
 
 const pinia = createPinia();
 
-createApp(App)
-    .use(vuetify)
-    .use(pinia)
-    .use(router)
-    .mount('#app')
+const app = createApp(App);
+
+setupRouter(router);
+
+app.use(pinia)
+   .use(router)
+   .mount("#app");
