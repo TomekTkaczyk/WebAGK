@@ -1,6 +1,10 @@
-<script lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <template>
-    Home in modules  !!!!!!
+    <div class="text-center">
+        <h2 class="text-info">AGK</h2>
+        <p>v.0.00.001 (alfa)</p>
+    </div>
 </template>
 

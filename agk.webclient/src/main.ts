@@ -1,19 +1,22 @@
-import "mdb-vue-ui-kit/css/mdb.min.css";
-import "./style.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.min.css'
+import 'bootstrap'
 
-import { createApp } from "vue";
-import App from "@/App.vue";
+import '@/style.css';
+
+import { createApp } from 'vue';
+import App from '@/AGK.vue';
 
 import { createPinia } from 'pinia';
 
-import router, { setupRouter } from "@/router";
+import router from '@/router';
 
 const pinia = createPinia();
 
-const app = createApp(App);
+const agk = createApp(App);
 
-setupRouter(router);
+// setupRouter(router);
 
-app.use(pinia)
+agk.use(pinia)
    .use(router)
-   .mount("#app");
+   .mount("#agk");

@@ -1,89 +1,68 @@
 <template>
-    <MDBNavbar expand="sm" dark bg="dark" container>
-        <MDBNavbarToggler target="#navbarAgk" @click="collapse = !collapse"></MDBNavbarToggler>
-        <MDBCollapse v-model="collapse" id="navbarAgk">
-            <MDBNavbarNav class="mb-lg-0">
-                <MDBNavbarItem to="/" active>
-                    AGK
-                </MDBNavbarItem>
-                <MDBNavbarItem to="clients">
-                    Klienci
-                </MDBNavbarItem>
-                <MDBDropdown v-if="authStore.hasClaim('agents')" class="nav-item" v-model="agents">
-                    <MDBDropdownToggle tag="a"
-                                       class="nav-link"
-                                       @click="agents=!agents">Agenci</MDBDropdownToggle>
-                    <MDBDropdownMenu>
-                        <MDBDropdownItem to="/agents">Kartoteka</MDBDropdownItem>
-                        <MDBDropdownItem to="/structures">Struktura</MDBDropdownItem>
-                    </MDBDropdownMenu>
-                </MDBDropdown>
-                <MDBNavbarItem to="contracts">
-                    Polisy
-                </MDBNavbarItem>
-                <MDBNavbarItem to="cash">
-                    Gotówka
-                </MDBNavbarItem>
-                <MDBDropdown v-if="authStore.hasClaim('settlements')" class="nav-item" v-model="settlements">
-                    <MDBDropdownToggle tag="a"
-                                       class="nav-link"
-                                       @click="settlements=!settlements">Rozliczenia</MDBDropdownToggle>
-                    <MDBDropdownMenu>
-                        <MDBDropdownItem to="/banks">Banki</MDBDropdownItem>
-                        <MDBDropdownItem to="/commisions">Prowizje</MDBDropdownItem>
-                    </MDBDropdownMenu>
-                </MDBDropdown>
-                <MDBNavbarItem to="users">
-                    Użytkownicy
-                </MDBNavbarItem>
-                <MDBNavbarItem to="settings">
-                    Ustawienia
-                </MDBNavbarItem>
-                <MDBNavbarItem to="profile">
-                    Profil
-                </MDBNavbarItem>
-            </MDBNavbarNav>
-        </MDBCollapse>
-    </MDBNavbar>
+    <nav class="navbar navbar-dark bg-dark navbar-expand-md" role="navigation">
+        <div class="container-fluid">
+            <RouterLink class="navbar-brand" to="/">AGK</RouterLink>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-lg-0">
+                    <li class="nav-item">
+                        <RouterLink class="nav-link" :to="{name:'Clients', query: { pageNumber: 1, pageSize: 15, textSearch: '' }}">Klienci</RouterLink>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Agenci
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><RouterLink class="dropdown-item" :to="{name:'Agents'}">Kartoteka</RouterLink></li>
+                            <li><RouterLink class="dropdown-item" :to="{name:'Structures'}">Struktura</RouterLink></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <RouterLink class="nav-link" to="/contracts">Polisy</RouterLink>
+                    </li>
+                    <li class="nav-item">
+                        <RouterLink to="/cash" class="nav-link" exact="false">Gotówka</RouterLink>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Rozliczenia
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><RouterLink class="dropdown-item" to="/banks">Banki</RouterLink></li>
+                            <li><RouterLink class="dropdown-item" to="/commisions">Prowizje</RouterLink></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <RouterLink class="nav-link" to="users">Użytkownicy</RouterLink>
+                    </li>
+                    <li class="nav-item">
+                        <RouterLink class="nav-link" to="settings">Ustawienia</RouterLink>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Witaj User
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><RouterLink class="dropdown-item" to="/profile">Mój profil</RouterLink></li>
+                            <li><RouterLink class="dropdown-item" to="/logout">Wyloguj</RouterLink></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-lg-0">
+                    <li class="nav-item">
+                        <RouterLink class="nav-link" to="login">Zaloguj</RouterLink>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </template>
 
 <script setup lang="ts">
-    import {
-        MDBNavbar,
-        MDBNavbarToggler,
-        MDBNavbarBrand,
-        MDBNavbarNav,
-        MDBNavbarItem,
-        MDBCollapse,
-        MDBDropdown,
-        MDBDropdownToggle,
-        MDBDropdownMenu,
-        MDBDropdownItem
-    } from 'mdb-vue-ui-kit';
-
-    import { ref } from 'vue';
-
-    import { useAuthStore } from '@/store/auth';
-
-    const authStore = useAuthStore();
-    const agents = ref(false);
-
-
-    const collapse = ref(false);
-    const dropdown7 = ref(false);
-
-    const expandDropdown = (dropdown: string) => {
-        switch (dropdown) {
-            case 'dropdown7':
-                dropdown7.value = true;
-                break;
-            default:
-                break;
-        }
-    };
-
-    authStore.login();
-
 </script>
 
 <style>
