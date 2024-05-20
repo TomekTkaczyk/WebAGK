@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <!-- Dodaj inne właściwości globalne tutaj -->
+    <TestProperty>TestValuaaae</TestProperty>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Globalne using directives -->
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Threading.Tasks" />
+    <!-- Dodaj tutaj własne aliasy typów -->
+    <!--<Using Include="TypeId = global::System.Int32" />-->
+  </ItemGroup>
+</Project>
