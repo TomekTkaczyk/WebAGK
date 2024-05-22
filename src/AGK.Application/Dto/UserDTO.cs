@@ -1,4 +1,6 @@
-﻿namespace AGK.Application.Dto;
+﻿using AGK.Domain.ValueObjects;
+
+namespace AGK.Application.Dto;
 public record UserDTO
 (
 	EntityId Id,

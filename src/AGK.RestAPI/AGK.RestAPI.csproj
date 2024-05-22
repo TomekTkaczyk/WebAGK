@@ -5,10 +5,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TestProperty Condition="'$(TestProperty)' == ''">TestValue</TestProperty>
   </PropertyGroup>
- 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
-  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />

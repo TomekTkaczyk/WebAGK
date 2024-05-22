@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		src\GlobalUsings.cs = src\GlobalUsings.cs
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGK.DataAccess", "src\AGK.DataAccess\AGK.DataAccess.csproj", "{30443C76-CC65-42F6-8132-1005C0B7FCC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{A2B48D3F-9933-4E56-9BCD-9AD0D98A390D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2B48D3F-9933-4E56-9BCD-9AD0D98A390D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2B48D3F-9933-4E56-9BCD-9AD0D98A390D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30443C76-CC65-42F6-8132-1005C0B7FCC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30443C76-CC65-42F6-8132-1005C0B7FCC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30443C76-CC65-42F6-8132-1005C0B7FCC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30443C76-CC65-42F6-8132-1005C0B7FCC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{1E5D6AAA-4D83-4C47-B483-412B947E04E4} = {2ADF0F0A-C852-4816-9200-871F28C24EE0}
 		{148FD041-446E-46D1-AB63-5DC6FA89884E} = {2ADF0F0A-C852-4816-9200-871F28C24EE0}
 		{A2B48D3F-9933-4E56-9BCD-9AD0D98A390D} = {0101436B-A901-4181-AF9D-4565EB9CC41F}
+		{30443C76-CC65-42F6-8132-1005C0B7FCC1} = {2ADF0F0A-C852-4816-9200-871F28C24EE0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E46F4576-306F-4253-9B1F-98F3829CBB0A}

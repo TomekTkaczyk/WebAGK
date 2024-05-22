@@ -1,6 +1,7 @@
 ﻿using AGK.Application.Auth;
 using AGK.Application.Reponse;
 using AGK.Domain.Entities;
+using AGK.Domain.ValueObjects;
 using MediatR;
 
 namespace AGK.Application.Features.UserManagment.Commands;
@@ -14,7 +15,7 @@ internal sealed class SignUpHandler : IRequestHandler<SignUp, ApiResponse<Entity
 		_passwordManager = passwordManager;
 	}
 
-    public Task<ApiResponse<int>> Handle(SignUp request, CancellationToken cancellationToken) {
+    public Task<ApiResponse<EntityId>> Handle(SignUp request, CancellationToken cancellationToken) {
 		// validate
 
 		// Validate if user exist
@@ -26,7 +27,7 @@ internal sealed class SignUpHandler : IRequestHandler<SignUp, ApiResponse<Entity
 		user.SetHashPassword(_passwordManager.Secure(request.Password));
 
 		// Save to DB and return UserId
-		var userId = 0;
+		var userId = new EntityId(0);
 
 		// Return ApiResult
 		return Task.FromResult(ApiResponse.Success(userId));

@@ -1,22 +1,18 @@
 ﻿using AGK.Application.Auth;
 using AGK.Domain.Entities;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace AGK.Infrastructure.Auth;
 
-public static class Extensions
+internal static class Extensions
 {
-	private const string _sectionName = "Auth";
+	private const string _authSectionName = "Auth";
 
-	public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
+	internal static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
 
-		services.Configure<AuthOptions>(configuration.GetRequiredSection(_sectionName));
-		var options = configuration.GetOptions<AuthOptions>(_sectionName);
+		var authOptions = configuration.GetOptions<AuthOptions>(_authSectionName);
 
 		services
 			.AddSingleton<IAuthenticator, Authenticator>()

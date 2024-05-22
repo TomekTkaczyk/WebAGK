@@ -1,5 +1,7 @@
-﻿using AGK.Domain.Services;
+﻿using AGK.DataAccess;
+using AGK.Domain.Services;
 using AGK.Infrastructure.Auth;
+using AGK.Infrastructure.Repositories;
 using AGK.Infrastructure.Time;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -10,19 +12,41 @@ namespace AGK.Infrastructure;
 
 public static class DependencyInjections
 {
-	
+	private const string _dbSectionName = "Database";
+	private const string _appSectionName = "App";
+
 	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
 
-		var section = configuration.GetSection("App");
-		services.Configure<AppOptions>(section);
+		var dbOptions = configuration.GetOptions<DatabaseOptions>(_dbSectionName);
+		var appOptions = configuration.GetOptions<AppOptions>(_appSectionName);
 
-		services.AddSingleton<IClock,Clock>();
+		var dllFiles = Directory.GetFiles(
+			AppDomain.CurrentDomain.BaseDirectory,
+			appOptions.Prefix + "*.dll");
 
+		foreach(string filePath in dllFiles) {
+			AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(filePath));
+		}
+
+		var loadedAssemblies = AppDomain.CurrentDomain
+			.GetAssemblies()
+			.Where(x => x.GetName().Name.StartsWith(appOptions.Prefix, StringComparison.CurrentCultureIgnoreCase))
+			.ToArray();
+
+		if(loadedAssemblies.Length == 0) {
+			throw new Exception($"Empty list of assembly with prefix {appOptions.Prefix}");
+		}
+											   
 		services.AddMediatR((cfg) => {
-			cfg.RegisterServicesFromAssembly(Application.AssemblyReference.ApplicationAssembly);
+			cfg.RegisterServicesFromAssemblies(loadedAssemblies);
 		});
 
+
+		services.AddSingleton<IClock, Clock>();
+
 		services.AddAuth(configuration);
+		services.AddDbContext(dbOptions);
+		services.AddRepositories(loadedAssemblies);
 
 		return services;
 	}
@@ -44,8 +68,7 @@ public static class DependencyInjections
 	public static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T: class, new() {
 
 		var options = new T();
-		var section = configuration.GetSection(sectionName);
-		section.Bind(options);
+		configuration.GetSection(sectionName).Bind(options);
 
 		return options;
 	}

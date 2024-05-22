@@ -1,3 +1,4 @@
+using AGK.DataAccess.Migrations;
 using AGK.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,20 +11,19 @@ builder.Services
 
 var app = builder.Build();
 
-app.UseInfrastructure();
-
-app
+app.UseInfrastructure()
 	.UseDefaultFiles()
 	.UseStaticFiles()
 	.UseHttpsRedirection()
-	.UseExceptionHandler("/error");
+	.UseRouting();
 
-app.UseRouting();
 app.MapControllers();
 
 if(app.Environment.IsDevelopment()) {
 	app.UseSwagger();
 	app.UseSwaggerUI();
-}
+};
+
+app.PerformMigrations();
 
 app.Run();

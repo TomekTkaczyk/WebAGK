@@ -9,6 +9,7 @@
     }
   },
   "profiles": {
+    // Profil dla uruchomienia przez Kestrel z HTTP
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
@@ -19,6 +20,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    // Profil dla uruchomienia przez Kestrel z HTTPS
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
@@ -29,6 +31,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    // Profil dla uruchomienia przez IIS Express
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,

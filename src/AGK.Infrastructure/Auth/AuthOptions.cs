@@ -1,5 +1,5 @@
 ﻿namespace AGK.Infrastructure.Auth;
-internal class AuthOptions
+internal sealed class AuthOptions
 {
 	public string Issuer { get; set; }
 

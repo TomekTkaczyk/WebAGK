@@ -1,4 +1,6 @@
-﻿namespace AGK.Domain.Entities;
+﻿using AGK.Domain.ValueObjects;
+
+namespace AGK.Domain.Entities;
 public abstract class BaseEntity : IBaseEntity
 {
 	public EntityId Id { get; private set; }

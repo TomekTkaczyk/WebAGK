@@ -2,14 +2,14 @@
 using AGK.Domain.ValueObjects;
 
 namespace AGK.Domain.Entities;
-public class User : BaseEntity
+public class User : ActiveStatusEntity
 {
     private User(string username)
     {							 
 		Username = username;
     }
 
-	public string Username { get; private set; }
+	public Name Username { get; private set; }
 	public Name Lastname { get; private set; }
 	public Name Firstname {  get; private set; }
 	public string NormalizedName { get; private set; }

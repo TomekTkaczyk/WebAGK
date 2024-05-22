@@ -1,1 +1,1 @@
-global using EntityId = System.Int32;
+global using TypeEntityId = System.Int32;

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AGK.Domain.ValueObjects;
+using MediatR;
 
 namespace AGK.Application.Features.Common;
 

@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AGK.RestAPI.v0_01.Controllers;
 
-public abstract class ReadDeleteBaseController<T> : ApiBaseController
+public abstract class ReadDeleteBaseController<T>(ISender sender, ILogger<ApiBaseController> logger) 
+	: ApiBaseController(sender, logger)
 {
-	protected ReadDeleteBaseController(ISender sender, ILogger<ApiBaseController> logger) : base(sender, logger) { }
-
 	[HttpGet]
 	public virtual async Task<IActionResult> GetPageAsync(
 		[FromQuery] GetPage<T> query,
