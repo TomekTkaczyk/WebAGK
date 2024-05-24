@@ -21,12 +21,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AGK.Tests", "tests\AGK.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{26D2ADC2-7A19-4811-8ABB-317A098DC9C2}"
 	ProjectSection(SolutionItems) = preProject
+		src\AddMigration.cmd = src\AddMigration.cmd
+		src\DatabaseUpdate.cmd = src\DatabaseUpdate.cmd
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		src\GlobalUsings.cs = src\GlobalUsings.cs
+		src\RemoveMigration.cmd = src\RemoveMigration.cmd
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGK.DataAccess", "src\AGK.DataAccess\AGK.DataAccess.csproj", "{30443C76-CC65-42F6-8132-1005C0B7FCC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AGK.DataAccess", "src\AGK.DataAccess\AGK.DataAccess.csproj", "{30443C76-CC65-42F6-8132-1005C0B7FCC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

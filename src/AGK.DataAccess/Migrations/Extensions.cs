@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AGK.DataAccess.Migrations;
+
 public static class Extensions
 {
 	public static WebApplication PerformMigrations(this WebApplication app) {
@@ -10,8 +11,13 @@ public static class Extensions
 		using(var scope = app.Services.CreateScope()) {
 			var dbContext = scope.ServiceProvider.GetRequiredService<AgkDbContext>();
 
-			dbContext.Database.EnsureCreated();
-			dbContext.Database.Migrate();
+			try {
+				dbContext.Database.Migrate();
+			}
+			catch(Exception ex) {
+				Console.WriteLine(ex.ToString());
+				throw;
+			}
 		}
 
 		return app;

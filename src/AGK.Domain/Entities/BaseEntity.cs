@@ -3,32 +3,41 @@
 namespace AGK.Domain.Entities;
 public abstract class BaseEntity : IBaseEntity
 {
-	public EntityId Id { get; private set; }
+    protected BaseEntity()
+    {
+		ConcurrencyStamp = new Guid();
+	}
+
+    public EntityId Id { get; private set; }
 
 	public DateTime CreateTimeStamp { get; private set; }
 
-	public int CreatedById { get; private set; }
+	public EntityId CreatedById { get; private set; }
 
 	public User CreatedBy { get; private set; }
 
 	public DateTime ModifyTimeStamp { get; private set; }
 
-	public int ModifiedById { get; private set; }
+	public EntityId ModifiedById { get; private set; }
 
 	public User ModifiedBy { get; private set; }
 
-	public Guid ConcurrencyStamp { get; private set; } = Guid.NewGuid();
+	public Guid ConcurrencyStamp { get; private set; }
 
-	public void SetCreateOwner(DateTime timeStamp) {
+	public void SetCreateOwner(User user, DateTime timeStamp) {
 		CreateTimeStamp = timeStamp;
-		CreatedById = 1;
+		CreatedBy = user;
 
-		SetModifyOwner(timeStamp);
+		SetModifyOwner(user, timeStamp);
 	}
 
-	public void SetModifyOwner(DateTime timeStamp) {
+	public void SetModifyOwner(User user, DateTime timeStamp) {
 		ModifyTimeStamp = timeStamp;
-		ModifiedById = 1;
+		ModifiedBy = user;
+	}
+
+	public void SetConcurrencyStamp() {
+		ConcurrencyStamp = new Guid();
 	}
 
 	public override int GetHashCode() {

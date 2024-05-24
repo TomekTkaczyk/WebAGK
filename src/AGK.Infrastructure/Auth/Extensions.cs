@@ -8,11 +8,8 @@ namespace AGK.Infrastructure.Auth;
 
 internal static class Extensions
 {
-	private const string _authSectionName = "Auth";
 
-	internal static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
-
-		var authOptions = configuration.GetOptions<AuthOptions>(_authSectionName);
+	internal static IServiceCollection AddAuth(this IServiceCollection services, AuthOptions authOptions) {
 
 		services
 			.AddSingleton<IAuthenticator, Authenticator>()

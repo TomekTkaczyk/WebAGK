@@ -6,30 +6,25 @@ using MediatR;
 
 namespace AGK.Application.Features.UserManagment.Commands;
 
-internal sealed class SignUpHandler : IRequestHandler<SignUp, ApiResponse<EntityId>>
+internal sealed class SignUpHandler(IUserManager userManager, IPasswordManager passwordManager) : IRequestHandler<SignUp, ApiResponse<EntityId>>
 {
-	private readonly IPasswordManager _passwordManager;
+	private readonly IUserManager _userManager = userManager;
+	private readonly IPasswordManager _passwordManager = passwordManager;
 
-	public SignUpHandler(IPasswordManager passwordManager)
-    {
-		_passwordManager = passwordManager;
-	}
-
-    public Task<ApiResponse<EntityId>> Handle(SignUp request, CancellationToken cancellationToken) {
-		// validate
+	public async Task<ApiResponse<EntityId>> Handle(SignUp request, CancellationToken cancellationToken = default) {
+		// Validate
 
 		// Validate if user exist
 
 		// Create the user
+		var user = User.Create(
+				request.UserName,
+				request.Email,
+				_passwordManager.HashPassword(request.Password));
 
-		var user = User.Create(request.UserName);
-
-		user.SetHashPassword(_passwordManager.Secure(request.Password));
-
-		// Save to DB and return UserId
-		var userId = new EntityId(0);
+		user = await _userManager.CreateAsync(user,	cancellationToken);
 
 		// Return ApiResult
-		return Task.FromResult(ApiResponse.Success(userId));
+		return ApiResponse.Success(user.Id);
 	}
 }

@@ -2,7 +2,7 @@
 
 public interface IPasswordManager
 {
-	string Secure(string password);
+	string HashPassword(string password);
 
-	bool Validate(string password, string securePassword);
+	bool VerifyHashedPassword(string password, string securePassword);
 }

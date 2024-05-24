@@ -14,11 +14,13 @@ public static class DependencyInjections
 {
 	private const string _dbSectionName = "Database";
 	private const string _appSectionName = "App";
+	private const string _authSectionName = "Auth";
 
 	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
 
 		var dbOptions = configuration.GetOptions<DatabaseOptions>(_dbSectionName);
 		var appOptions = configuration.GetOptions<AppOptions>(_appSectionName);
+		var authOptions = configuration.GetOptions<AuthOptions>(_authSectionName);
 
 		var dllFiles = Directory.GetFiles(
 			AppDomain.CurrentDomain.BaseDirectory,
@@ -44,7 +46,7 @@ public static class DependencyInjections
 
 		services.AddSingleton<IClock, Clock>();
 
-		services.AddAuth(configuration);
+		services.AddAuth(authOptions);
 		services.AddDbContext(dbOptions);
 		services.AddRepositories(loadedAssemblies);
 
