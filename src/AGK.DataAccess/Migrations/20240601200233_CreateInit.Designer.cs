@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AGK.DataAccess.Migrations
 {
     [DbContext(typeof(AgkDbContext))]
-    [Migration("20240523183634_InitCreate")]
-    partial class InitCreate
+    [Migration("20240601200233_CreateInit")]
+    partial class CreateInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,13 +36,12 @@ namespace AGK.DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<bool>("ActiveStatus")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<int>("ActiveStatus")
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreateTimeStamp")
@@ -57,10 +56,10 @@ namespace AGK.DataAccess.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Firstname")
+                    b.Property<string>("FirstName")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Lastname")
+                    b.Property<string>("LastName")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("LockoutEnabled")
@@ -96,7 +95,8 @@ namespace AGK.DataAccess.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
@@ -111,7 +111,7 @@ namespace AGK.DataAccess.Migrations
                     b.HasIndex("ModifiedById")
                         .HasDatabaseName("UsersIX_ModifiedById");
 
-                    b.HasIndex("Username")
+                    b.HasIndex("UserName")
                         .IsUnique()
                         .HasDatabaseName("UsersIX_UserName");
 

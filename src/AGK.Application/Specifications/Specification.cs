@@ -6,8 +6,8 @@ namespace AGK.Application.Specifications;
 public abstract class Specification<T> : ISpecification<T>
 {
 
-	private readonly List<Expression<Func<T, object>>> _includeCollection = new();
-	private readonly List<Tuple<Expression<Func<T, object>>, bool>> _ordersByExpressionCollection = new();
+	private readonly List<Expression<Func<T, object>>> _includeCollection = [];
+	private readonly List<Tuple<Expression<Func<T, object>>, bool>> _ordersByExpressionCollection = [];
 
 	public Expression<Func<T, bool>> Criteria { get; }
 

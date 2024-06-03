@@ -17,7 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\AGK.Application\AGK.Application.csproj" />
     <ProjectReference Include="..\AGK.DataAccess\AGK.DataAccess.csproj" />
-    <ProjectReference Include="..\AGK.Domain\AGK.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

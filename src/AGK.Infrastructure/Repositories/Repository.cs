@@ -8,8 +8,8 @@ namespace AGK.Infrastructure.Repositories;
 
 public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
 {
-	private readonly AgkDbContext _dbContext;
-	private readonly DbSet<TEntity> _entities;
+	protected readonly AgkDbContext _dbContext;
+	protected readonly DbSet<TEntity> _entities;
 
 	protected Repository(AgkDbContext dbContext)
     {
@@ -32,21 +32,29 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 		_dbContext.Entry(entity).State = EntityState.Modified;
 	}
 
-	public IQueryable<TEntity> Get(ISpecification<TEntity> specification = null) => 
-		SpecificationEvaluator<TEntity>.GetQuery(_entities,specification);
-
-	public Task<List<TEntity>> GetPageAsync(ISpecification<TEntity> specification, int pageNumber, int pageSize, CancellationToken cancellationToken = default) {
-		var collection = Get(specification);
-		var page = collection.Skip((pageNumber-1)*pageSize).Take(pageSize).ToListAsync(cancellationToken);
-
-		return page;
+	public IQueryable<TEntity> Get(ISpecification<TEntity> specification = default) {
+		return SpecificationEvaluator<TEntity>.GetQuery(_entities, specification);
 	}
 
-	public Task<List<TEntity>> GetPageAsync(IQueryable<TEntity> query, int pageNumber, int pageSize, CancellationToken cancellationToken = default) {
-		return query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+	public async Task<List<TEntity>> GetPageAsync(ISpecification<TEntity> specification, int pageNumber, int pageSize, CancellationToken cancellationToken = default) {
+		var result = Get(specification).Skip((pageNumber - 1) * pageSize);
+		if(pageSize > 0) {
+			result = result.Take(pageSize);
+		};
+
+		return await result.AsNoTracking().ToListAsync(cancellationToken);
 	}
 
-	public Task<int> CountAsync(IQueryable<TEntity> query, CancellationToken cancellationTokem = default) {
-		return query.CountAsync(cancellationTokem);
+	public async Task<List<TEntity>> GetPageAsync(IQueryable<TEntity> query, int pageNumber, int pageSize, CancellationToken cancellationToken = default) {
+		var result = query.Skip((pageNumber - 1) * pageSize);
+		if(pageSize > 0) {
+			result = result.Take(pageSize);
+		};
+
+		return await result.AsNoTracking().ToListAsync(cancellationToken);
+	}
+
+	public async Task<int> CountAsync(IQueryable<TEntity> query, CancellationToken cancellationTokem = default) {
+		return await query.CountAsync(cancellationTokem);
 	}
 }

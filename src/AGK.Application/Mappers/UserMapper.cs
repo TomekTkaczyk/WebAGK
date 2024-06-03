@@ -9,9 +9,10 @@ internal static class UserMapper
 
 		var userDTO = new UserDTO(
 			user.Id,
-			user.Username,
-			user.Firstname,
-			user.Lastname);
+			user.UserName,
+			user.FirstName,
+			user.LastName
+		);
 		
 		return userDTO;
 	}

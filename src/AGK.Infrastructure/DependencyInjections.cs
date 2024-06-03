@@ -1,9 +1,12 @@
 ﻿using AGK.DataAccess;
+using AGK.Domain.Entities;
 using AGK.Domain.Services;
 using AGK.Infrastructure.Auth;
 using AGK.Infrastructure.Repositories;
 using AGK.Infrastructure.Time;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -45,8 +48,10 @@ public static class DependencyInjections
 
 
 		services.AddSingleton<IClock, Clock>();
-
-		services.AddAuth(authOptions);
+		services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+		services.AddScoped<DataInitializer>();
+		
+		services.AddAuth();
 		services.AddDbContext(dbOptions);
 		services.AddRepositories(loadedAssemblies);
 
@@ -65,6 +70,20 @@ public static class DependencyInjections
 		}
 
 		return app;
+	}
+
+	public static void SeedData(this WebApplication app) {
+
+		using(var scope = app.Services.CreateScope()) {
+			var dataInitializer = scope.ServiceProvider.GetRequiredService<DataInitializer>();
+			try {
+				dataInitializer.UserInit();
+			}
+			catch(Exception ex) {
+				Console.WriteLine(ex.ToString());
+				throw;
+			}
+		}
 	}
 
 	public static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T: class, new() {

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AGK.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitCreate : Migration
+    public partial class CreateInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,11 +21,11 @@ namespace AGK.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Username = table.Column<string>(type: "varchar(255)", nullable: true)
+                    UserName = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Lastname = table.Column<string>(type: "longtext", nullable: true)
+                    LastName = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Firstname = table.Column<string>(type: "longtext", nullable: true)
+                    FirstName = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedName = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -47,9 +47,9 @@ namespace AGK.DataAccess.Migrations
                     CreatedById = table.Column<int>(type: "int", nullable: true),
                     ModifyTimeStamp = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModifiedById = table.Column<int>(type: "int", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "longtext", rowVersion: true, nullable: false)
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ActiveStatus = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    ActiveStatus = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,7 +88,7 @@ namespace AGK.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "UsersIX_UserName",
                 table: "Users",
-                column: "Username",
+                column: "UserName",
                 unique: true);
         }
 

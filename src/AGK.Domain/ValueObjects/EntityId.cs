@@ -7,8 +7,6 @@ public sealed record EntityId
 		Value = value;
 	}
 
-	public static EntityId Create() => new(0);
-
 	public static implicit operator int(EntityId entityId) => entityId.Value;
 
 	public static implicit operator EntityId(TypeEntityId entityId) => new(entityId);

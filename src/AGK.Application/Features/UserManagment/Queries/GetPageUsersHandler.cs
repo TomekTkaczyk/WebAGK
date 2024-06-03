@@ -7,30 +7,23 @@ using AGK.Domain.Repositories;
 using MediatR;
 
 namespace AGK.Application.Features.UserManagment.Queries;
-internal sealed class GetPageUsersHandler : IRequestHandler<GetPage<UserDTO>, ApiResponse<Page<UserDTO>>>
+internal sealed class GetPageUsersHandler(IUserRepository repository)
+	: IRequestHandler<GetPage<UserDTO>, ApiResponse<Page<UserDTO>>>
 {
-	private readonly IUserRepository _repository;
+	private readonly IUserRepository _repository = repository;
 
-	public GetPageUsersHandler(IUserRepository repository)
-    {
-		_repository = repository;
-	}
+	public async Task<ApiResponse<Page<UserDTO>>> Handle(GetPage<UserDTO> request, CancellationToken cancellationToken = default) {
 
-    public async Task<ApiResponse<Page<UserDTO>>> Handle(GetPage<UserDTO> request, CancellationToken cancellationToken = default) {
-
-		await Task.Run(() => { }, cancellationToken);
-
-		var specification = new UserSearchSpecification(
-			request.ActiveStatus,
-			request.SearchString);
+		var specification = new UserSearchSpecification(request.ActiveStatus, request.SearchString);
 
 		var query = _repository.Get(specification);
 		var total = await _repository.CountAsync(query, cancellationToken);
-		var page = (await _repository.GetPageAsync(query, request.PageNumber, request.PageSize, cancellationToken))
+		var list = await _repository.GetPageAsync(query, request.PageNumber, request.PageSize, cancellationToken);
+		var result = list
 			.Select(x => x.ToDTO())
 			.ToList()
 			.AsReadOnly();
 
-		return ApiResponse.Success(new Page<UserDTO>(request.PageNumber, request.PageSize, total, page));
+		return ApiResponse.Success(new Page<UserDTO>(request.PageNumber, request.PageSize, total, result));
 	}
 }

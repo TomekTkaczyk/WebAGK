@@ -12,14 +12,15 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AGK.Domain\AGK.Domain.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\GlobalUsings.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AGK.Domain\AGK.Domain.csproj" />
   </ItemGroup>
 
 </Project>

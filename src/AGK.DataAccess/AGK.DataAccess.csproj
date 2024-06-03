@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.2">
       <PrivateAssets>all</PrivateAssets>
@@ -16,6 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\GlobalUsings.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AGK.Application\AGK.Application.csproj" />
     <ProjectReference Include="..\AGK.Domain\AGK.Domain.csproj" />
   </ItemGroup>
 

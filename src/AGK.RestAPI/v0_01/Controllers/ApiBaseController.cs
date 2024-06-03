@@ -4,20 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AGK.RestAPI.v0_01.Controllers;
 
-public abstract class ApiBaseController : ControllerBase
+public abstract class ApiBaseController(ISender sender, ILogger<ApiBaseController> logger) : ControllerBase
 {
-	protected readonly ISender _sender;
-	protected readonly ILogger<ApiBaseController> _logger;
-
-	public ApiBaseController(ISender sender, ILogger<ApiBaseController> logger) {
-		_sender = sender ?? throw new ArgumentNullException(nameof(sender));
-		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-	}
-
+	protected readonly ISender _sender = sender ?? throw new ArgumentNullException(nameof(sender));
+	protected readonly ILogger<ApiBaseController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
 	protected async Task<IActionResult> HandleRequestAsync<TRequest>(
 		TRequest request,
-		CancellationToken cancellationToken) where TRequest : IRequest {
+		CancellationToken cancellationToken = default) where TRequest : IRequest {
 		if(!ModelState.IsValid) {
 			return BadRequest(ModelState
 				.Where(x => x.Value.Errors.Any())
@@ -31,7 +25,7 @@ public abstract class ApiBaseController : ControllerBase
 
 	protected async Task<IActionResult> HandleRequestAsync<TRequest, TResponse>(
 		TRequest request,
-		CancellationToken cancellationToken) where TRequest : IRequest<TResponse> where TResponse : ApiResponse {
+		CancellationToken cancellationToken = default) where TRequest : IRequest<TResponse> where TResponse : ApiResponse {
 		if(!ModelState.IsValid) {
 			return BadRequest(ModelState
 				.Where(x => x.Value.Errors.Any())

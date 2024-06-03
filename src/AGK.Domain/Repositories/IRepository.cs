@@ -1,7 +1,7 @@
 ﻿using AGK.Domain.Entities;
 
 namespace AGK.Domain.Repositories;
-public interface IRepository<TEntity> where TEntity : BaseEntity
+public interface IRepository<TEntity> where TEntity : IBaseEntity
 {
 	TEntity Add(TEntity entity);
 
@@ -9,11 +9,12 @@ public interface IRepository<TEntity> where TEntity : BaseEntity
 
 	void Delete(TEntity entity);
 
-	IQueryable<TEntity> Get(ISpecification<TEntity> specification);
+	IQueryable<TEntity> Get(ISpecification<TEntity> specification = default);
 
-	Task<List<TEntity>> GetPageAsync(ISpecification<TEntity> specification,  int pageNumber, int pageSize, CancellationToken cancellationToken);
+	Task<List<TEntity>> GetPageAsync(ISpecification<TEntity> specification, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 
-	Task<List<TEntity>> GetPageAsync(IQueryable<TEntity> query, int pageNumber, int pageSize, CancellationToken cancellationToken);
+	Task<List<TEntity>> GetPageAsync(IQueryable<TEntity> query, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 
-	Task<int> CountAsync(IQueryable<TEntity> query, CancellationToken cancellationToken);
+	Task<int> CountAsync(IQueryable<TEntity> query, CancellationToken cancellationToken = default);
+
 }

@@ -1,10 +1,8 @@
-﻿using AGK.Domain.ValueObjects;
-
-namespace AGK.Application.Dto;
+﻿namespace AGK.Application.Dto;
 public record UserDTO
 (
-	EntityId Id,
+	TypeEntityId Id,
 	string UserName,
 	string FirstName,
 	string LastName
-);
+) : DTO;

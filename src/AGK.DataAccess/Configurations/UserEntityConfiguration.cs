@@ -1,28 +1,30 @@
-﻿using AGK.Domain.Entities;
+﻿using AGK.DataAccess.Conversions;
+using AGK.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AGK.DataAccess.Configurations;
 
-internal sealed class UserEntityConfiguration : EntityConfiguration<User>, IEntityTypeConfiguration<User>
+internal sealed class UserEntityConfiguration : ActiveStatusConfiguration<User>, IEntityTypeConfiguration<User>	
 {
-	public void Configure(EntityTypeBuilder<User> builder) {
+	public override void Configure(EntityTypeBuilder<User> builder) {
 
-		BaseConfigure(builder);
+		base.Configure(builder);
 
-		builder.Property(x => x.Username)
-			.HasConversion(x => x.Value, x => new(x));
+		builder.Property(x => x.UserName)
+			.HasConversion<NameConverter>()
+			.IsRequired();
 
-		builder.Property(x => x.Firstname)
-			.HasConversion(x => x.Value, x => new(x));
+		builder.Property(x => x.FirstName)
+			.HasConversion<NameConverter>();
 
-		builder.Property(x => x.Lastname)
-			.HasConversion(x => x.Value, x => new(x));
+		builder.Property(x => x.LastName)
+			.HasConversion<NameConverter>();
 
 		builder.Property(x => x.Email)
-			.HasConversion(x => x.Value, x => new(x));
+			.HasConversion<EmailConverter>();
 
-		builder.HasIndex(x => x.Username)
+		builder.HasIndex(x => x.UserName)
 			.HasDatabaseName("UsersIX_UserName")
 			.IsUnique();
 

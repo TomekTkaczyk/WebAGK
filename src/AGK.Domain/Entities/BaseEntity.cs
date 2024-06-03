@@ -8,21 +8,21 @@ public abstract class BaseEntity : IBaseEntity
 		ConcurrencyStamp = new Guid();
 	}
 
-    public EntityId Id { get; private set; }
+    public EntityId Id { get; protected set; }
 
-	public DateTime CreateTimeStamp { get; private set; }
+	public DateTime CreateTimeStamp { get; protected set; }
 
-	public EntityId CreatedById { get; private set; }
+	public EntityId CreatedById { get; protected set; }
 
-	public User CreatedBy { get; private set; }
+	public User CreatedBy { get; set; }
 
-	public DateTime ModifyTimeStamp { get; private set; }
+	public DateTime ModifyTimeStamp { get; protected set; }
 
-	public EntityId ModifiedById { get; private set; }
+	public EntityId ModifiedById { get; protected set; }
 
-	public User ModifiedBy { get; private set; }
+	public User ModifiedBy { get; protected set; }
 
-	public Guid ConcurrencyStamp { get; private set; }
+	public Guid ConcurrencyStamp { get; protected set; } = new Guid();
 
 	public void SetCreateOwner(User user, DateTime timeStamp) {
 		CreateTimeStamp = timeStamp;

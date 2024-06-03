@@ -1,4 +1,5 @@
 ﻿using AGK.Domain.Entities;
+using AGK.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -6,7 +7,8 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace AGK.DataAccess;
 
-public sealed class AgkDbContext(DbContextOptions<AgkDbContext> dbContextOptions) : DbContext(dbContextOptions)
+public sealed class AgkDbContext(
+	DbContextOptions<AgkDbContext> dbContextOptions) : DbContext(dbContextOptions)
 {
 	public DbSet<User> Users { get; set; }
 

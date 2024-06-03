@@ -2,22 +2,23 @@
 
 public record Name : ValueObject
 {
-    public string Value { get; }
+	
+	public string Value { get; init; }
 
-    public Name(string lastname)
-    {
-        Value = lastname ?? "";
-    }
+	public Name(string value) {
+		ArgumentNullException.ThrowIfNull(value);
 
-    public static Name Default => new("");
+		Value = value;
+	}
+
+	public static Name Default => new("");
 
 
-	public static implicit operator string(Name lastname) => lastname.Value;
+	public static implicit operator string(Name name) => name?.Value;
 
-	public static implicit operator Name(string lastname) => new(lastname);
+	public static implicit operator Name(string value) => new(value);
 
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Value;
-    }
+	public override IEnumerable<object> GetAtomicValues() {
+		yield return Value;
+	}
 }

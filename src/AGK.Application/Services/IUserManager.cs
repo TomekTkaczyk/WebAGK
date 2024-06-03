@@ -1,12 +1,18 @@
 ﻿using AGK.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AGK.Domain.ValueObjects;
 
 namespace AGK.Application.Services;
-internal interface IUserManager
+public interface IUserManager
 {
-	IPasswordHasher<User> PasswordHasher { get; set; }
+    IQueryable<User> Users { get; }
+
+    Task<User> CreateAsync(User user, CancellationToken cancellationToken = default);
+	Task<int> UpdateAsync(User user, CancellationToken cancellationToken = default);
+	Task<int> DeleteAsync(User user, CancellationToken cancellationToken = default);
+
+	Task<User> FindByEmailAsync(Email email, CancellationToken cancellationToken = default);
+    Task<User> FindByUserNameAsync(Name userName, CancellationToken cancellationToken = default);
+    Task<User> FindByIdAsync(EntityId id, CancellationToken cancellationToken = default);
+
+    Task<bool> IsUnique(User user, CancellationToken cancellationToken = default);
 }

@@ -1,27 +1,27 @@
-﻿using AGK.Domain.Entities;
+﻿using AGK.DataAccess.Conversions;
+using AGK.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AGK.DataAccess.Configurations;
-internal abstract class EntityConfiguration<TEntity> where TEntity : BaseEntity
+internal abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : BaseEntity
 {
-	protected static void BaseConfigure(EntityTypeBuilder<TEntity> builder) {
+	public virtual void Configure(EntityTypeBuilder<TEntity> builder) {
 
 		builder.HasKey(x => x.Id);
 		builder.Property(x => x.Id)
-			.HasConversion(x => x.Value, x => new(x))
+			.HasConversion<EntityIdConverter>()
 			.ValueGeneratedOnAdd();
 
 		builder.Property(u => u.ConcurrencyStamp)
-			.HasConversion(x => x.ToString(), x => new(x))
-			.IsConcurrencyToken()
-			.ValueGeneratedOnAddOrUpdate();
+			.HasConversion<GuidConverter>()
+			.IsRowVersion();
 
 		builder.Property(x => x.CreatedById)
-			.HasConversion(x => x.Value, x => new(x));
+			.HasConversion<EntityIdConverter>();
 
 		builder.Property(x => x.ModifiedById)
-			.HasConversion(x => x.Value, x => new(x));
+			.HasConversion<EntityIdConverter>();
 
 		builder.HasIndex(x => x.CreatedById)
 			.HasDatabaseName("UsersIX_CreatedById")
@@ -44,6 +44,6 @@ internal abstract class EntityConfiguration<TEntity> where TEntity : BaseEntity
 		    .HasConstraintName("FK_ModifiedById")
 			.OnDelete(DeleteBehavior.Restrict)
 			.IsRequired(false);
-
 	}
+
 }

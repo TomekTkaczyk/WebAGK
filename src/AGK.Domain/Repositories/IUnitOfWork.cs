@@ -1,6 +1,8 @@
-﻿namespace AGK.Domain.Repositories;
+﻿using AGK.Domain.Entities;
+
+namespace AGK.Domain.Repositories;
 
 public interface IUnitOfWork
 {
-	Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+	Task<int> SaveChangesAsync(BaseEntity user, CancellationToken cancellationToken = default);
 }

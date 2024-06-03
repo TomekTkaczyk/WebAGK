@@ -34,16 +34,16 @@ public record ApiResponse
 	=> new(true, string.Empty, HttpStatusCode.NoContent, []);
 
 	public static ApiResponse Success(HttpStatusCode httpCode)
-	=> new(true, string.Empty, httpCode, new Collection<Error>());
+	=> new(true, string.Empty, httpCode, []);
 
 	public static ApiResponse Failure(string message, HttpStatusCode httpCode, ICollection<Error> errors = null)
 		=> new(false, message, httpCode, errors);
 
 	public static ApiResponse<TValue> Success<TValue>(TValue value)
-		=> new(value, true, "", HttpStatusCode.OK, new Collection<Error>());
+		=> new(value, true, "", HttpStatusCode.OK, []);
 
 	public static ApiResponse<TValue> Failure<TValue>(string message, HttpStatusCode httpCode)
-	=> new(false, message, httpCode, new Collection<Error>());
+	=> new(false, message, httpCode, []);
 
 	public static ApiResponse<TValue> Failure<TValue>(string message, HttpStatusCode httpCode, Error error = null)
 	=> new(false, message, httpCode, new Collection<Error>() { error }.Where(x => x != null).ToList());
@@ -75,10 +75,10 @@ public record ApiResponse<TValue> : ApiResponse
 		: throw new InvalidOperationException("The value of a failure result can not be accessed.");
 
 	internal protected ApiResponse(TValue value, bool isSuccess, HttpStatusCode httpCode)
-		: base(isSuccess, "", httpCode, new Collection<Error>()) => _value = value;
+		: base(isSuccess, "", httpCode, []) => _value = value;
 
 	internal protected ApiResponse(TValue value, bool isSuccess, string message, HttpStatusCode httpCode)
-		: base(isSuccess, message, httpCode, new Collection<Error>()) => _value = value;
+		: base(isSuccess, message, httpCode, []) => _value = value;
 
 	internal protected ApiResponse(TValue value, bool isSuccess, string message, HttpStatusCode httpCode, ICollection<Error> errors)
 		: base(isSuccess, message, httpCode, errors) => _value = value;

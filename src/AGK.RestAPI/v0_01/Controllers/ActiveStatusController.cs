@@ -1,15 +1,14 @@
-﻿using AGK.Application.Features.Common;
+﻿using AGK.Application.Dto;
+using AGK.Application.Features.Common;
+using AGK.Application.Reponse;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AGK.RestAPI.v0_01.Controllers;
 
-public abstract class ActiveStatusController<T> : ReadDeleteBaseController<T>
+public abstract class ActiveStatusController<TSelector,T>(ISender sender, ILogger<ApiBaseController> logger) 
+	: ReadDeleteBaseController<TSelector,T>(sender, logger) where TSelector : SelectorDTO where T : DTO
 {
-	protected ActiveStatusController(
-		ISender sender, 
-		ILogger<ApiBaseController> logger) : base(sender, logger) {	}
-
 	[HttpPatch("{id:int}/status/{status:int}")]
 	public async Task<IActionResult> SetActiveStatusAsync(
 		[FromRoute] int id,
@@ -19,8 +18,8 @@ public abstract class ActiveStatusController<T> : ReadDeleteBaseController<T>
 			return BadRequest();
 		}
 
-		var command = new SetActive<T>(id, status == 1);
+		var command = new SetActive<TSelector>(id, status == 1);
 
-		return await HandleRequestAsync(command, cancellationToken);
+		return await HandleRequestAsync<SetActive<TSelector>,ApiResponse>(command, cancellationToken);
 	}
 }

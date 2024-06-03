@@ -1,4 +1,6 @@
-﻿namespace AGK.Application.Reponse;
+﻿using AGK.Domain.ValueObjects;
+
+namespace AGK.Application.Reponse;
 
 public record Page<T>(
 	int PageNumber,

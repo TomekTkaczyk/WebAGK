@@ -6,37 +6,39 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AGK.Infrastructure.Repositories;
-internal sealed class UnitOfWork : IUnitOfWork
+internal sealed class UnitOfWork(
+	AgkDbContext dbContext,
+	IClock clock) : IUnitOfWork
 {
-	private readonly AgkDbContext _dbContext;
-	private readonly IClock _clock;
+	private readonly AgkDbContext _dbContext = dbContext;
+	private readonly IClock _clock = clock;
 
-	public UnitOfWork(AgkDbContext dbContext, IClock clock) {
-		_dbContext = dbContext;
-		_clock = clock;
-	}
+	public Task<int> SaveChangesAsync(BaseEntity entity, CancellationToken cancellationToken = default) {
 
-	public Task<int> SaveChangesAsync(CancellationToken cancellationToken) {
-		UpdateAuditableEntities();
-
+		UpdateAuditableEntities(entity);
+			
 		return _dbContext.SaveChangesAsync(cancellationToken);
 	}
 
 	#region Private methods
 
-	private void UpdateAuditableEntities() {
+	private void UpdateAuditableEntities(BaseEntity entity) {
+		var utcNow = _clock.Current();
 		IEnumerable<EntityEntry<BaseEntity>> entities = _dbContext.ChangeTracker.Entries<BaseEntity>();
 		foreach(EntityEntry<BaseEntity> entityEntry in entities) {
+			entityEntry.Property(a => a.ConcurrencyStamp).CurrentValue = Guid.NewGuid();
+
 			if(entityEntry.State == EntityState.Added) {
-				var utcNow = _clock.Current();
 				entityEntry.Property(a => a.CreateTimeStamp).CurrentValue = utcNow;
+				entityEntry.Property(a => a.CreatedById).CurrentValue = entity?.Id;
 				entityEntry.Property(a => a.ModifyTimeStamp).CurrentValue = utcNow;
-				entityEntry.Property(a => a.CreatedById).CurrentValue = 1;
-				entityEntry.Property(a => a.ModifiedById).CurrentValue = 1;
+				entityEntry.Property(a => a.ModifiedById).CurrentValue = entity?.Id;
+				entityEntry.Property(a => a.ConcurrencyStamp).CurrentValue = Guid.NewGuid();
 			}
 			if(entityEntry.State == EntityState.Modified) {
-				entityEntry.Property(a => a.ModifyTimeStamp).CurrentValue = _clock.Current();
-				entityEntry.Property(a => a.ModifiedById).CurrentValue = 1;
+				entityEntry.Property(a => a.ModifyTimeStamp).CurrentValue = utcNow;
+				entityEntry.Property(a => a.ModifiedById).CurrentValue = entity?.Id;
+				entityEntry.Property(a => a.ConcurrencyStamp).CurrentValue = Guid.NewGuid();
 			}
 		}
 	}

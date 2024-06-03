@@ -1,7 +1,7 @@
-﻿using AGK.Application.Auth;
+﻿using AGK.Application.Services;
 using AGK.Domain.Entities;
+using AGK.Domain.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AGK.Infrastructure.Auth;
@@ -9,12 +9,16 @@ namespace AGK.Infrastructure.Auth;
 internal static class Extensions
 {
 
-	internal static IServiceCollection AddAuth(this IServiceCollection services, AuthOptions authOptions) {
+	internal static IServiceCollection AddAuth(this IServiceCollection services) {
 
 		services
 			.AddSingleton<IAuthenticator, Authenticator>()
 			.AddSingleton<IPasswordManager, PasswordManager>()
-			.AddSingleton<IPasswordHasher<IBaseEntity>, PasswordHasher<IBaseEntity>>();
+			.AddSingleton<IPasswordHasher<IBaseEntity>, PasswordHasher<IBaseEntity>>()
+			.AddScoped<IUserManager, UserManager>()
+			.AddScoped<CurrentUserService>();
+			
+
 			//.AddAuthorization()
 			//.AddAuthentication(x => {
 			//	x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

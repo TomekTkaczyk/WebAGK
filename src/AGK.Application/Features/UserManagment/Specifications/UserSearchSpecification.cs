@@ -2,13 +2,14 @@
 using AGK.Domain.Entities;
 
 namespace AGK.Application.Features.UserManagment.Specifications;
-internal sealed class UserSearchSpecification(bool? active = null, string searchString = null) 
+internal sealed class UserSearchSpecification(bool? activeStatus = null, string searchString = null)
 	: Specification<User>(
-		user =>	(!active.HasValue || user.ActiveStatus.Equals(active))
-				&&
-				(string.IsNullOrWhiteSpace(searchString) ||
-				user.Username.Value.Contains(searchString) ||
-				user.Firstname.Value.Contains(searchString) ||
-				user.Lastname.Value.Contains(searchString))) 
-{
-}
+		user => 
+			(activeStatus==null
+			|| user.ActiveStatus == activeStatus) 
+			&& 
+			(string.IsNullOrEmpty(searchString) 
+			|| ((string)user.UserName).Contains(searchString)
+			|| ((string)user.FirstName).Contains(searchString)
+			|| ((string)user.LastName).Contains(searchString))
+		) { }

@@ -18,10 +18,7 @@ public partial record Email	: ValueObject
 		Value = email;
 	}
 
-	public static Email Default => new("");
-
-
-	public static implicit operator string(Email email) => email.Value;
+	public static implicit operator string(Email email) => email?.Value;
 
 	public static implicit operator Email(string email) => new(email);
 

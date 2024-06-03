@@ -1,6 +1,6 @@
 ﻿namespace AGK.Domain.Entities;
 
-public interface IActiveStatus
+public interface IActiveStatus : IBaseEntity
 {
 	bool ActiveStatus { get; }
 

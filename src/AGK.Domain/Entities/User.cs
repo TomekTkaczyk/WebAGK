@@ -2,20 +2,19 @@
 using AGK.Domain.ValueObjects;
 
 namespace AGK.Domain.Entities;
-public class User : ActiveStatusEntity
+public sealed class User : ActiveStatusEntity
 {
-	protected User() { }
+	private User() { }
 
-    private User(string username, Email email, string password) : base()
-    {							 
-		Username = username;
-		Email = email;
+	private User(string username, string email, string password) : base() {
+		UserName = username;
+		Email = new Email(email);
 		PasswordHash = password;
-    }
+	}
 
-	public Name Username { get; private set; }
-	public Name Lastname { get; private set; }
-	public Name Firstname {  get; private set; }
+	public Name UserName { get; private set; }
+	public Name LastName { get; private set; }
+	public Name FirstName { get; private set; }
 	public string NormalizedName { get; private set; }
 	public Email Email { get; private set; }
 	public bool EmailConfirmed { get; private set; }
@@ -28,15 +27,23 @@ public class User : ActiveStatusEntity
 	public bool LockoutEnabled { get; private set; }
 	public int AccessFailedCount { get; private set; }
 	public Role Role { get; private set; }
-	public ICollection<string> Claims { get; private set; }
 
-	public static User Create(string username, Email email, string password) {
+	public static User Create(Name username, Email email, string password) {
 		return new User(username, email, password);
 	}
 
 	public void Normalize() {
-		Firstname = Firstname?.Value.ToUpper().Trim() ?? "";
-		Lastname = Lastname?.Value.ToUpper().Trim() ?? "";
-		NormalizedName = $"{Firstname} {Lastname}"; 
+		FirstName = FirstName?.Value.ToUpper().Trim() ?? "";
+		LastName = LastName?.Value.ToUpper().Trim() ?? "";
+		NormalizedName = $"{FirstName} {LastName}";
+	}
+
+	public void Update(
+		string firstName,
+		string lastName,
+		string phoneNumber) {
+		FirstName = firstName;
+		LastName = lastName;
+		PhoneNumber = phoneNumber;
 	}
 }

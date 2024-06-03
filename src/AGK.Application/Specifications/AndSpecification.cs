@@ -3,13 +3,10 @@ using System.Linq.Expressions;
 
 namespace AGK.Application.Specifications;
 
-public class AndSpecification<T> : Specification<T>
+public class AndSpecification<T>(params Specification<T>[] specifications) : Specification<T>
 {
-	private readonly Specification<T>[] _specifications;
-
-	public AndSpecification(params Specification<T>[] specifications) {
-		_specifications = specifications ?? throw new ArgumentNullException(nameof(specifications));
-	}
+	private readonly Specification<T>[] _specifications = specifications 
+		?? throw new ArgumentNullException(nameof(specifications));
 
 	public override Expression<Func<T, bool>> AsPredicateExpression() {
 		Expression<Func<T, bool>> resultingExpression = null;
@@ -26,7 +23,7 @@ public class AndSpecification<T> : Specification<T>
 		return resultingExpression;
 	}
 
-	private Expression<Func<T, bool>> Combine(Expression<Func<T, bool>> leftExpression, Expression<Func<T, bool>> rightExpression) {
+	private static Expression<Func<T, bool>> Combine(Expression<Func<T, bool>> leftExpression, Expression<Func<T, bool>> rightExpression) {
 		var parameter = Expression.Parameter(typeof(T));
 
 		var leftVisitor = new ReplaceExpressionVisitor(leftExpression.Parameters[0], parameter);
@@ -39,20 +36,16 @@ public class AndSpecification<T> : Specification<T>
 			Expression.And(left, right), parameter);
 	}
 
-	private class ReplaceExpressionVisitor
-		: ExpressionVisitor
+	private class ReplaceExpressionVisitor(Expression oldValue, Expression newValue)
+				: ExpressionVisitor
 	{
-		private readonly Expression _oldValue;
-		private readonly Expression _newValue;
-
-		public ReplaceExpressionVisitor(Expression oldValue, Expression newValue) {
-			_oldValue = oldValue;
-			_newValue = newValue;
-		}
+		private readonly Expression _oldValue = oldValue;
+		private readonly Expression _newValue = newValue;
 
 		public override Expression Visit(Expression node) {
 			if(node == _oldValue)
 				return _newValue;
+
 			return base.Visit(node);
 		}
 	}
