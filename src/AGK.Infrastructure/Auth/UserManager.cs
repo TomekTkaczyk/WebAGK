@@ -11,52 +11,34 @@ namespace AGK.Infrastructure.Auth;
 
 public class UserManager(
 	IUnitOfWork unitOfWork, 
-	IUserRepository userRepository,
-	CurrentUserService currentUserService) : IUserManager {
+	IUserRepository userRepository) : IUserManager {
 
 	private readonly IUnitOfWork _unitOfWork = unitOfWork;
 	private readonly IUserRepository _userRepository = userRepository;
-	private readonly CurrentUserService _currentUserService = currentUserService;
 
 	public IQueryable<User> Users => _userRepository.Get();
 
 	public async Task<User> CreateAsync(User user, CancellationToken cancellationToken = default) {
 
-		User currentUser = null;
-		try {
-			var name = _currentUserService.GetCurrentUser().UserName;
-			currentUser = await FindByUserNameAsync(new Name(name), cancellationToken);
-		}
-		catch {
-		}
 		var createdUser = _userRepository.Add(user);
 		
-		await _unitOfWork.SaveChangesAsync(currentUser, cancellationToken);
+		await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 		return createdUser;
 	}
 
 	public async Task<int> UpdateAsync(User user, CancellationToken cancellationToken = default) {
 
-		User currentUser = null;
-
-		try {
-			var name = _currentUserService.GetCurrentUser().UserName;
-			currentUser = await FindByUserNameAsync(new Name(name), cancellationToken);
-		}
-		catch {
-		}
-
 		var updatedUser = await _userRepository
 			.Get(new ByIdSpecification<User>(user.Id))
-			.SingleOrDefaultAsync(cancellationToken)
+			.SingleAsync(cancellationToken)
 		?? throw new UserNotFoundException();
 
 		updatedUser.Update(user.FirstName, user.LastName, user.Email);
 
-		_userRepository.Update(user);
+		_userRepository.Update(updatedUser);
 		
-		return await _unitOfWork.SaveChangesAsync(currentUser, cancellationToken);
+		return await _unitOfWork.SaveChangesAsync(cancellationToken);
 	}
 
 	public async Task<int> DeleteAsync(User user, CancellationToken cancellationToken = default) {
@@ -68,25 +50,25 @@ public class UserManager(
 
 		_userRepository.Delete(deletedUser);
 
-		return await _unitOfWork.SaveChangesAsync(null, cancellationToken);
+		return await _unitOfWork.SaveChangesAsync(cancellationToken);
 	}
 
 	public async Task<User> FindByIdAsync(EntityId id, CancellationToken cancellationToken = default) 
-		=> await Users.SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
+		=> await Users.SingleAsync(x => x.Id == id, cancellationToken)
 		?? throw new UserNotFoundException();
 
 	public async Task<User> FindByEmailAsync(Email email, CancellationToken cancellationToken = default) 
-		=> await Users.SingleOrDefaultAsync(x => x.Email == email, cancellationToken)
+		=> await Users.SingleAsync(x => x.Email == email, cancellationToken)
 		?? throw new UserNotFoundException();
 
 	public async Task<User> FindByUserNameAsync(Name userName, CancellationToken cancellationToken = default) 
-		=> await Users.SingleOrDefaultAsync(x => x.UserName == userName, cancellationToken)
+		=> await Users.SingleAsync(x => x.UserName == userName, cancellationToken)
 		?? throw new UserNotFoundException();
 
-	public async Task<bool> IsUnique(User user, CancellationToken cancellationToken = default) {
-		var taskName = _userRepository.Get().FirstOrDefaultAsync(x => x.UserName == user.UserName, cancellationToken);
-		var taskEmail = _userRepository.Get().FirstOrDefaultAsync(x => x.Email == user.Email, cancellationToken);
-		var result = await Task.WhenAll(taskName, taskEmail);
+	public async Task<bool> IsUniqueAsync(User user, CancellationToken cancellationToken = default) {
+		var name = _userRepository.Get().FirstOrDefaultAsync(x => x.UserName == user.UserName, cancellationToken);
+		var email = _userRepository.Get().FirstOrDefaultAsync(x => x.Email == user.Email, cancellationToken);
+		var result = await Task.WhenAll(name, email);
 
 		return result.IsNullOrEmpty();
 	}

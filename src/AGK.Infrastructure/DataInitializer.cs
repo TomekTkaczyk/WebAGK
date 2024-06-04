@@ -24,11 +24,12 @@ public class DataInitializer(
 		try {
 			user = await _userManager.FindByUserNameAsync(userName);
 		}
-		catch(Exception ex) {
+		catch {
 			user = User.Create(
 				userName, 
 				email, 
 				_passwordManager.HashPassword(password));
+
 			await _userManager.CreateAsync(user);
 		}
 

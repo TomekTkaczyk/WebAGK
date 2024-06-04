@@ -11,10 +11,7 @@ public interface IRepository<TEntity> where TEntity : IBaseEntity
 
 	IQueryable<TEntity> Get(ISpecification<TEntity> specification = default);
 
-	Task<List<TEntity>> GetPageAsync(ISpecification<TEntity> specification, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+	IQueryable<TEntity> GetPage(ISpecification<TEntity> specification, int pageNumber, int pageSize);
 
-	Task<List<TEntity>> GetPageAsync(IQueryable<TEntity> query, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
-
-	Task<int> CountAsync(IQueryable<TEntity> query, CancellationToken cancellationToken = default);
-
+	IQueryable<TEntity> GetPage(IQueryable<TEntity> query, int pageNumber, int pageSize);
 }

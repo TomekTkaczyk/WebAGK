@@ -36,25 +36,21 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 		return SpecificationEvaluator<TEntity>.GetQuery(_entities, specification);
 	}
 
-	public async Task<List<TEntity>> GetPageAsync(ISpecification<TEntity> specification, int pageNumber, int pageSize, CancellationToken cancellationToken = default) {
+	public IQueryable<TEntity> GetPage(ISpecification<TEntity> specification, int pageNumber, int pageSize) {
 		var result = Get(specification).Skip((pageNumber - 1) * pageSize);
 		if(pageSize > 0) {
 			result = result.Take(pageSize);
 		};
 
-		return await result.AsNoTracking().ToListAsync(cancellationToken);
+		return result.AsNoTracking();
 	}
 
-	public async Task<List<TEntity>> GetPageAsync(IQueryable<TEntity> query, int pageNumber, int pageSize, CancellationToken cancellationToken = default) {
+	public IQueryable<TEntity> GetPage(IQueryable<TEntity> query, int pageNumber, int pageSize) {
 		var result = query.Skip((pageNumber - 1) * pageSize);
 		if(pageSize > 0) {
 			result = result.Take(pageSize);
 		};
 
-		return await result.AsNoTracking().ToListAsync(cancellationToken);
-	}
-
-	public async Task<int> CountAsync(IQueryable<TEntity> query, CancellationToken cancellationTokem = default) {
-		return await query.CountAsync(cancellationTokem);
+		return result.AsNoTracking();
 	}
 }

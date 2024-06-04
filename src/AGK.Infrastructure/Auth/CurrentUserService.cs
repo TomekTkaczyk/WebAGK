@@ -11,9 +11,9 @@ public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor)
 			return new UserSession();
 		}
 
-		var currentUser = new UserSession(
+		var currentUser = new UserSession(0,
 			_httpContextAccessor.HttpContext.User.Identity.Name,
-			_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated);
+			_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated); ;
 
 		return currentUser;
 	}

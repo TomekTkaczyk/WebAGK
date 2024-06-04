@@ -5,6 +5,7 @@ using AGK.Application.Mappers;
 using AGK.Application.Reponse;
 using AGK.Domain.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AGK.Application.Features.UserManagment.Queries;
 internal sealed class GetPageUsersHandler(IUserRepository repository)
@@ -17,13 +18,11 @@ internal sealed class GetPageUsersHandler(IUserRepository repository)
 		var specification = new UserSearchSpecification(request.ActiveStatus, request.SearchString);
 
 		var query = _repository.Get(specification);
-		var total = await _repository.CountAsync(query, cancellationToken);
-		var list = await _repository.GetPageAsync(query, request.PageNumber, request.PageSize, cancellationToken);
-		var result = list
-			.Select(x => x.ToDTO())
-			.ToList()
-			.AsReadOnly();
+		var page = _repository.GetPage(query, request.PageNumber, request.PageSize);
+		var total = await query.CountAsync(cancellationToken);
+		var result = await page.Select(x => x.ToDTO()).ToListAsync(cancellationToken);
 
-		return ApiResponse.Success(new Page<UserDTO>(request.PageNumber, request.PageSize, total, result));
+
+		return ApiResponse.Success(new Page<UserDTO>(request.PageNumber, request.PageSize, total, result.AsReadOnly()));
 	}
 }

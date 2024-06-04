@@ -36,17 +36,21 @@ public class UserController( ISender sender, ILogger<ApiBaseController> logger)
 	}
 
 
-	//[HttpGet("{id:TypeEntityId}")]
-	//public virtual async Task<IActionResult> GetUser(
-	//	[FromRoute] TypeEntityId Id,
-	//	CancellationToken cancellationToken = default) {
+	[HttpGet("{id:int}")]
+	public virtual async Task<IActionResult> GetUser(
+		[FromRoute] TypeEntityId id,
+		CancellationToken cancellationToken = default) {
 
-	//	var response = await HandleRequestAsync<GetById<UserDTO>, ApiResponse<UserDTO>>(
-	//		new GetById<UserDTO>(Id),
-	//		cancellationToken);
+		var query = new GetById<UserDTO>(id);
 
-	//	return Ok(response);
-	//}
+		try {
+			var response = await HandleRequestAsync<GetById<UserDTO>, ApiResponse<UserDTO>>(query, cancellationToken);
+			return Ok(response);
+		}
+		catch(Exception ex) {
+			return BadRequest(ex.Message);
+		}
+	}
 
 	//[HttpPost]
 	//public virtual async Task<IActionResult> SignUp(

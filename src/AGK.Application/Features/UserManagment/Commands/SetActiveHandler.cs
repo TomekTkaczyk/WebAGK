@@ -3,6 +3,7 @@ using AGK.Application.Features.Common;
 using AGK.Application.Reponse;
 using AGK.Application.Specifications.Common;
 using AGK.Domain.Entities;
+using AGK.Domain.Exceptions.Users;
 using AGK.Domain.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -20,12 +21,13 @@ internal sealed class SetActiveHandler(
 
 		var user = await _userRepository
 			.Get(new ByIdSpecification<User>(request.Id.Value))
-			.FirstOrDefaultAsync(cancellationToken);
+			.SingleAsync(cancellationToken)
+			?? throw new UserNotFoundException();
 
 		_userRepository.SetActive(user, request.ActiveStatus);
 
 		try {
-			await _unitOfWork.SaveChangesAsync(null, cancellationToken);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			return ApiResponse.Success(System.Net.HttpStatusCode.NoContent);
 		}
 		catch(DbUpdateException ex) {

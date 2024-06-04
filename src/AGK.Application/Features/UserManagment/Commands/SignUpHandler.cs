@@ -29,13 +29,7 @@ internal sealed class SignUpHandler(
 				request.Email,
 				_passwordManager.HashPassword(request.Password));
 
-		try {
-			user = await _userManager.CreateAsync(user,	cancellationToken);
-		}
-		catch(Exception ex) {
-
-			throw;
-		}
+		user = await _userManager.CreateAsync(user,	cancellationToken);
 
 		// Return ApiResult
 		return ApiResponse.Success(user.Id);

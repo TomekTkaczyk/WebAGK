@@ -4,5 +4,5 @@ namespace AGK.Domain.Repositories;
 
 public interface IUnitOfWork
 {
-	Task<int> SaveChangesAsync(BaseEntity user, CancellationToken cancellationToken = default);
+	Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

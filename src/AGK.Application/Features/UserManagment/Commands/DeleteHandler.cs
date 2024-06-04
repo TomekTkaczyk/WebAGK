@@ -22,12 +22,12 @@ internal sealed class DeleteHandler(
 
 		var specification = new ByIdSpecification<User>(request.Id);
 		var user = await _userRepository.Get(specification)
-			.FirstOrDefaultAsync(cancellationToken)
+			.SingleAsync(cancellationToken)
 			?? throw new UserNotFoundException();
 
 		_userRepository.Delete(user);
 
-		var count = await _unitOfWork.SaveChangesAsync(user, cancellationToken);
+		var count = await _unitOfWork.SaveChangesAsync(cancellationToken);
 		if(count != 1) {
 			throw new DeleteException();
 		}
