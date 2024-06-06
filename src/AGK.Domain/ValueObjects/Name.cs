@@ -1,4 +1,6 @@
-﻿namespace AGK.Domain.ValueObjects;
+﻿using AGK.Domain.Exceptions;
+
+namespace AGK.Domain.ValueObjects;
 
 public record Name : ValueObject
 {
@@ -6,8 +8,10 @@ public record Name : ValueObject
 	public string Value { get; init; }
 
 	public Name(string value) {
-		ArgumentNullException.ThrowIfNull(value);
-
+		if(string.IsNullOrEmpty(value)
+			|| (value.Length is > 100 or < 2)) {
+			throw new InvalidNameException();
+		}
 		Value = value;
 	}
 
@@ -21,4 +25,6 @@ public record Name : ValueObject
 	public override IEnumerable<object> GetAtomicValues() {
 		yield return Value;
 	}
+
+	public override string ToString() => Value;
 }

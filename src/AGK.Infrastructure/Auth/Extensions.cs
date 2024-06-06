@@ -16,7 +16,7 @@ internal static class Extensions
 			.AddSingleton<IPasswordManager, PasswordManager>()
 			.AddSingleton<IPasswordHasher<IBaseEntity>, PasswordHasher<IBaseEntity>>()
 			.AddScoped<IUserManager, UserManager>()
-			.AddScoped<CurrentUserService>();
+			.AddScoped<AuthorizedUserService>();
 			
 
 			//.AddAuthorization()

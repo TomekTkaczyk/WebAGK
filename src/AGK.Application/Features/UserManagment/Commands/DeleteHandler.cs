@@ -21,17 +21,15 @@ internal sealed class DeleteHandler(
 	public async Task<ApiResponse> Handle(Delete<UserSelectorDTO> request, CancellationToken cancellationToken) {
 
 		var specification = new ByIdSpecification<User>(request.Id);
-		var user = await _userRepository.Get(specification)
+		var user = await _userRepository
+			.Get(specification)
 			.SingleAsync(cancellationToken)
 			?? throw new UserNotFoundException();
 
 		_userRepository.Delete(user);
+		
+		await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-		var count = await _unitOfWork.SaveChangesAsync(cancellationToken);
-		if(count != 1) {
-			throw new DeleteException();
-		}
-
-		return ApiResponse.Success();
+		return ApiResponse.Success(System.Net.HttpStatusCode.NoContent);
 	}
 }

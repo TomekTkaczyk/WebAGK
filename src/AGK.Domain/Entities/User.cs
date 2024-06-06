@@ -12,14 +12,14 @@ public sealed class User : ActiveStatusEntity
 		PasswordHash = password;
 	}
 
-	public Name UserName { get; private set; }
+	public UserName UserName { get; private set; }
 	public Name LastName { get; private set; }
 	public Name FirstName { get; private set; }
 	public string NormalizedName { get; private set; }
 	public Email Email { get; private set; }
 	public bool EmailConfirmed { get; private set; }
 	public string PasswordHash { get; private set; }
-	public Guid SecurityStamp { get; private set; }
+	public Guid SecurityStamp { get; private set; } = Guid.NewGuid();
 	public string PhoneNumber { get; private set; }
 	public bool PhoneNumberConfirmed { get; private set; }
 	public bool TwoFactorEnabled { get; private set; }

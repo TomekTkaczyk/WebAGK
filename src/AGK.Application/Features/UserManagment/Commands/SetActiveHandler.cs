@@ -19,19 +19,16 @@ internal sealed class SetActiveHandler(
 
 	public async Task<ApiResponse> Handle(SetActive<UserSelectorDTO> request, CancellationToken cancellationToken) {
 
+		var specification = new ByIdSpecification<User>(request.Id);
 		var user = await _userRepository
-			.Get(new ByIdSpecification<User>(request.Id.Value))
+			.Get(specification)
 			.SingleAsync(cancellationToken)
 			?? throw new UserNotFoundException();
 
 		_userRepository.SetActive(user, request.ActiveStatus);
-
-		try {
-			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			return ApiResponse.Success(System.Net.HttpStatusCode.NoContent);
-		}
-		catch(DbUpdateException ex) {
-			return ApiResponse.Failure(ex.Message,System.Net.HttpStatusCode.Conflict);
-		}
+			
+		await _unitOfWork.SaveChangesAsync(cancellationToken);
+		
+		return ApiResponse.Success(System.Net.HttpStatusCode.NoContent);
 	}
 }

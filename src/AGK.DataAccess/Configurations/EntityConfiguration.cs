@@ -14,8 +14,7 @@ internal abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<
 			.ValueGeneratedOnAdd();
 
 		builder.Property(u => u.ConcurrencyStamp)
-			.HasConversion<GuidConverter>()
-			.IsRowVersion();
+			.IsConcurrencyToken();
 
 		builder.Property(x => x.CreatedById)
 			.HasConversion<EntityIdConverter>();

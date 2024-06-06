@@ -1,13 +1,11 @@
 ﻿using AGK.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System.Linq.Expressions;
 
 namespace AGK.DataAccess.Conversions;
-internal class NameConverter : ValueConverter<Name, string>
+internal class UserNameConverter : ValueConverter<UserName, string>
 {
-	public NameConverter()
+	public UserNameConverter()
 		: base(
 			v => v.Value,
-			v => new Name(v)) { }
+			v => new UserName(v)) { }
 }
-

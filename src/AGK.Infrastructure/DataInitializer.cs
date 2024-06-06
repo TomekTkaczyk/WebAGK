@@ -12,27 +12,18 @@ public class DataInitializer(
 
 	public void UserInit() {
 
-		CreateUserIfNotExistAsync("Admin", "support@unipromax.pl", "").Wait();
-		CreateUserIfNotExistAsync("Perlon", "perlon@unipromax.pl", "").Wait();
-		CreateUserIfNotExistAsync("KS", "ks@unipromax.pl", "").Wait();
-		CreateUserIfNotExistAsync("GS", "gs@unipromax.pl", "").Wait();
+		CreateUserIfNotExistAsync("Admin", "support@unipromax.pl", "").GetAwaiter().GetResult();
+		CreateUserIfNotExistAsync("Perlon", "perlon@unipromax.pl", "").GetAwaiter().GetResult();
+		CreateUserIfNotExistAsync("KS", "ks@unipromax.pl", "").GetAwaiter().GetResult();
+		CreateUserIfNotExistAsync("GS", "gs@unipromax.pl", "").GetAwaiter().GetResult();
 	}
 
-	private async Task<User> CreateUserIfNotExistAsync(Name userName, Email email, string password) {
+	private async Task CreateUserIfNotExistAsync(UserName userName, Email email, string password) {
 
-		User user;
-		try {
-			user = await _userManager.FindByUserNameAsync(userName);
+		var user = User.Create(userName, email, _passwordManager.HashPassword(password));
+		var isUnique = await _userManager.IsUniqueAsync(user);
+		if(isUnique) {
+			await _userManager.AddAsync(user);
 		}
-		catch {
-			user = User.Create(
-				userName, 
-				email, 
-				_passwordManager.HashPassword(password));
-
-			await _userManager.CreateAsync(user);
-		}
-
-		return user;
 	}
 }

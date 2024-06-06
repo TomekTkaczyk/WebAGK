@@ -3,10 +3,7 @@
 namespace AGK.Domain.Entities;
 public abstract class BaseEntity : IBaseEntity
 {
-    protected BaseEntity()
-    {
-		ConcurrencyStamp = new Guid();
-	}
+	protected BaseEntity() { }
 
     public EntityId Id { get; protected set; }
 
@@ -22,22 +19,20 @@ public abstract class BaseEntity : IBaseEntity
 
 	public User ModifiedBy { get; protected set; }
 
-	public Guid ConcurrencyStamp { get; protected set; } = new Guid();
+	public Guid ConcurrencyStamp { get; protected set; }
 
-	public void SetCreateOwner(User user, DateTime timeStamp) {
+	public void SetCreateOwner(TypeEntityId userId, DateTime timeStamp) {
 		CreateTimeStamp = timeStamp;
-		CreatedBy = user;
-
-		SetModifyOwner(user, timeStamp);
+		CreatedById = userId == 0 ? null : userId;
 	}
 
-	public void SetModifyOwner(User user, DateTime timeStamp) {
+	public void SetModifyOwner(TypeEntityId userId, DateTime timeStamp) {
 		ModifyTimeStamp = timeStamp;
-		ModifiedBy = user;
+		ModifiedById = userId == 0 ? null : userId;
 	}
 
 	public void SetConcurrencyStamp() {
-		ConcurrencyStamp = new Guid();
+		ConcurrencyStamp = Guid.NewGuid();
 	}
 
 	public override int GetHashCode() {

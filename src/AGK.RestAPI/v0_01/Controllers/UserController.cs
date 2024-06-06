@@ -52,13 +52,14 @@ public class UserController( ISender sender, ILogger<ApiBaseController> logger)
 		}
 	}
 
-	//[HttpPost]
-	//public virtual async Task<IActionResult> SignUp(
-	//	[FromBody] SignUp command,
-	//	CancellationToken cancellationToken = default) {
 
-	//	var response = await HandleRequestAsync<SignUp, ApiResponse<EntityId>>(command, cancellationToken);
+	[HttpPost]
+	public virtual async Task<IActionResult> SignUp(
+		[FromBody] SignUp command,
+		CancellationToken cancellationToken = default) {
 
-	//	return Ok();
-	//}
+		var response = await HandleRequestAsync<SignUp, ApiResponse<EntityId>>(command, cancellationToken);
+
+		return Ok(response);
+	}
 }

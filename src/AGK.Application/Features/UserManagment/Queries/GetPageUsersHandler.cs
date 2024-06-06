@@ -20,9 +20,8 @@ internal sealed class GetPageUsersHandler(IUserRepository repository)
 		var query = _repository.Get(specification);
 		var page = _repository.GetPage(query, request.PageNumber, request.PageSize);
 		var total = await query.CountAsync(cancellationToken);
-		var result = await page.Select(x => x.ToDTO()).ToListAsync(cancellationToken);
+		var users = await page.Select(x => x.ToDTO()).ToListAsync(cancellationToken);
 
-
-		return ApiResponse.Success(new Page<UserDTO>(request.PageNumber, request.PageSize, total, result.AsReadOnly()));
+		return ApiResponse.Success(new Page<UserDTO>(request.PageNumber, request.PageSize, total, users.AsReadOnly()));
 	}
 }

@@ -10,3 +10,13 @@ Accept: application/json
 
 ###
 PATCH {{AGK.RestAPI_HostAddress}}/users/3/status/1
+
+###
+POST {{AGK.RestAPI_HostAddress}}/users
+Content-Type: application/json
+
+{
+  "userName": "testUser",
+  "email": "email@email.com",
+  "password": "password"
+}

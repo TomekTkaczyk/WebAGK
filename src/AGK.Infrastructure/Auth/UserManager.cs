@@ -18,7 +18,7 @@ public class UserManager(
 
 	public IQueryable<User> Users => _userRepository.Get();
 
-	public async Task<User> CreateAsync(User user, CancellationToken cancellationToken = default) {
+	public async Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {
 
 		var createdUser = _userRepository.Add(user);
 		
@@ -57,19 +57,24 @@ public class UserManager(
 		=> await Users.SingleAsync(x => x.Id == id, cancellationToken)
 		?? throw new UserNotFoundException();
 
-	public async Task<User> FindByEmailAsync(Email email, CancellationToken cancellationToken = default) 
+	public async Task<User> FindByEmailAsync(Email email, CancellationToken cancellationToken = default)
 		=> await Users.SingleAsync(x => x.Email == email, cancellationToken)
 		?? throw new UserNotFoundException();
 
-	public async Task<User> FindByUserNameAsync(Name userName, CancellationToken cancellationToken = default) 
+	public async Task<User> FindByUserNameAsync(UserName userName, CancellationToken cancellationToken = default)
 		=> await Users.SingleAsync(x => x.UserName == userName, cancellationToken)
 		?? throw new UserNotFoundException();
 
 	public async Task<bool> IsUniqueAsync(User user, CancellationToken cancellationToken = default) {
-		var name = _userRepository.Get().FirstOrDefaultAsync(x => x.UserName == user.UserName, cancellationToken);
-		var email = _userRepository.Get().FirstOrDefaultAsync(x => x.Email == user.Email, cancellationToken);
-		var result = await Task.WhenAll(name, email);
+		var name = await _userRepository.Get().FirstOrDefaultAsync(x => x.UserName == user.UserName, cancellationToken);
+		if (name is not null) {
+			return false;
+		}
+		var email = await _userRepository.Get().FirstOrDefaultAsync(x => x.Email == user.Email, cancellationToken);
+		if(email is not null) {
+			return false;
+		}
 
-		return result.IsNullOrEmpty();
+		return true;
 	}
 }
