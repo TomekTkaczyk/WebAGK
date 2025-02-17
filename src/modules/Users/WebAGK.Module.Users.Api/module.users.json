@@ -1,0 +1,8 @@
+{
+  "modules": {
+    "users": {
+      "name": "Users",
+      "enabled": true
+    }
+  }
+}

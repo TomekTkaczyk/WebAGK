@@ -1,0 +1,1 @@
+dotnet ef database update %1 --startup-project ..\..\..\bootstraper\WebAGK.Bootstraper\WebAGK.Bootstraper.csproj --project .\WebAGK.Module.Employees.Core.csproj --context EmployeesDbContext -v 

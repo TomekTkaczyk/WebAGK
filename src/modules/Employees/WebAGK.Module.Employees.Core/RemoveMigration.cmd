@@ -1,0 +1,1 @@
+dotnet-ef migrations remove --startup-project ..\..\..\bootstraper\WebAGK.Bootstraper\WebAGK.Bootstraper.csproj --project .\WebAGK.Module.Employees.Core.csproj --context EmployeesDbContext -v
