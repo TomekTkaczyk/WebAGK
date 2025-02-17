@@ -1,5 +1,4 @@
 ﻿using WebAGK.Shared.Abstractions.Entities;
-using System.Security.Claims;
 
 namespace WebAGK.Module.Users.Core.Entities;
 
