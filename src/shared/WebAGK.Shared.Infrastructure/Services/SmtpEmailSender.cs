@@ -21,7 +21,7 @@ internal class SmtpEmailSender : IEmailSender
 		}
 	}
 
-	public async Task<bool> SendEmailAsync(Email email, CancellationToken cancellationToken = default)
+	public async Task<bool> SendEmailAsync(EmailMessage emailMessage, CancellationToken cancellationToken = default)
 	{
 		var options = _optionsMonitor.CurrentValue;
 		if(!IsValidConfiguration(options, out var errors)) {
@@ -40,7 +40,7 @@ internal class SmtpEmailSender : IEmailSender
 				_optionsMonitor.CurrentValue.Account, 
 				_optionsMonitor.CurrentValue.Password, 
 				cancellationToken);
-			await client.SendAsync(CreateEmail(email), cancellationToken);
+			await client.SendAsync(CreateEmail(emailMessage), cancellationToken);
 			await client.DisconnectAsync(true, cancellationToken);
 		}
 		catch (Exception ex) {
@@ -84,21 +84,21 @@ internal class SmtpEmailSender : IEmailSender
 		return errors.Count == 0;
 	}
 
-	private MimeMessage CreateEmail(Email email)
+	private MimeMessage CreateEmail(EmailMessage emailMessage)
 	{
 		var bodyBuilder = new BodyBuilder
 		{
-			HtmlBody = email.Body,
+			HtmlBody = emailMessage.Body,
 			TextBody = @"Text body do rozważenia"
 		};
 
 		var message = new MimeMessage()
 		{
-			Subject = email.Subject,
+			Subject = emailMessage.Subject,
 			Body = bodyBuilder.ToMessageBody()
 		};
 		message.From.Add(new MailboxAddress(_optionsMonitor.CurrentValue.Issuer, _optionsMonitor.CurrentValue.IssuerEmail));
-		foreach(var address in email.Recievers) {
+		foreach(var address in emailMessage.Recievers) {
 			message.To.Add(new MailboxAddress("", address));
 		}
 

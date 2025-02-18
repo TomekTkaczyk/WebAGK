@@ -9,4 +9,9 @@
     <ProjectReference Include="..\WebAGK.Module.Agents.Core\WebAGK.Module.Agents.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="AgentTests" />
+    <InternalsVisibleTo Include="WebAGK.Module.Agents.Api" />
+  </ItemGroup>
+
 </Project>

@@ -13,7 +13,7 @@ internal class EmployeeModule : IModule
 
 	public string Path => BasePath;
 
-	public IEnumerable<string> Policies { get; } = ["Uprawnienie1", "Uprawnienie2"];
+	public IEnumerable<string> Policies { get; } = [];
 
 	public void Register(IServiceCollection services, IConfiguration configuration)
 	{

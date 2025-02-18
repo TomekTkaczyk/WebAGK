@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using WebAGK.Module.Users.Core.Entities;
 using WebAGK.Module.Users.Core.Repositories;
 
 namespace WebAGK.Module.Users.Core.Services;
-internal class DataInitializerService(IUserRepository repository, IPasswordHasher<User> passwordHasher) : IDataInitializerService
+internal class DataInitializerService(
+	IUserRepository repository, 
+	IPasswordHasher<User> passwordHasher,
+	IConfiguration configuration) : IDataInitializerService
 {
 	public async Task Initialize()
 	{
@@ -22,6 +26,7 @@ internal class DataInitializerService(IUserRepository repository, IPasswordHashe
 			Password = passwordHasher.HashPassword(default, ""),
 			Role = "Admin",
 			IsActive = true,
+			Email = configuration.GetSection("AdminEmail").Value,
 			EmailConfirm = true,
 			Claims = new Dictionary<string, IEnumerable<string>>()
 			{

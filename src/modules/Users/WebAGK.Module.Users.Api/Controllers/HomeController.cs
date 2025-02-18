@@ -19,7 +19,7 @@ internal class HomeController(IMediator mediator) : HomeControllerBase
 		return Ok(await mediator.Send(new GetUsersQuery(), cancellationToken));
 	}
 
-	[HttpGet("{id}")]
+	[HttpGet("{id:guid}")]
 	public async Task<IActionResult> GetUser(Guid id, CancellationToken cancellationToken)
 	{
 		return Ok(await mediator.Send(new GetUserQuery(id), cancellationToken));

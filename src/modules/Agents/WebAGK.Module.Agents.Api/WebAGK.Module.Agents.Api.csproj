@@ -7,6 +7,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebAGK.Module.Agents.Core\WebAGK.Module.Agents.Core.csproj" />
+    <ProjectReference Include="..\WebAGK.Module.Agents.UseCases\WebAGK.Module.Agents.UseCases.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="module.agents.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="module.agents.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

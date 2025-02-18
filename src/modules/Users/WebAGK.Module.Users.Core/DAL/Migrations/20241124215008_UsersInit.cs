@@ -41,7 +41,7 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                 name: "IX_Users_Email",
                 schema: "Users",
                 table: "Users",
-                column: "Email",
+                column: "EmailMessage",
                 unique: true);
 
             migrationBuilder.CreateIndex(

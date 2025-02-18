@@ -10,11 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DAL\Migrations\" />
-    <Folder Include="ValueObjects\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="UsersTests" />
     <InternalsVisibleTo Include="WebAGK.Module.Users.Api" />
     <InternalsVisibleTo Include="WebAGK.Module.Users.UseCases" />

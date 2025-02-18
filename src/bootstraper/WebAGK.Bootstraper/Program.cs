@@ -3,6 +3,7 @@ using WebAGK.Shared.Infrastructure;
 using WebAGK.Shared.Infrastructure.Modules;
 using WebAGK.Shared.Infrastructure.Services;
 using System.Reflection;
+using WebAGK.Shared.Infrastructure.ValueObject;
 
 namespace WebAGK.Bootstraper;
 
@@ -75,7 +76,7 @@ public class Program
 		//		.GetRequiredService<EmailConfirmerFactory>()
 		//		.GetEmailConfirmer();
 		//	var body = confirmer.GetConfirmEmailBody(Guid.NewGuid(), "biuro@unipromax.pl");
-		//	var email = new Email
+		//	var email = new EmailMessage
 		//	{
 		//		Body = body,
 		//		Subject = "Sample activating your account in the WebAGK application",
@@ -87,7 +88,7 @@ public class Program
 
 		_assemblies.Clear();
 		_modules.Clear();
-
+		
 		app.Run();
 	}
 }

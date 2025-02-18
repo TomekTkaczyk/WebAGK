@@ -35,7 +35,7 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("EmailMessage")
                         .HasColumnType("text");
 
                     b.Property<bool>("EmailConfirm")
@@ -78,7 +78,7 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
+                    b.HasIndex("EmailMessage")
                         .IsUnique();
 
                     b.HasIndex("Name")

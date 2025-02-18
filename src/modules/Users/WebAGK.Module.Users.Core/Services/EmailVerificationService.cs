@@ -34,11 +34,11 @@ internal class EmailVerificationService(
 
 	public async Task SendSample(CancellationToken cancellationToken)
 	{
-		EmailsQueue.Add(new Email
+		EmailsQueue.Add(new EmailMessage
 		{
 			Recievers = ["biuro@unipromax.pl"],
-			Subject = "Email sample subject",
-			Body = "Email sample body"
+			Subject = "EmailMessage sample subject",
+			Body = "EmailMessage sample body"
 		});
 
 		await Task.CompletedTask;

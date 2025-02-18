@@ -1,10 +1,11 @@
 ﻿using WebAGK.Shared.Abstractions.Entities;
+using WebAGK.Shared.Infrastructure.ValueObject;
 
 namespace WebAGK.Module.Users.Core.Entities;
 
 public class User : EntityBase
 {
-	public string Email { get; set; }
+	public Email Email { get; set; }
 	public string Name { get; set; }
 	public string Password { get; set; }
 	public string FirstName { get; set; }

@@ -2,7 +2,7 @@
 
 namespace WebAGK.Shared.Abstractions.Services;
 
-public class Email
+public class EmailMessage
 {
 	public string[] Recievers { get; set; }
 	public string Subject { get; set; }

@@ -4,10 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using WebAGK.Module.Agents.Core;
 using WebAGK.Shared.Abstractions.Modules;
 
-namespace WebAGK.Modules.Agents.Api;
+namespace WebAGK.Module.Agents.Api;
 internal class AgentModule : IModule
 {
-	public const string BasePath = "agents-module";
+	public const string BasePath = "/agents-module";
 
 	public string Name { get; } = "Agents";
 

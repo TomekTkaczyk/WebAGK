@@ -16,7 +16,7 @@ internal class RemindPasswordHandler(
 
 		var emailConfirmer = emailConfirmerFactory.GetEmailConfirmer();
 
-		var forgotEmail = new Email
+		var forgotEmail = new EmailMessage
 		{
 			Body = emailConfirmer.GetRemindPasswordBody(user.Id, user.Email),
 			Subject = "Remind your password in the WebAGK application",

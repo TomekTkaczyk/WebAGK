@@ -1,8 +1,7 @@
 ﻿using WebAGK.Module.Users.Core.Entities;
 
 namespace WebAGK.Module.Users.Core.DTO;
-public class UserDto
-{
+public class UserDto {
 	public Guid Id { get; set; }
 	public string Name { get; set; }
 	public string Email { get; set; }

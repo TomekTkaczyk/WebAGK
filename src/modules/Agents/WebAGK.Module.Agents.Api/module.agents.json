@@ -1,0 +1,8 @@
+{
+  "modules": {
+    "agents": {
+      "name": "Agents",
+      "enabled": true
+    }
+  }
+}

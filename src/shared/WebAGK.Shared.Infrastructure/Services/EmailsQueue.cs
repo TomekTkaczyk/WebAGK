@@ -5,26 +5,26 @@ namespace WebAGK.Shared.Infrastructure.Services;
 
 public static class EmailsQueue
 {
-	private static readonly ConcurrentQueue<Email> _emails = new();
+	private static readonly ConcurrentQueue<EmailMessage> _emails = new();
 
-	public static ConcurrentQueue<Email> Emails => _emails;
+	public static ConcurrentQueue<EmailMessage> Emails => _emails;
 
 	public static int ErrorCount { get; set; } = 0;
 
-	public static void Add(Email email)
+	public static void Add(EmailMessage emailMessage)
 	{
-		_emails.Enqueue(email);
+		_emails.Enqueue(emailMessage);
 	}
 
-	public static bool TryDequeue(out Email email)
+	public static bool TryDequeue(out EmailMessage emailMessage)
 	{
-		return _emails.TryDequeue(out email);
+		return _emails.TryDequeue(out emailMessage);
 	}
 
 
-	public static bool TryPeek(out Email email)
+	public static bool TryPeek(out EmailMessage emailMessage)
 	{
-		return _emails.TryPeek(out email);
+		return _emails.TryPeek(out emailMessage);
 	}
 
 	public static bool IsEmpty => _emails.IsEmpty;

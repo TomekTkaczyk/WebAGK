@@ -35,7 +35,7 @@ internal class EmailBackgroundService(IEmailSenderFactory emailServiceFactory, I
 					}
 				}
 				else {
-					logger.LogInformation("Email {Subject} sent.", email.Subject);
+					logger.LogInformation("EmailMessage {Subject} sent.", email.Subject);
 					EmailsQueue.ErrorCount = 0;
 				}
 			}

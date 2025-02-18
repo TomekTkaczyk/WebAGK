@@ -15,7 +15,7 @@ internal class UserModule : IModule
 
 	public string Path => BasePath;
 
-	public IEnumerable<string> Policies { get; } = ["UserManager", "UserUprawnienie1", "UserUprawnienie2"];
+	public IEnumerable<string> Policies { get; } = ["UserManager"];
 
 	public void Register(IServiceCollection services, IConfiguration configuration)
 	{

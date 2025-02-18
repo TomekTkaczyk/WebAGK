@@ -39,7 +39,7 @@ internal class FakeEmailSender : IEmailSender
 		}
 	}
 
-	public async Task<bool> SendEmailAsync(Email email, CancellationToken cancellationToken = default)
+	public async Task<bool> SendEmailAsync(EmailMessage emailMessage, CancellationToken cancellationToken = default)
 	{
 		await Task.CompletedTask;
 		

@@ -46,7 +46,7 @@ internal class ChangeEmailHandler(
 	{
 		var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", "EmailConfirmTokenTemplate.html");
 		var template = await File.ReadAllTextAsync(path, cancellationToken);
-		var email = new Email
+		var email = new EmailMessage
 		{
 			Body = template.Replace("{{ConfirmUrl}}", confirmEmailUrl),
 			Subject = "Potwierdzenie adresu email w aplikacji WebAGK",
