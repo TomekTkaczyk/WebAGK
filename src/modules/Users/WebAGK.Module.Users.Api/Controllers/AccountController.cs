@@ -28,9 +28,9 @@ internal class AccountController(
 	IContext context,
 	IHttpContextAccessor httpContextAccessor) : HomeControllerBase
 {
-	private readonly IMediator mediator = mediator;
-	private readonly IContext context = context;
-	private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
+	// private readonly IMediator mediator = mediator;
+	// private readonly IContext context = context;
+	// private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
 
 	[HttpGet]
 	[ProducesResponseType(200)]

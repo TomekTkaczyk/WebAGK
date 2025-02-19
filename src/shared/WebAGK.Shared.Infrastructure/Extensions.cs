@@ -11,20 +11,17 @@ using WebAGK.Shared.Abstractions;
 using WebAGK.Shared.Abstractions.Auth;
 using WebAGK.Shared.Abstractions.Modules;
 using WebAGK.Shared.Abstractions.Services;
-using WebAGK.Shared.Infrastructure.Database;
-using WebAGK.Shared.Infrastructure.Exceptions;
-using WebAGK.Shared.Infrastructure.Modules;
-using System.Runtime.InteropServices;
 using WebAGK.Shared.Infrastructure.Api;
 using WebAGK.Shared.Infrastructure.Auth;
 using WebAGK.Shared.Infrastructure.Contexts;
 using WebAGK.Shared.Infrastructure.DAL;
 using WebAGK.Shared.Infrastructure.DAL.Repositories;
+using WebAGK.Shared.Infrastructure.Database;
+using WebAGK.Shared.Infrastructure.Exceptions;
 using WebAGK.Shared.Infrastructure.Middleware;
+using WebAGK.Shared.Infrastructure.Modules;
 using WebAGK.Shared.Infrastructure.Services;
 using WebAGK.Shared.Infrastructure.Time;
-using Npgsql;
-using Microsoft.Extensions.Logging;
 
 namespace WebAGK.Shared.Infrastructure;
 
@@ -40,8 +37,6 @@ public static class Extensions
 		IConfiguration configuration,
 		IList<IModule> modules)
 	{
-
-
 		AddScoped(services);
 		AddSingletons(services);
 		AddTransients(services);
@@ -54,7 +49,7 @@ public static class Extensions
 				continue;
 			}
 
-			if(!bool.Parse(value)) {
+			if(value != null && !bool.Parse(value)) {
 				disableModules.Add(key.Split(":")[0]);
 			}
 		}
@@ -64,7 +59,6 @@ public static class Extensions
 
 		services.AddCors(cors =>
 		{
-			var a = configuration.GetSection("AllowedHost").Get<string>();
 			cors.AddPolicy(name:_corsPolicy, x =>
 			{
 				x.WithOrigins(configuration.GetSection("AllowedHost").Get<string>())

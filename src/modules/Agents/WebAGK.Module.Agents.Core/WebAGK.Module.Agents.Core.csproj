@@ -13,5 +13,9 @@
     <ProjectReference Include="..\..\..\shared\WebAGK.Shared.Infrastructure\WebAGK.Shared.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Users\WebAGK.Module.Users.Core\WebAGK.Module.Users.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DAL\Migrations\" />
+  </ItemGroup>
   
 </Project>

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAGK.Module.Employees.Core.DTO;
 using WebAGK.Module.Employees.Core.Services;
-using System.Threading;
 
 namespace WebAGK.Module.Employees.Api.Controllers;
 

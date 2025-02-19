@@ -8,7 +8,6 @@ using WebAGK.Module.Employees.Core.Repositories;
 using WebAGK.Module.Employees.Core.Services;
 
 namespace WebAGK.Module.Employees.Core;
-
 internal static class Extensions
 {
 	public static IServiceCollection AddCore(this IServiceCollection services, IConfiguration configuration)

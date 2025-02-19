@@ -8,22 +8,13 @@ namespace WebAGK.Module.Agents.Core.DAL.Configurations;
 
 internal class AgentConfiguration : IEntityTypeConfiguration<Agent>
 {
-	private static readonly JsonSerializerOptions SerializerOptions = new()
-	{
+	private static readonly JsonSerializerOptions SerializerOptions = new() {
 		PropertyNameCaseInsensitive = true,
 		WriteIndented = false
 	};
 	
-	public void Configure(EntityTypeBuilder<Agent> builder)
-	{
-		builder.HasIndex(x => x.PersonalId)
-			.HasFilter("PersonalId IS NOT NULL")
-			.IsUnique();
-		
-		builder.HasIndex(x => x.TaxId)
-			.HasFilter("TaxId IS NOT NULL")
-			.IsUnique();
-		
+	public void Configure(EntityTypeBuilder<Agent> builder) {
+	
 		builder.Property(x => x.Email)
 			.HasConversion(
 				email => (string)email,
@@ -47,8 +38,14 @@ internal class AgentConfiguration : IEntityTypeConfiguration<Agent>
 		builder.Property(x => x.Address)
 			.HasConversion(
 				address => JsonSerializer.Serialize(address, SerializerOptions),
-				value => JsonSerializer.Deserialize<Address>(value, SerializerOptions)
-			)
-			.HasColumnType("nvarchar(max)"); // longtext for MySQL
+				value => JsonSerializer.Deserialize<Address>(value, SerializerOptions));
+		
+		// builder.HasIndex(x => x.PersonalId)
+		// 	.HasFilter("PersonalId IS NOT NULL")
+		// 	.IsUnique();
+		//
+		// builder.HasIndex(x => x.TaxId)
+		// 	.HasFilter("TaxId IS NOT NULL")
+		// 	.IsUnique();
 	}
 }

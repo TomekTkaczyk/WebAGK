@@ -4,9 +4,9 @@ using WebAGK.Shared.Infrastructure.ValueObject;
 
 namespace WebAGK.Module.Agents.Core.Entities;
 public class Agent : EntityBase {
+    public string LastName { get; set; }
     public string FirstName { get; set; }
     public string SecondName { get; set; }
-    public string LastName { get; set; }
     public string PhoneNumber { get; set; }
     public Email Email { get; set; }
     public PersonalId PersonalId { get; set; }

@@ -9,7 +9,7 @@ internal class AgentsDbContext(DbContextOptions<AgentsDbContext> options, ILogge
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		modelBuilder.HasDefaultSchema("Users");
+		modelBuilder.HasDefaultSchema("Agents");
 		modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
 		Database.Migrate();
 		logger.LogInformation("Database migration {DbContext}", this.GetType().Name.Replace("DbContext", ""));
