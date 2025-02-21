@@ -15,4 +15,8 @@
     <InternalsVisibleTo Include="WebAGK.Module.Users.UseCases" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DAL\Migrations\" />
+  </ItemGroup>
+
 </Project>

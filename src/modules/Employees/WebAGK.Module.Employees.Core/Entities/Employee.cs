@@ -1,4 +1,4 @@
-﻿using WebAGK.Shared.Abstractions.Entities;
+﻿using WebAGK.Shared.Infrastructure.Entities;
 
 namespace WebAGK.Module.Employees.Core.Entities;
 

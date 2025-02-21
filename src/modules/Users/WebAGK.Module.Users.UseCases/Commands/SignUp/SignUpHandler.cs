@@ -38,20 +38,12 @@ internal class SignUpHandler(
 
 		var password = passwordHasher.HashPassword(default, request.Password);
 
-		user = new User
-		{
-			Id = Guid.NewGuid(),
-			Name = request.UserName,
-			Email = request.Email,
-			Password = password,
-			Role = "User",
-			Claims = new Dictionary<string, IEnumerable<string>>(),
-			CreatedAt = clock.CurrentDate(),
-			IsActive = true,
-			EmailConfirm = false,
-			EmailToConfirm = request.Email
-		};
-
+		user = User.Create(
+			name:request.UserName,
+			email:request.Email,
+			password: password,
+			emailToConfirm:request.ConfirmEmailUrl,
+			createdAt: clock.CurrentDate());
 
 		var token = tokenProvider.GenerateConfirmEmailToken(user.Id, user.Email);
 

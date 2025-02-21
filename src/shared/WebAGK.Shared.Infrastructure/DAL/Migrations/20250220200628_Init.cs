@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebAGK.Shared.Infrastructure.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class addFilesStore : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,8 @@ namespace WebAGK.Shared.Infrastructure.DAL.Migrations
                     FileHash = table.Column<string>(type: "text", nullable: true),
                     FileStoragePath = table.Column<string>(type: "text", nullable: true),
                     FileStorageName = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ConcurrencyStamp = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {

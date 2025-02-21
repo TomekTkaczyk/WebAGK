@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebAGK.Module.Users.Core.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class UsersInit : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,17 +20,22 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Password = table.Column<string>(type: "text", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: true),
                     LastName = table.Column<string>(type: "text", nullable: true),
+                    FirstName = table.Column<string>(type: "text", nullable: true),
                     Role = table.Column<string>(type: "text", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    Permissions = table.Column<string>(type: "text", nullable: true),
                     EmailConfirm = table.Column<bool>(type: "boolean", nullable: false),
+                    EmailToConfirm = table.Column<string>(type: "text", nullable: true),
                     EmailConfirmToken = table.Column<string>(type: "text", nullable: true),
+                    EmailConfirmExpires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    RefreshToken = table.Column<string>(type: "text", nullable: true),
+                    RefreshExpires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Claims = table.Column<string>(type: "text", nullable: true)
+                    ConcurrencyStamp = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,7 +46,7 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                 name: "IX_Users_Email",
                 schema: "Users",
                 table: "Users",
-                column: "EmailMessage",
+                column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(

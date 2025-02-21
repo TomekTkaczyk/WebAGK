@@ -1,4 +1,4 @@
-﻿using WebAGK.Shared.Abstractions.Entities;
+﻿using WebAGK.Shared.Infrastructure.Entities;
 using WebAGK.Shared.Infrastructure.ValueObject;
 
 namespace WebAGK.Module.Users.Core.Entities;
@@ -12,7 +12,7 @@ public class User : EntityBase
 	public string FirstName { get; set; }
 	public string Role { get; set; }
 	public bool IsActive { get; set; }
-	public IDictionary<string, IEnumerable<string>> Claims { get; set; }  // change name to Permissions on next migration !!!
+	public IDictionary<string, IEnumerable<string>> Permissions { get; set; }
 	public bool EmailConfirm { get; set; }
 	public string EmailToConfirm { get; set; }
 	public string EmailConfirmToken { get; set; }
@@ -21,13 +21,35 @@ public class User : EntityBase
 	public DateTime RefreshExpires { get; set; }
 
 
+	public static User Create(
+		string name,
+		string email,
+		string password,
+		string emailToConfirm,
+		DateTime createdAt) {
+		
+		return new User() {
+			Id = Guid.NewGuid(),
+			Name = name,
+			Email = email,
+			Password = password,
+			Role = "User",
+			Permissions = new Dictionary<string, IEnumerable<string>>(),
+			EmailToConfirm = emailToConfirm,
+			EmailConfirm = false,
+			IsActive = true,
+			CreatedAt = createdAt,
+		};
+	}
+	
 	public IEnumerable<string> GetPermissions()
 	{
 		List<string> result = [];
-		if(Claims is not null) {
-			foreach(var permission in Claims) {
-				result = [.. result, .. permission.Value.Select(x => $"{permission.Key}.{x}")];
-			}
+		if(Permissions is not null) {
+			result = Permissions.Aggregate(
+				result, 
+				(current, permission) 
+					=> [.. current, .. permission.Value.Select(x => $"{permission.Key}.{x}")]);
 		}
 
 		return result;

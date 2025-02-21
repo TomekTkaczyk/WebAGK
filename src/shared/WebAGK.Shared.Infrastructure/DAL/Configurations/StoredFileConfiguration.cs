@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebAGK.Shared.Abstractions.Entities;
 using System.Text.Json;
+using WebAGK.Shared.Infrastructure.Entities;
 
 namespace WebAGK.Shared.Infrastructure.DAL.Configurations;
 internal class StoredFileConfiguration : IEntityTypeConfiguration<StoredFile>

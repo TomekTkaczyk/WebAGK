@@ -8,6 +8,7 @@ internal class GetUsersHandler(IUserRepository repository) : IRequestHandler<Get
 {
 	public async Task<IReadOnlyList<UserProfileDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
 	{
+		
 		return await repository.GetAll()
 			.Where(x => !x.Name.Equals("Admin"))
 			.Select(user => UserProfileDto.Create(user))

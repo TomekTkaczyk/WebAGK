@@ -11,7 +11,5 @@ internal class AgentsDbContext(DbContextOptions<AgentsDbContext> options, ILogge
 	{
 		modelBuilder.HasDefaultSchema("Agents");
 		modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
-		Database.Migrate();
-		logger.LogInformation("Database migration {DbContext}", this.GetType().Name.Replace("DbContext", ""));
 	}
 }

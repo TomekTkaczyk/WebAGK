@@ -12,8 +12,7 @@ internal static class Extensions
 {
 	public static IServiceCollection AddCore(this IServiceCollection services, IConfiguration configuration)
 	{
-
-		services.AddDatatabase<EmployeesDbContext>(configuration);
+		services.AddDatabase<EmployeesDbContext>(configuration);
 		services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 		services.AddSingleton<IEmployeeDeletionPolicy, EmployeeDeletionPolicy>();
 		services.AddScoped<IEmployeeService, EmployeeService>();

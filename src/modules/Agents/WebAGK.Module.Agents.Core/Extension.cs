@@ -10,7 +10,7 @@ internal static class Extension
 {
 	public static IServiceCollection AddCore(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.AddDatatabase<AgentsDbContext>(configuration);
+		services.AddDatabase<AgentsDbContext>(configuration);
 		services.AddScoped<IAgentRepository, AgentRepository>();
 		
 		return services;

@@ -1,94 +1,69 @@
-using WebAGK.Shared.Abstractions.Modules;
 using WebAGK.Shared.Infrastructure;
 using WebAGK.Shared.Infrastructure.Modules;
 using WebAGK.Shared.Infrastructure.Services;
-using System.Reflection;
-using WebAGK.Shared.Infrastructure.ValueObject;
 
 namespace WebAGK.Bootstraper;
 
-public class Program
+public static class Program
 {
 	public static void Main(string[] args)
 	{
-		IList<Assembly> _assemblies;
-		IList<IModule> _modules;
-
-		var builder = WebApplication.CreateBuilder(args);
+		var _builder = WebApplication.CreateBuilder(args);
 		
-		var configuration = builder.Configuration;
-		var services = builder.Services;
+		var _configuration = _builder.Configuration;
+		var _services = _builder.Services;
 
-		builder.Host.ConfigureModules();
+		_builder.Host.ConfigureModules();
 
-		_assemblies = ModuleLoader.LoadAssemblies(configuration);
-		_modules = ModuleLoader.LoadModules(_assemblies);
+		var _assemblies = ModuleLoader.LoadAssemblies(_configuration);
+		var _modules = ModuleLoader.LoadModules(_assemblies);
 
-		builder.Services.AddInfrastructure(configuration, _modules);
+		_builder.Services.AddInfrastructure(_configuration, _modules);
 
-		foreach(var module in _modules) {
-			module.Register(services, configuration);
+		foreach(var _module in _modules) {
+			_module.Register(_services, _configuration);
 		}
 
-		builder.Services.AddControllers();
-		builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("smtp"));
+		_builder.Services.AddControllers();
+		_builder.Services.Configure<SmtpOptions>(_builder.Configuration.GetSection("smtp"));
 
+		var _app = _builder.Build();
 
-		var app = builder.Build();
-
-		app.Logger.LogInformation("Modules: {Modules}", string.Join(",", _modules.Select(m => m.Name)));
-
-		app.UseInfrastructure(app.Environment);
-		foreach(var module in _modules) {
-			module.Use(app);
+		_app.Logger.LogInformation("Modules: {Modules}", string.Join(",", _modules.Select(m => m.Name)));
+		
+		_app.UseInfrastructure(_app.Environment);
+		foreach(var _module in _modules) {
+			_module.Use(_app);
 		}
 
-		app.MapControllers();
+		_app.MapControllers();
 
-		app.MapGet("/", context => context.Response.WriteAsync("WebAGK API."));
-		app.MapGet("modules", context =>
+		_app.MapGet("/", context => context.Response.WriteAsync("WebAGK API."));
+		_app.MapGet("modules", context =>
 		{
-			var moduleInfoProvider = context.RequestServices.GetRequiredService<ModuleInfoProvider>();
-			return context.Response.WriteAsJsonAsync(moduleInfoProvider);
+			var _moduleInfoProvider = context.RequestServices.GetRequiredService<ModuleInfoProvider>();
+			return context.Response.WriteAsJsonAsync(_moduleInfoProvider);
 		});
 
-		app.MapGet("permissions", context =>
+		_app.MapGet("permissions", context =>
 		{
-			var moduleInfoProvider = context.RequestServices.GetRequiredService<ModuleInfoProvider>();
-			IDictionary<string, IEnumerable<string>> permissions = new Dictionary<string, IEnumerable<string>>();
-			foreach(var module in moduleInfoProvider.MolueInfos) {
-				foreach(var policy in module.Policies) {
-					if(permissions.ContainsKey(module.Name)) {
-						permissions[module.Name] = permissions[module.Name].Union(module.Policies);
-					}
-					else {
-						permissions.Add(module.Name, module.Policies);
-					}
+			var _moduleInfoProvider = context.RequestServices.GetRequiredService<ModuleInfoProvider>();
+			var _permissions = new Dictionary<string, IEnumerable<string>>();
+			foreach(var _module in _moduleInfoProvider.ModuleInfos) {
+				if(_permissions.TryGetValue(_module.Name, out var _value)) {
+					_permissions[_module.Name] = _value.Union(_module.Policies);
+				}
+				else {
+					_permissions.Add(_module.Name, _module.Policies);
 				}
 			}
 
-			return context.Response.WriteAsJsonAsync(permissions);
+			return context.Response.WriteAsJsonAsync(_permissions);
 		});
-
-		//app.MapGet("email", context =>
-		//{
-		//	var confirmer = context.RequestServices
-		//		.GetRequiredService<EmailConfirmerFactory>()
-		//		.GetEmailConfirmer();
-		//	var body = confirmer.GetConfirmEmailBody(Guid.NewGuid(), "biuro@unipromax.pl");
-		//	var email = new EmailMessage
-		//	{
-		//		Body = body,
-		//		Subject = "Sample activating your account in the WebAGK application",
-		//		Recievers = ["biuro@unipromax.pl"]
-		//	};
-		//	EmailsQueue.Add(email);
-		//	return context.Response.WriteAsync("WebAGK API.");
-		//});
 
 		_assemblies.Clear();
 		_modules.Clear();
 		
-		app.Run();
+		_app.Run();
 	}
 }

@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using WebAGK.Shared.Abstractions;
 using WebAGK.Shared.Abstractions.Auth;
 using WebAGK.Shared.Abstractions.Modules;
+using WebAGK.Shared.Abstractions.Repositories;
 using WebAGK.Shared.Abstractions.Services;
 using WebAGK.Shared.Infrastructure.Api;
 using WebAGK.Shared.Infrastructure.Auth;
@@ -41,7 +42,7 @@ public static class Extensions
 		AddSingletons(services);
 		AddTransients(services);
 
-		services.AddDatatabase<InfrastructureDbContext>(configuration);
+		services.AddDatabase<InfrastructureDbContext>(configuration);
 
 		var disableModules = new List<string>();
 		foreach(var (key, value) in configuration.AsEnumerable()) {
@@ -164,6 +165,8 @@ public static class Extensions
 		this IApplicationBuilder app,
 		IWebHostEnvironment environment)
 	{
+		// app.DbMigrate<InfrastructureDbContext>();
+		
 		app.UseErrorHandling();
 		
 		if(environment.IsDevelopment()) {

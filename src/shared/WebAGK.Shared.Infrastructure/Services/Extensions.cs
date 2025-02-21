@@ -6,7 +6,6 @@ internal static class Extensions
 {
 	public static IServiceCollection AddBackgroundServices(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.AddHostedService<AppInitializer>();
 		services.AddHostedService<EmailBackgroundService>();
 
 		return services;

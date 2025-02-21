@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebAGK.Module.Agents.Core;
+using WebAGK.Module.Agents.Core.DAL;
 using WebAGK.Shared.Abstractions.Modules;
+using WebAGK.Shared.Infrastructure.Database;
 
 namespace WebAGK.Module.Agents.Api;
 internal class AgentModule : IModule
@@ -21,15 +23,20 @@ internal class AgentModule : IModule
 
 		services.AddMediatR(cfg =>
 		{
-			var assemblies = AppDomain.CurrentDomain
+			var _assemblies = AppDomain.CurrentDomain
 			.GetAssemblies()
-			.Where(x => x.GetName().Name.StartsWith("WebAGK.Module.Agents.", StringComparison.CurrentCultureIgnoreCase))
+			.Where(x => {
+				var _name = x.GetName().Name;
+				return _name != null && _name.StartsWith("WebAGK.Module.Agents.",
+					StringComparison.CurrentCultureIgnoreCase);
+			})
 			.ToArray();
-			cfg.RegisterServicesFromAssemblies(assemblies);
+			cfg.RegisterServicesFromAssemblies(_assemblies);
 		});
 	}
 
 	public void Use(IApplicationBuilder app)
 	{
+		app.MigrateDatabase<AgentsDbContext>();
 	}
 }

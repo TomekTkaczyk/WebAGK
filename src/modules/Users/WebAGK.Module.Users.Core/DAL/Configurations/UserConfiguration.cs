@@ -25,12 +25,12 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 				value => value)
 			.IsRequired();
 		
-		builder.Property(x => x.Claims)
+		builder.Property(x => x.Permissions)
 			.HasConversion(
 				claims => JsonSerializer.Serialize(claims, SerializerOptions),
 				value => JsonSerializer.Deserialize<IDictionary<string, IEnumerable<string>>>(value, SerializerOptions));
 
-		builder.Property(x => x.Claims).Metadata.SetValueComparer(
+		builder.Property(x => x.Permissions).Metadata.SetValueComparer(
 			new ValueComparer<IDictionary<string, IEnumerable<string>>>(
 				(c1, c2) => c1.SequenceEqual(c2),
 				c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),

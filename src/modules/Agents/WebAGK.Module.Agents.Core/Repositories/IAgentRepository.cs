@@ -6,6 +6,10 @@ public interface IAgentRepository {
     Task<Agent> GetAsync(Guid id, CancellationToken cancellationToken);
    
     IQueryable<Agent> Get();
+    
+    Task<Agent> GetByTaxIdAsync(string taxId, CancellationToken cancellationToken); 
+
+    Task<Agent> GetByPersonalIdAsync(string personalId, CancellationToken cancellationToken); 
 
     Task AddAsync(Agent agent, CancellationToken cancellationToken);
    

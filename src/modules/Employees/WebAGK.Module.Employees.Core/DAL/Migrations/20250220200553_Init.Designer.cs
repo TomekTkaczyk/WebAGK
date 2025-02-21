@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebAGK.Module.Employees.Core.DAL;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using WebAGK.Module.Employees.Core.DAL;
 
 #nullable disable
 
 namespace WebAGK.Module.Employees.Core.DAL.Migrations
 {
     [DbContext(typeof(EmployeesDbContext))]
-    [Migration("20241122100116_EmployeeInit")]
-    partial class EmployeeInit
+    [Migration("20250220200553_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,12 @@ namespace WebAGK.Module.Employees.Core.DAL.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");

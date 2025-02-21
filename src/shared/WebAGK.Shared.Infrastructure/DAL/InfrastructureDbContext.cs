@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebAGK.Shared.Abstractions.Entities;
+using WebAGK.Shared.Infrastructure.Entities;
 
 namespace WebAGK.Shared.Infrastructure.DAL;
 internal class InfrastructureDbContext(

@@ -8,16 +8,18 @@ public static class Extensions
 {
 	internal static IServiceCollection AddModuleInfo(this IServiceCollection services, IList<IModule> modules)
 	{
-		var moduleInfoProvider = new ModuleInfoProvider();
-		var moduleInfo = modules?.Select(x => new ModuleInfo(x.Name, x.Path, x.Policies ?? [])) ?? [];
+		var _moduleInfoProvider = new ModuleInfoProvider();
+		var _moduleInfo = modules?.Select(x => new ModuleInfo(x.Name, x.Path, x.Policies ?? [])) ?? [];
 
-		moduleInfoProvider.MolueInfos.AddRange(moduleInfo);
+		_moduleInfoProvider.ModuleInfos.AddRange(_moduleInfo);
 
 		services.AddMediatR(cfg => {
-			cfg.RegisterServicesFromAssemblies(modules.Select(x => x.GetType().Assembly).ToArray());
+			if (modules != null) {
+				cfg.RegisterServicesFromAssemblies(modules.Select(x => x.GetType().Assembly).ToArray());
+			}
 		});
 
-		services.AddSingleton(moduleInfoProvider);
+		services.AddSingleton(_moduleInfoProvider);
 
 		return services;
 	}
@@ -25,14 +27,16 @@ public static class Extensions
 	public static IHostBuilder ConfigureModules(this IHostBuilder builder)
 		=> builder.ConfigureAppConfiguration((ctx, cfg) => {
 
-			var settingsFiles = GetSettings("*");
-			foreach(var settings in GetSettings("*")) {
-				cfg.AddJsonFile(settings);
+			var _settingsFiles = GetSettings("*");
+			foreach(var _settings in GetSettings("*")) {
+				cfg.AddJsonFile(_settings);
 			}
 
-			foreach(var settings in GetSettings($"*.{ctx.HostingEnvironment.EnvironmentName}")) {
-				cfg.AddJsonFile(settings);
+			foreach(var _settings in GetSettings($"*.{ctx.HostingEnvironment.EnvironmentName}")) {
+				cfg.AddJsonFile(_settings);
 			}
+
+			return;
 
 			IEnumerable<string> GetSettings(string pattern)
 			=> Directory.EnumerateFiles(ctx.HostingEnvironment.ContentRootPath, 

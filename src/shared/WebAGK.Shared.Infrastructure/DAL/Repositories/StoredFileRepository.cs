@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WebAGK.Shared.Abstractions;
 using WebAGK.Shared.Abstractions.Entities;
-using WebAGK.Shared.Abstractions.Services;
+using WebAGK.Shared.Abstractions.Repositories;
+using WebAGK.Shared.Infrastructure.Entities;
 
 namespace WebAGK.Shared.Infrastructure.DAL.Repositories;
 internal class StoredFileRepository : IStoredFileRepository
@@ -33,56 +34,46 @@ internal class StoredFileRepository : IStoredFileRepository
 			}
 		}
 	}
-
-	public async Task<Guid> AddAsync(IFormFile file, CancellationToken cancellationToken = default)
-	{
-		var id = Guid.NewGuid();
+	
+	public async Task<Guid> AddAsync(IFormFile file, CancellationToken cancellationToken) {
+		var storedFile = new StoredFile();
 		var fileInfo = new FileInfo(file.FileName);
-		var filePath = Path.Combine(_filesFolder, id.ToString() + fileInfo.Extension);
-		using var stream = new FileStream(filePath, FileMode.Create);
+		var filePath = Path.Combine(_filesFolder, storedFile.Id.ToString() + fileInfo.Extension);
+		await using var stream = new FileStream(filePath, FileMode.Create);
 		await file.CopyToAsync(stream, cancellationToken);
 
-		var storedFile = new StoredFile
-		{
-			Id = id,
-			CreatedAt = _clock.CurrentDate(),
-			FileName = file.FileName,
-			FileStoragePath = filePath,
-			FileStorageName = id.ToString() + Path.GetExtension(file.FileName),
-		};
-
-		await _storedFiles.AddAsync(storedFile);
+		storedFile.FileName = file.FileName;
+		storedFile.FileStoragePath = filePath;
+		storedFile.FileStorageName = storedFile.Id.ToString() + Path.GetExtension(file.FileName);
+	
+		await _storedFiles.AddAsync(storedFile, cancellationToken);
 		await _context.SaveChangesAsync(cancellationToken);
-
-		return id;
+	
+		return storedFile.Id;	
 	}
-
-	public async Task<StoredFile> GetAsync(Guid id, CancellationToken cancellationToken = default)
+		
+	public async Task<IStoredFile> GetAsync(Guid id, CancellationToken cancellationToken) 
 		=> await _storedFiles.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-	public async Task DeleteAsync(StoredFile file, CancellationToken cancellationToken = default)
-	{
-		_storedFiles.Remove(file);
+	
+	public async Task DeleteAsync(IStoredFile file, CancellationToken cancellationToken) {
+		_storedFiles.Remove(file as StoredFile ?? throw new Exception());
 		await _context.SaveChangesAsync(cancellationToken);
-		if(File.Exists(file.FileStoragePath)) {
+		if(File.Exists(file.FileStoragePath)) { 
 			File.Delete(file.FileStoragePath);
 		}
 	}
-
-	public async Task<(byte[], string, string)> GetFileAsync(Guid id, CancellationToken cancellationToken = default)
-	{
+	
+	public async Task<(byte[], string, string)> GetFileAsync(Guid id, CancellationToken cancellationToken) {
 		var file = await _storedFiles.SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
 			?? throw new FileNotFoundException();
 
-		if(File.Exists(file.FileStoragePath)) {
-			var provider = new FileExtensionContentTypeProvider();
-			if(!provider.TryGetContentType(file.FileStorageName, out var contentType)) {
-				contentType = "application/octet-stream";
-			}
-			var bytes = await File.ReadAllBytesAsync(file.FileStorageName, cancellationToken);
-			return (bytes, contentType, file.FileName);
+		if (!File.Exists(file.FileStoragePath)) throw new FileNotFoundException(file.FileName);
+		
+		var provider = new FileExtensionContentTypeProvider();
+		if(!provider.TryGetContentType(file.FileStorageName, out var contentType)) {
+			contentType = "application/octet-stream";
 		}
-
-		throw new FileNotFoundException(file.FileName);
+		var bytes = await File.ReadAllBytesAsync(file.FileStorageName, cancellationToken);
+		return (bytes, contentType, file.FileName);
 	}
 }

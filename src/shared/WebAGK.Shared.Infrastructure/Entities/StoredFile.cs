@@ -1,6 +1,7 @@
-﻿namespace WebAGK.Shared.Abstractions.Entities;
-public class StoredFile : EntityBase
-{
+﻿using WebAGK.Shared.Abstractions.Entities;
+
+namespace WebAGK.Shared.Infrastructure.Entities;
+public class StoredFile : EntityBase, IStoredFile {
 	public string FileName { get; set; }
 	public string FileDescription { get; set; }
 	public string FileHash { get; set; }

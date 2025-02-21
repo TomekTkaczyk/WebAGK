@@ -14,10 +14,9 @@ internal static class Extensions
 {
 	public static IServiceCollection AddCore(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.AddDatatabase<UsersDbContext>(configuration);
-		services.AddScoped<IUserRepository, UserRepository>();
+		services.AddDatabase<UsersDbContext>(configuration);
 		services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
-		services.AddScoped<IDataInitializerService, DataInitializerService>();
+		services.AddScoped<IUserRepository, UserRepository>();
 		services.AddScoped<IEmailVerificationService, EmailVerificationService>();
 
 		return services;

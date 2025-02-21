@@ -11,36 +11,24 @@ internal class EmailVerificationService(
 {
 	public async Task Confirm(ConfirmEmailDto dto, CancellationToken cancellationToken)
 	{
-		//ConfirmToken decode !!! and compliance check !!! 
+		//ConfirmToken decode !!! and check compliance !!! 
 
-		var user = await userRepository.GetByEmailAsync(dto.Email, cancellationToken)
+		var _user = await userRepository.GetByEmailAsync(dto.Email, cancellationToken)
 			?? throw new InvalidCredentialsException();
 
-		if(!user.IsActive) {
-			throw new UserNotActiveException(user.Id);
+		if(!_user.IsActive) {
+			throw new UserNotActiveException(_user.Id);
 		}
 
-		var emailConfirmer = emailConfirmerFactory.GetEmailConfirmer();
-		if(!emailConfirmer.Confirm(user.EmailConfirmToken, dto.ConfirmToken, dto.Email)) {
+		var _emailConfirmer = emailConfirmerFactory.GetEmailConfirmer();
+		if(!_emailConfirmer.Confirm(_user.EmailConfirmToken, dto.ConfirmToken, dto.Email)) {
 			throw new UserEmailConfirmException();
 		}
 
-		user.Email = dto.Email;
-		user.EmailConfirm = true;
-		user.EmailConfirmToken = null;
+		_user.Email = dto.Email;
+		_user.EmailConfirm = true;
+		_user.EmailConfirmToken = null;
 
-		await userRepository.UpdateAsync(user, cancellationToken);
-	}
-
-	public async Task SendSample(CancellationToken cancellationToken)
-	{
-		EmailsQueue.Add(new EmailMessage
-		{
-			Recievers = ["biuro@unipromax.pl"],
-			Subject = "EmailMessage sample subject",
-			Body = "EmailMessage sample body"
-		});
-
-		await Task.CompletedTask;
+		await userRepository.UpdateAsync(_user, cancellationToken);
 	}
 }

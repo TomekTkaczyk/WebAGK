@@ -11,7 +11,5 @@ internal class UsersDbContext(DbContextOptions<UsersDbContext> options, ILogger<
 	{
 		modelBuilder.HasDefaultSchema("Users");
 		modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
-		Database.Migrate();
-		logger.LogInformation("Database migration {DbContext}", this.GetType().Name.Replace("DbContext", ""));
 	}
 }

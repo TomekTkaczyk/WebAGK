@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebAGK.Module.Employees.Core;
+using WebAGK.Module.Employees.Core.DAL;
 using WebAGK.Shared.Abstractions.Modules;
+using WebAGK.Shared.Infrastructure.Database;
 
 namespace WebAGK.Module.Employees.Api;
 internal class EmployeeModule : IModule
@@ -21,15 +23,20 @@ internal class EmployeeModule : IModule
 
 		services.AddMediatR(cfg =>
 		{
-			var assemblies = AppDomain.CurrentDomain
+			var _assemblies = AppDomain.CurrentDomain
 			.GetAssemblies()
-			.Where(x => x.GetName().Name.StartsWith("WebAGK.Module.Employees.", StringComparison.CurrentCultureIgnoreCase))
+			.Where(x => {
+				var _name = x.GetName().Name;
+				return _name != null && _name.StartsWith("WebAGK.Module.Employees.",
+					StringComparison.CurrentCultureIgnoreCase);
+			})
 			.ToArray();
-			cfg.RegisterServicesFromAssemblies(assemblies);
+			cfg.RegisterServicesFromAssemblies(_assemblies);
 		});
 	}
 
 	public void Use(IApplicationBuilder app)
 	{
+		app.MigrateDatabase<EmployeesDbContext>();
 	}
 }

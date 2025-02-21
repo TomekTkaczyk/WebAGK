@@ -10,6 +10,14 @@ internal class AgentRepository(AgentsDbContext dbContext) : IAgentRepository {
     public IQueryable<Agent> Get() {
         return dbContext.Set<Agent>().AsQueryable();
     }
+
+    public Task<Agent> GetByTaxIdAsync(string taxId, CancellationToken cancellationToken) {
+        throw new NotImplementedException();
+    }
+    public Task<Agent> GetByPersonalIdAsync(string personalId, CancellationToken cancellationToken) {
+        throw new NotImplementedException();
+    }
+
     public Task AddAsync(Agent agent, CancellationToken cancellationToken) {
         throw new NotImplementedException();
     }

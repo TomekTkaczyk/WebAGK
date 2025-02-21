@@ -22,7 +22,7 @@ public class UserDto {
 			FirstName = user.FirstName,
 			LastName = user.LastName,
 			Role = user.Role,
-			Permissions = user.Claims,
+			Permissions = user.Permissions,
 			IsActive = user.IsActive,
 			IsConfirmed = user.EmailConfirm
 		};

@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebAGK.Module.Users.Core;
+using WebAGK.Module.Users.Core.DAL;
+using WebAGK.Module.Users.Core.Entities;
+using WebAGK.Module.Users.Core.Repositories;
 using WebAGK.Module.Users.Core.Services;
 using WebAGK.Shared.Abstractions.Modules;
+using WebAGK.Shared.Infrastructure.Database;
 
 namespace WebAGK.Module.Users.Api;
 
@@ -23,11 +28,15 @@ internal class UserModule : IModule
 
 		services.AddMediatR(cfg =>
 		{
-			var assemblies = AppDomain.CurrentDomain
+			var _assemblies = AppDomain.CurrentDomain
 			.GetAssemblies()
-			.Where(x => x.GetName().Name.StartsWith("WebAGK.Module.Users.", StringComparison.CurrentCultureIgnoreCase))
+			.Where(x => {
+				var _name = x.GetName().Name;
+				return _name != null && _name.StartsWith("WebAGK.Module.Users.",
+					StringComparison.CurrentCultureIgnoreCase);
+			})
 			.ToArray();
-			cfg.RegisterServicesFromAssemblies(assemblies);
+			cfg.RegisterServicesFromAssemblies(_assemblies);
 		});
 
 		//services.Scan(scan => scan
@@ -45,10 +54,41 @@ internal class UserModule : IModule
 	}
 
 	public void Use(IApplicationBuilder app) {
-		using var scope = app.ApplicationServices.CreateScope();
-		scope.ServiceProvider
-			.GetRequiredService<IDataInitializerService>()
-			.Initialize()
+		
+		app.MigrateDatabase<UsersDbContext>();
+		
+		using var _scope = app.ApplicationServices.CreateScope();
+
+		var _repository = _scope.ServiceProvider
+			.GetRequiredService<IUserRepository>();
+		var _passwordHasher = _scope.ServiceProvider
+			.GetRequiredService<IPasswordHasher<User>>();
+		var _configuration = _scope.ServiceProvider
+			.GetRequiredService<IConfiguration>();
+		Task.Run(async () => await InitializeAdminAsync(_configuration, _repository, _passwordHasher))
 			.Wait();
+	}
+
+	private static async Task InitializeAdminAsync(IConfiguration configuration, IUserRepository repository, IPasswordHasher<User> passwordHasher)
+	{
+		var _user = await repository.GetByNameAsync("Admin", CancellationToken.None);
+		if (_user == null) {
+			_user = new User
+			{
+				Id = Guid.NewGuid(),
+				Name = "Admin",
+				Password = passwordHasher.HashPassword(null!, ""),
+				Role = "Admin",
+				IsActive = true,
+				Email = configuration.GetSection("AdminEmail").Value,
+				EmailConfirm = true,
+				Permissions = new Dictionary<string, IEnumerable<string>>()
+				{
+					{ "Users", new List<string> { "UserManager" } }
+				}
+			};
+
+			await repository.AddAsync(_user, CancellationToken.None);
+		}
 	}
 }

@@ -5,6 +5,7 @@ using WebAGK.Module.Employees.Core.Entities;
 using WebAGK.Module.Employees.Core.Exceptions;
 using WebAGK.Module.Employees.Core.Policies;
 using WebAGK.Module.Employees.Core.Repositories;
+using WebAGK.Shared.Abstractions.Repositories;
 
 namespace WebAGK.Module.Employees.Core.Services;
 

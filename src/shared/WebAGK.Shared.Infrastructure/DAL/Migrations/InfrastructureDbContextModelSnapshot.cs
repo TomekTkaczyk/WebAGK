@@ -3,8 +3,8 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebAGK.Shared.Infrastructure.DAL;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using WebAGK.Shared.Infrastructure.DAL;
 
 #nullable disable
 
@@ -27,6 +27,9 @@ namespace WebAGK.Shared.Infrastructure.DAL.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ConcurrencyStamp")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")

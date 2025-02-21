@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using WebAGK.Module.Agents.Core.DAL;
+using WebAGK.Shared.Infrastructure.DAL;
 
 #nullable disable
 
-namespace WebAGK.Module.Agents.Core.DAL.Migrations
+namespace WebAGK.Shared.Infrastructure.DAL.Migrations
 {
-    [DbContext(typeof(AgentsDbContext))]
-    [Migration("20250219075133_Init")]
+    [DbContext(typeof(InfrastructureDbContext))]
+    [Migration("20250220200628_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -20,57 +20,45 @@ namespace WebAGK.Module.Agents.Core.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("Agents")
+                .HasDefaultSchema("Infrastructure")
                 .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("WebAGK.Module.Agents.Core.Entities.Agent", b =>
+            modelBuilder.Entity("WebAGK.Shared.Infrastructure.Entities.StoredFile", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Address")
-                        .HasColumnType("text");
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("FileDescription")
                         .HasColumnType("text");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("FileHash")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsCompany")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("LastName")
+                    b.Property<string>("FileName")
                         .HasColumnType("text");
 
-                    b.Property<string>("PersonalId")
+                    b.Property<string>("FileStorageName")
                         .HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RpuId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("TaxId")
+                    b.Property<string>("FileStoragePath")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Agents", "Agents");
+                    b.HasIndex("FileStorageName")
+                        .IsUnique();
+
+                    b.ToTable("StoredFiles", "Infrastructure");
                 });
 #pragma warning restore 612, 618
         }

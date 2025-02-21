@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -6,42 +7,53 @@ using Npgsql;
 namespace WebAGK.Shared.Infrastructure.Database;
 public static class Extensions
 {
-	private const string _dbSectionName = "Postgres";
+	private const string DbSectionName = "Postgres";
 
 	public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration) {
 
-		var dbOptions = configuration.GetOptions<DatabaseOptions>(_dbSectionName);
-		services.AddSingleton(dbOptions);
-		EnsureDatabaseExists(dbOptions.ConnectionString);
+		var _dbOptions = configuration.GetOptions<DatabaseOptions>(DbSectionName);
+		services.AddSingleton(_dbOptions);
+		EnsureDatabaseExists(_dbOptions.ConnectionString);
 
 		return services;
 	}
 
-	public static IServiceCollection AddDatatabase<T>(this IServiceCollection services, IConfiguration configuration) where T : DbContext {
-		var options = configuration.GetOptions<DatabaseOptions>(_dbSectionName);
-		services.AddDbContext<T>(x => x.UseNpgsql(options.ConnectionString));
+	public static IServiceCollection AddDatabase<T>(
+		this IServiceCollection services, 
+		IConfiguration configuration) where T : DbContext {
+		var _options = configuration.GetOptions<DatabaseOptions>(DbSectionName);
+		services.AddDbContext<T>(x => {
+			x.UseNpgsql(_options.ConnectionString);
+		});
 
 		return services;
+	}
+
+	public static IApplicationBuilder MigrateDatabase<T>(this IApplicationBuilder app) where T : DbContext {
+		using var _scope = app.ApplicationServices.CreateScope();
+		var _serviceProvider = _scope.ServiceProvider;
+		var _dbContext = _serviceProvider.GetService<T>();
+		_dbContext.Database.Migrate();
+
+		return app;
 	}
 
 	private static void EnsureDatabaseExists(string connectionString)
 	{
-		var builder = new NpgsqlConnectionStringBuilder(connectionString);
-		var databaseName = builder.Database;
-		builder.Database = "postgres"; // Połącz się z bazą systemową
+		var _builder = new NpgsqlConnectionStringBuilder(connectionString);
+		var _databaseName = _builder.Database;
+		_builder.Database = "postgres"; // Połącz się z bazą systemową
 
-		using var connection = new NpgsqlConnection(builder.ToString());
-		connection.Open();
+		using var _connection = new NpgsqlConnection(_builder.ToString());
+		_connection.Open();
 
-		using var cmd = new NpgsqlCommand($"SELECT 1 FROM pg_database WHERE datname = '{databaseName}'", connection);
-		var exists = cmd.ExecuteScalar();
+		using var _cmd = new NpgsqlCommand($"SELECT 1 FROM pg_database WHERE datname = '{_databaseName}'", _connection);
+		var _exists = _cmd.ExecuteScalar();
 
-		if(exists == null)
-		{
-			using var createCmd = new NpgsqlCommand($"CREATE DATABASE \"{databaseName}\"", connection);
-			createCmd.ExecuteNonQuery();
-			Console.WriteLine($"Database '{databaseName}' created.");
-		}
+		if (_exists != null) return;
+		
+		using var _createCmd = new NpgsqlCommand($"CREATE DATABASE \"{_databaseName}\"", _connection);
+		_createCmd.ExecuteNonQuery();
+		Console.WriteLine($"Database '{_databaseName}' created.");
 	}
-
 }

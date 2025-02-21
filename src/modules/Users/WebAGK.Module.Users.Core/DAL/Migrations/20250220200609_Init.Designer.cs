@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebAGK.Module.Users.Core.DAL;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using WebAGK.Module.Users.Core.DAL;
 
 #nullable disable
 
 namespace WebAGK.Module.Users.Core.DAL.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20241203065052_AddEmailConfirmExpires")]
-    partial class AddEmailConfirmExpires
+    [Migration("20250220200609_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,13 +32,14 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Claims")
-                        .HasColumnType("text");
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("EmailConfirm")
@@ -48,6 +49,9 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("EmailConfirmToken")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EmailToConfirm")
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
@@ -64,6 +68,9 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Permissions")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("RefreshExpires")

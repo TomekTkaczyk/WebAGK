@@ -4,51 +4,48 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebAGK.Module.Users.Core.DAL;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using WebAGK.Module.Agents.Core.DAL;
 
 #nullable disable
 
-namespace WebAGK.Module.Users.Core.DAL.Migrations
+namespace WebAGK.Module.Agents.Core.DAL.Migrations
 {
-    [DbContext(typeof(UsersDbContext))]
-    [Migration("20241202211737_AddRefreshToken")]
-    partial class AddRefreshToken
+    [DbContext(typeof(AgentsDbContext))]
+    [Migration("20250220200531_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("Users")
+                .HasDefaultSchema("Agents")
                 .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("WebAGK.Module.Users.Core.Entities.User", b =>
+            modelBuilder.Entity("WebAGK.Module.Agents.Core.Entities.Agent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Claims")
+                    b.Property<string>("Address")
                         .HasColumnType("text");
+
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .HasColumnType("text");
-
-                    b.Property<bool>("EmailConfirm")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("EmailConfirmToken")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("Expires")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
@@ -56,32 +53,30 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsCompany")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LastName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("PersonalId")
                         .HasColumnType("text");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
-                    b.Property<string>("RefreshToken")
+                    b.Property<string>("RpuId")
                         .HasColumnType("text");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
+                    b.Property<string>("SecondName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TaxId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Users", "Users");
+                    b.ToTable("Agents", "Agents");
                 });
 #pragma warning restore 612, 618
         }

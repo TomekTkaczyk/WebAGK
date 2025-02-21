@@ -9,7 +9,7 @@ internal class UpdatePermissionsHandler(IUserRepository repository) : IRequestHa
 		var user = await repository.GetAsync(request.Id, cancellationToken);
 		user.Role = request.Role;
 		user.IsActive = request.IsActive;
-		user.Claims = request.Permissions;
+		user.Permissions = request.Permissions;
 
 		await repository.UpdateAsync(user, cancellationToken);
 	}

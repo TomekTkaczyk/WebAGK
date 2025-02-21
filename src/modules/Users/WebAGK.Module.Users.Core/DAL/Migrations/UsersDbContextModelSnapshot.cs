@@ -3,8 +3,8 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebAGK.Module.Users.Core.DAL;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using WebAGK.Module.Users.Core.DAL;
 
 #nullable disable
 
@@ -29,13 +29,14 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Claims")
-                        .HasColumnType("text");
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("EmailMessage")
+                    b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("EmailConfirm")
@@ -66,6 +67,9 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Permissions")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("RefreshExpires")
                         .HasColumnType("timestamp with time zone");
 
@@ -78,7 +82,7 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmailMessage")
+                    b.HasIndex("Email")
                         .IsUnique();
 
                     b.HasIndex("Name")
