@@ -1,20 +1,22 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebAGK.Module.Users.Core;
 using WebAGK.Module.Users.Core.DAL;
 using WebAGK.Module.Users.Core.Entities;
 using WebAGK.Module.Users.Core.Repositories;
-using WebAGK.Module.Users.Core.Services;
+using WebAGK.Module.Users.UseCases.Specifications;
 using WebAGK.Shared.Abstractions.Modules;
+using WebAGK.Shared.Abstractions.Repositories;
 using WebAGK.Shared.Infrastructure.Database;
 
 namespace WebAGK.Module.Users.Api;
 
 internal class UserModule : IModule
 {
-	public const string BasePath = "/users-module";
+	public const string BasePath = "users-module";
 
 	public string Name { get; } = "Users";
 
@@ -65,13 +67,20 @@ internal class UserModule : IModule
 			.GetRequiredService<IPasswordHasher<User>>();
 		var _configuration = _scope.ServiceProvider
 			.GetRequiredService<IConfiguration>();
-		Task.Run(async () => await InitializeAdminAsync(_configuration, _repository, _passwordHasher))
+		var _unitOfWork = _scope.ServiceProvider
+			.GetRequiredService<IUserUnitOfWork>();
+		Task.Run(async () => await InitializeAdminAsync(_configuration, _repository, _unitOfWork, _passwordHasher))
 			.Wait();
 	}
 
-	private static async Task InitializeAdminAsync(IConfiguration configuration, IUserRepository repository, IPasswordHasher<User> passwordHasher)
-	{
-		var _user = await repository.GetByNameAsync("Admin", CancellationToken.None);
+	private static async Task InitializeAdminAsync(
+		IConfiguration configuration, 
+		IUserRepository repository, 
+		IUserUnitOfWork unitOfWork,
+		IPasswordHasher<User> passwordHasher) {
+
+		var _user = await repository.Get(new UserByNameSpecification("Admin"))
+			.SingleOrDefaultAsync();
 		if (_user == null) {
 			_user = new User
 			{
@@ -88,7 +97,8 @@ internal class UserModule : IModule
 				}
 			};
 
-			await repository.AddAsync(_user, CancellationToken.None);
+			repository.Add(_user);
+			await unitOfWork.SaveChangesAsync();
 		}
 	}
 }

@@ -3,7 +3,8 @@ using Microsoft.Extensions.Logging;
 using WebAGK.Module.Users.Core.Entities;
 
 namespace WebAGK.Module.Users.Core.DAL;
-internal class UsersDbContext(DbContextOptions<UsersDbContext> options, ILogger<UsersDbContext> logger) : DbContext(options)
+
+public class UsersDbContext(DbContextOptions<UsersDbContext> options) : DbContext(options)
 {
 	public DbSet<User> Users { get; set; }
 

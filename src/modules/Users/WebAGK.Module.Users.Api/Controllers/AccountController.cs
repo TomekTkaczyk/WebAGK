@@ -69,26 +69,26 @@ internal class AccountController(
 	[ProducesResponseType(400)]
 	public async Task<ActionResult> SignUpAsync(SignUpRequest request, CancellationToken cancellationToken)
 	{
-		var confirmEmailUrl = Request.Headers["X-Confirmemail-Url"].ToString();
-		if(confirmEmailUrl.IsNullOrEmpty()) {
-			confirmEmailUrl = Url.Action(
+		var _confirmEmailUrl = Request.Headers["X-Confirmemail-Url"].ToString();
+		if(_confirmEmailUrl.IsNullOrEmpty()) {
+			_confirmEmailUrl = Url.Action(
 				"ConfirmEmail",
 				ControllerContext.ActionDescriptor.ControllerName,
 				new { token = @"__token__" },
 				httpContextAccessor.HttpContext.Request.Scheme
 			);
 		} else {
-			confirmEmailUrl += @"?token=__token__";
+			_confirmEmailUrl += @"?token=__token__";
 		}
 
-		var command = new SignUpCommand() {
+		var _command = new SignUpCommand() {
 			UserName = request.UserName,
 			Email = request.Email,
 			Password = request.Password,
-			ConfirmEmailUrl = confirmEmailUrl
+			ConfirmEmailUrl = _confirmEmailUrl
 		};
 
-		await mediator.Send(command, cancellationToken);
+		await mediator.Send(_command, cancellationToken);
 
 		return Created();
 	}

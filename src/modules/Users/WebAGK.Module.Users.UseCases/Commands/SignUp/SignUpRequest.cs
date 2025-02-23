@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebAGK.Module.Users.UseCases.Commands.SignUp;
-internal sealed record SignUpRequest
-{
+internal sealed record SignUpRequest {
 	[Required]
 	[MinLength(3), MaxLength(20)]
 	public string UserName { get; init; }

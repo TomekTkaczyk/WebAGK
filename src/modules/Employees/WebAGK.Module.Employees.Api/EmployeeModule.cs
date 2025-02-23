@@ -7,6 +7,7 @@ using WebAGK.Shared.Abstractions.Modules;
 using WebAGK.Shared.Infrastructure.Database;
 
 namespace WebAGK.Module.Employees.Api;
+
 internal class EmployeeModule : IModule
 {
 	public const string BasePath = "employees-module";

@@ -1,57 +1,65 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using WebAGK.Module.Users.Core.Entities;
 using WebAGK.Module.Users.Core.Exceptions;
 using WebAGK.Module.Users.Core.Repositories;
+using WebAGK.Module.Users.UseCases.Specifications;
 using WebAGK.Shared.Abstractions.Auth;
 using WebAGK.Shared.Abstractions.Services;
+using WebAGK.Shared.Infrastructure.Repositories;
 using WebAGK.Shared.Infrastructure.Services;
 
 namespace WebAGK.Module.Users.UseCases.Commands.ChangeEmail;
 
 internal class ChangeEmailHandler(
 	IUserRepository repository,
+	IUserUnitOfWork unitOfWork,
 	ITokenProvider tokenProvider) : IRequestHandler<ChangeEmailCommand>
 {
 	public async Task Handle(ChangeEmailCommand request, CancellationToken cancellationToken)
 	{
-		var user = await repository.GetAsync(request.Id, cancellationToken)
+		var _user = await repository.Get(new ByIdSpecification<User>(request.Id))
+				.SingleOrDefaultAsync(cancellationToken)
 		?? throw new InvalidCredentialsException();
 
-		var email = request.Email;
+		var _email = request.Email;
 
-		var anotherUser = await repository.GetByEmailAsync(email, cancellationToken);
+		var _anotherUser = await repository.Get(new UserByEmailSpecification(_email))
+			.SingleOrDefaultAsync(cancellationToken);
 
-		if(anotherUser is not null) {
-			if(!user.Id.Equals(anotherUser.Id)) {
+		if(_anotherUser is not null) {
+			if(!_user.Id.Equals(_anotherUser.Id)) {
 				throw new EmailIsInUseException();
 			}
-			if(user.Email.Equals(email) && user.EmailConfirm) {
+			if(_user.Email.Equals(_email) && _user.EmailConfirm) {
 				throw new EmailNotChanged();
 			}
 		}
 
-		var token = tokenProvider.GenerateConfirmEmailToken(request.Id, email);
+		var _token = tokenProvider.GenerateConfirmEmailToken(request.Id, _email);
 
-		user.EmailConfirmToken = token;
-		user.EmailToConfirm = email;
+		_user.EmailConfirmToken = _token;
+		_user.EmailToConfirm = _email;
 
 		await CreateEmail(
-			request.ConfirmEmailUrl + "?token=" + token,
-			email,
+			request.ConfirmEmailUrl + "?token=" + _token,
+			_email,
 			cancellationToken);
 
-		await repository.UpdateAsync(user, cancellationToken);
+		repository.Update(_user);
+		await unitOfWork.SaveChangesAsync(cancellationToken);
 	}
 
 	private static async Task CreateEmail(string confirmEmailUrl, string emailAddress, CancellationToken cancellationToken)
 	{
-		var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", "EmailConfirmTokenTemplate.html");
-		var template = await File.ReadAllTextAsync(path, cancellationToken);
-		var email = new EmailMessage
+		var _path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", "EmailConfirmTokenTemplate.html");
+		var _template = await File.ReadAllTextAsync(_path, cancellationToken);
+		var _email = new EmailMessage
 		{
-			Body = template.Replace("{{ConfirmUrl}}", confirmEmailUrl),
+			Body = _template.Replace("{{ConfirmUrl}}", confirmEmailUrl),
 			Subject = "Potwierdzenie adresu email w aplikacji WebAGK",
 			Recievers = [emailAddress]
 		};
-		EmailsQueue.Add(email);
+		EmailsQueue.Add(_email);
 	}
 }

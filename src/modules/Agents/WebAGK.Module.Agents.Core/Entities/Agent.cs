@@ -3,7 +3,7 @@ using WebAGK.Shared.Infrastructure.Entities;
 using WebAGK.Shared.Infrastructure.ValueObject;
 
 namespace WebAGK.Module.Agents.Core.Entities;
-public class Agent : EntityBase {
+public class Agent : ActiveStatusEntity {
     public string LastName { get; set; }
     public string FirstName { get; set; }
     public string SecondName { get; set; }

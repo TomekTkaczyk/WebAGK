@@ -6,7 +6,7 @@ namespace WebAGK.Module.Agents.Api.Controllers;
 
 [Route(AgentModule.BasePath)]
 [Authorize(Roles ="Admin")]
-internal class HomeController(IMediator mediator) : HomeControllerBase
+internal class HomeController() : HomeControllerBase
 {
 
 }

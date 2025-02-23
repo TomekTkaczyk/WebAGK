@@ -1,34 +1,44 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using WebAGK.Module.Agents.Core.DAL.Repositories;
 using WebAGK.Module.Agents.Core.Entities;
 using WebAGK.Module.Agents.Core.Exceptions;
 using WebAGK.Module.Agents.Core.Repositories;
+using WebAGK.Module.Agents.UseCases.Specifications;
 using WebAGK.Shared.Abstractions.Exceptions;
 
 namespace WebAGK.Module.Agents.UseCases.Commands.CreateAgent;
 
-internal sealed class CreateAgentHandler(IAgentRepository repository) : IRequestHandler<CreateAgentCommand,Guid> {
+internal sealed class CreateAgentHandler(
+    IAgentRepository repository, 
+    IAgentUnitOfWork unitOfWork)
+    : IRequestHandler<CreateAgentCommand,Guid> {
+    
     public async Task<Guid> Handle(CreateAgentCommand request, CancellationToken cancellationToken) {
 
-        var error = new ApiError();
-        
-        var agent = await repository.GetByTaxIdAsync(request.TaxId, cancellationToken);
-        if (agent is not null) {
-            error.AddValidationError("TaxId", "taxid_already_exist", "Tax id already exists.");
+        var _error = new ApiError();
+        var _agent = await repository
+            .Get(new GetByTaxIdSpecification(request.TaxId))
+            .SingleOrDefaultAsync(cancellationToken);
+        if (_agent is not null) {
+            _error.AddValidationError("TaxId", "taxid_already_exist", "Tax id already exists.");
         }
         
-        agent = await repository.GetByPersonalIdAsync(request.PersonalId, cancellationToken);
-        if (agent is not null) {
-            error.AddValidationError("PersonalId", "personalid_already_exist", "Personal id already exists.");
+        _agent = await repository
+            .Get(new GetByPersonalIdSpecification(request.PersonalId))
+            .SingleOrDefaultAsync(cancellationToken);
+        if (_agent is not null) {
+            _error.AddValidationError("PersonalId", "personalid_already_exist", "Personal id already exists.");
         }
-
-        if(error.ValidationErrors.Any()) {
+        
+        if(_error.ValidationErrors.Any()) {
             throw new InvalidIdentifierException()
             {
-                Error = error
+                Error = _error
             };
         }
 
-        agent = Agent.Create(
+        _agent = Agent.Create(
             lastName: request.LastName,
             firstName: request.FirstName,
             secondName: request.SecondName,
@@ -36,6 +46,9 @@ internal sealed class CreateAgentHandler(IAgentRepository repository) : IRequest
             taxId: request.TaxId,
             isCompany: request.IsCompany);
         
-        return agent.Id;
+        repository.Add(_agent);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        return _agent.Id;
     }
 }

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 
 namespace WebAGK.Shared.Infrastructure.Services;
-internal class AppInitializer(IServiceProvider serviceProvider, ILogger<AppInitializer> logger) : IHostedService
+internal class AppInitializer(ILogger<AppInitializer> logger) : IHostedService
 {
 	public async Task StartAsync(CancellationToken cancellationToken)
 	{

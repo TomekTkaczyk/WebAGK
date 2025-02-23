@@ -5,23 +5,27 @@ using WebAGK.Shared.Abstractions;
 using WebAGK.Shared.Abstractions.Auth;
 using WebAGK.Shared.Infrastructure.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.EntityFrameworkCore;
+using WebAGK.Module.Users.Core.Entities;
+using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Users.UseCases.Commands.RefreshToken;
 internal class RefreshTokenHandler(
 	IUserRepository repository,
+	IUserUnitOfWork unitOfWork,
 	ITokenProvider tokenProvider,
 	IClock clock) : IRequestHandler<RefreshTokenCommand, JsonWebToken>
 {
 	public async Task<JsonWebToken> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
 	{
-		var handler = new JwtSecurityTokenHandler();
-		var jwtToken = handler.ReadJwtToken(request.Token);
-		var sub = jwtToken.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;
-		var exp = jwtToken.Claims.FirstOrDefault(x => x.Type == "exp")?.Value;
-		if(exp != null && long.TryParse(exp, out var expUnixSecons)) {
-			var expirationDate = DateTimeOffset.FromUnixTimeSeconds(expUnixSecons).UtcDateTime;
-			var now = clock.CurrentDate();
-			if(expirationDate < now) {
+		var _handler = new JwtSecurityTokenHandler();
+		var _jwtToken = _handler.ReadJwtToken(request.Token);
+		var _sub = _jwtToken.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;
+		var _exp = _jwtToken.Claims.FirstOrDefault(x => x.Type == "exp")?.Value;
+		if(_exp != null && long.TryParse(_exp, out var _expUnixSecons)) {
+			var _expirationDate = DateTimeOffset.FromUnixTimeSeconds(_expUnixSecons).UtcDateTime;
+			var _now = clock.CurrentDate();
+			if(_expirationDate < _now) {
 				throw new UnauthorisedException();
 			}
 		}
@@ -29,32 +33,39 @@ internal class RefreshTokenHandler(
 			throw new UnauthorisedException();
 		};
 
-		var user = await repository.GetAsync(new Guid(sub), cancellationToken)
-			?? throw new UnauthorisedException();
-
-		if(!user.IsActive) {
-			throw new UserNotActiveException(user.Id);
-		}
-
-		if(!user.RefreshToken.Equals(request.Token)) {
+		if (_sub is null) {
 			throw new UnauthorisedException();
 		}
 
-		var claims = new Dictionary<string, IEnumerable<string>>
+		var _user = await repository
+			.Get(new ByIdSpecification<User>(new Guid(_sub)))
+			.SingleOrDefaultAsync(cancellationToken)       
+			?? throw new UnauthorisedException();
+
+		if(!_user.IsActive) {
+			throw new UserNotActiveException(_user.Id);
+		}
+
+		if(!_user.RefreshToken.Equals(request.Token)) {
+			throw new UnauthorisedException();
+		}
+
+		var _claims = new Dictionary<string, IEnumerable<string>>
 		{
-			{ "role", new[] { user.Role } },
-			{ "permissions", user.GetPermissions() }
+			{ "role", [_user.Role] },
+			{ "permissions", _user.GetPermissions() }
 		};
 
-		var jwt = new JsonWebToken
+		var _jwt = new JsonWebToken
 		{
-			AccessToken = tokenProvider.GenerateAccessToken(user.Id, claims),
-			RefreshToken = tokenProvider.GenerateRefreshToken(user.Id),
+			AccessToken = tokenProvider.GenerateAccessToken(_user.Id, _claims),
+			RefreshToken = tokenProvider.GenerateRefreshToken(_user.Id),
 		};
 
-		user.RefreshToken = jwt.RefreshToken;
-		await repository.UpdateAsync(user, cancellationToken);
+		_user.RefreshToken = _jwt.RefreshToken;
+		repository.Update(_user);
+		await unitOfWork.SaveChangesAsync(cancellationToken);
 
-		return jwt;
+		return _jwt;
 	}
 }

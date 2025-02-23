@@ -2,28 +2,31 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using WebAGK.Module.Agents.Core.DAL;
+using WebAGK.Module.Users.Core.DAL;
 
 #nullable disable
 
-namespace WebAGK.Module.Agents.Core.DAL.Migrations
+namespace WebAGK.Module.Users.Core.DAL.Migrations
 {
-    [DbContext(typeof(AgentsDbContext))]
-    partial class AgentsDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(UsersDbContext))]
+    [Migration("20250223124855_UpdateEntityBase")]
+    partial class UpdateEntityBase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("Agents")
+                .HasDefaultSchema("Users")
                 .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("WebAGK.Module.Agents.Core.Entities.Agent", b =>
+            modelBuilder.Entity("WebAGK.Module.Users.Core.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,9 +34,6 @@ namespace WebAGK.Module.Agents.Core.DAL.Migrations
 
                     b.Property<bool>("ActiveStatus")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("text");
 
                     b.Property<Guid>("ConcurrencyStamp")
                         .HasColumnType("uuid");
@@ -44,19 +44,26 @@ namespace WebAGK.Module.Agents.Core.DAL.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Email")
+                    b.Property<bool>("EmailConfirm")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("EmailConfirmExpires")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("EmailConfirmToken")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EmailToConfirm")
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsCompany")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
@@ -68,24 +75,35 @@ namespace WebAGK.Module.Agents.Core.DAL.Migrations
                     b.Property<Guid>("ModifiedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("PersonalId")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("RpuId")
+                    b.Property<string>("Permissions")
                         .HasColumnType("text");
 
-                    b.Property<string>("SecondName")
+                    b.Property<DateTime>("RefreshExpires")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RefreshToken")
                         .HasColumnType("text");
 
-                    b.Property<string>("TaxId")
+                    b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Agents", "Agents");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Users", "Users");
                 });
 #pragma warning restore 612, 618
         }

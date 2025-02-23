@@ -1,19 +1,26 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using WebAGK.Module.Users.Core.Entities;
 using WebAGK.Module.Users.Core.Exceptions;
 using WebAGK.Module.Users.Core.Repositories;
+using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Users.UseCases.Commands.UpdateName;
 internal class UpdateNameHandler(
-	IUserRepository repository) : IRequestHandler<UpdateNameCommand>
+	IUserRepository repository,
+	IUserUnitOfWork unitOfWork) : IRequestHandler<UpdateNameCommand>
 {
 	public async Task Handle(UpdateNameCommand request, CancellationToken cancellationToken)
 	{
-		var user = await repository.GetAsync(request.Id, cancellationToken)
-			?? throw new InvalidCredentialsException();
+		var _user = await repository
+			.Get(new ByIdSpecification<User>(request.Id))
+			.SingleOrDefaultAsync(cancellationToken)
+			?? throw new UserNotFoundException(request.Id);
 
-		user.FirstName = request.FirstName;
-		user.LastName = request.LastName;
+		_user.FirstName = request.FirstName;
+		_user.LastName = request.LastName;
 
-		await repository.UpdateAsync(user, cancellationToken);
+		repository.Update(_user);
+		await unitOfWork.SaveChangesAsync(cancellationToken);
 	}
 }

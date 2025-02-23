@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -38,20 +39,20 @@ public static class Extensions
 		IConfiguration configuration,
 		IList<IModule> modules)
 	{
-		AddScoped(services);
 		AddSingletons(services);
+		AddScoped(services);
 		AddTransients(services);
 
 		services.AddDatabase<InfrastructureDbContext>(configuration);
 
-		var disableModules = new List<string>();
-		foreach(var (key, value) in configuration.AsEnumerable()) {
-			if(!key.Contains(":module:enabled")) {
+		var _disableModules = new List<string>();
+		foreach(var (_key, _value) in configuration.AsEnumerable()) {
+			if(!_key.Contains(":module:enabled")) {
 				continue;
 			}
 
-			if(value != null && !bool.Parse(value)) {
-				disableModules.Add(key.Split(":")[0]);
+			if(_value != null && !bool.Parse(_value)) {
+				_disableModules.Add(_key.Split(":")[0]);
 			}
 		}
 
@@ -84,14 +85,14 @@ public static class Extensions
 		services.AddControllers(options => options.Filters.Add<VaidateModelAttribute>())
 			.ConfigureApplicationPartManager(manager =>
 			{
-				var removedParts = new List<ApplicationPart>();
-				foreach(var disableModule in disableModules) {
-					var parts = manager.ApplicationParts.Where(x => x.Name.Contains(disableModule, StringComparison.InvariantCultureIgnoreCase));
-					removedParts.AddRange(parts);
+				var _removedParts = new List<ApplicationPart>();
+				foreach(var _disableModule in _disableModules) {
+					var parts = manager.ApplicationParts.Where(x => x.Name.Contains(_disableModule, StringComparison.InvariantCultureIgnoreCase));
+					_removedParts.AddRange(parts);
 				}
 
-				foreach(var part in removedParts) {
-					manager.ApplicationParts.Remove(part);
+				foreach(var _part in _removedParts) {
+					manager.ApplicationParts.Remove(_part);
 				}
 
 				manager.FeatureProviders.Add(new InternalControllerFeatureProvider());
@@ -109,7 +110,7 @@ public static class Extensions
 				Version = _docsVersion,
 			});
 
-			var securityScheme = new OpenApiSecurityScheme
+			var _securityScheme = new OpenApiSecurityScheme
 			{
 				Name = "JWT Authentication",
 				Description = "Enter your JWT token in this field",
@@ -119,9 +120,9 @@ public static class Extensions
 				BearerFormat = "JWT"
 			};
 
-			swagger.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securityScheme);
+			swagger.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, _securityScheme);
 
-			var securityRequirement = new OpenApiSecurityRequirement
+			var _securityRequirement = new OpenApiSecurityRequirement
 			{
 				{
 					new OpenApiSecurityScheme
@@ -136,23 +137,46 @@ public static class Extensions
 				}
 			};
 
-			swagger.AddSecurityRequirement(securityRequirement);
+			swagger.AddSecurityRequirement(_securityRequirement);
 		});
 
 		return services;
 	}
-
-
-	private static void AddScoped(IServiceCollection services)
-	{
-		services.AddScoped<IStoredFileRepository, StoredFileRepository>();
-	}
-
+	
 	private static void AddSingletons(IServiceCollection services)
 	{
 		services.AddSingleton<IClock, UtcClock>();
 		services.AddSingleton<ITokenValidator, TokenValidator>();
 		services.AddSingleton<IEmailSenderFactory, EmailSenderFactory>();
+	}
+
+	private static void AddScoped(IServiceCollection services)
+	{
+		var _assemblies = AppDomain.CurrentDomain.GetAssemblies();
+		services.AddScoped<IStoredFileRepository, StoredFileRepository>();
+		services.Scan(scan => scan
+			.FromAssemblies(_assemblies)
+			.AddClasses(classes => classes.AssignableTo(typeof(IUnitOfWork)))
+			.AsImplementedInterfaces()
+			.WithScopedLifetime());
+		
+		var _repositories = _assemblies
+			.SelectMany(a => a.GetTypes())
+			.Where(t => t.IsClass && !t.IsAbstract)
+			.Where(t => t.GetInterfaces()
+				.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRepository<>)));
+		
+		foreach (var _repoType in _repositories) {
+			var _interfaces = _repoType.GetInterfaces();
+			foreach (var _interfaceType in _interfaces) {
+				if (_interfaceType.IsGenericTypeDefinition) {
+					var _closedInterface = _interfaceType.MakeGenericType(_repoType.GetGenericArguments());
+					services.AddScoped(_closedInterface, _repoType);
+				} else {
+					services.AddScoped(_interfaceType, _repoType); 
+				}
+			}
+		}
 	}
 
 	private static void AddTransients(IServiceCollection services)
@@ -165,8 +189,6 @@ public static class Extensions
 		this IApplicationBuilder app,
 		IWebHostEnvironment environment)
 	{
-		// app.DbMigrate<InfrastructureDbContext>();
-		
 		app.UseErrorHandling();
 		
 		if(environment.IsDevelopment()) {
@@ -196,9 +218,9 @@ public static class Extensions
 
 	public static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T : class, new()
 	{
-		var options = new T();
-		configuration.GetSection(sectionName).Bind(options);
+		var _options = new T();
+		configuration.GetSection(sectionName).Bind(_options);
 
-		return options;
+		return _options;
 	}
 }

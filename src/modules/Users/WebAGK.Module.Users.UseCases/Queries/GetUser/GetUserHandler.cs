@@ -12,11 +12,11 @@ internal sealed class GetUserHandler(IUserRepository repository) : IRequestHandl
 		
 		// var user = await repository.GetAsync(request.Id, cancellationToken);
 
-		var specification = new ByIdSpecification<User>(request.Id);
-		var user = await repository
-			.Get(specification)
+		var _specification = new ByIdSpecification<User>(request.Id);
+		var _user = await repository
+			.Get(_specification)
 			.SingleOrDefaultAsync(cancellationToken);
 		
-		return UserDto.Create(user);
+		return UserDto.Create(_user);
 	}
 }

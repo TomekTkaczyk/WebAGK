@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="WebAGK.Module.Agents.Api" />
+    <InternalsVisibleTo Include="WebAGK.Module.Agents.Core" />
   </ItemGroup>
 
   <ItemGroup>

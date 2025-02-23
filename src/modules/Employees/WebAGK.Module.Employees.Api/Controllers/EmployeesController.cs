@@ -10,7 +10,6 @@ namespace WebAGK.Module.Employees.Api.Controllers;
 internal class EmployeesController(
 	IEmployeeService service) : HomeControllerBase
 {
-
 	[HttpGet("{id:Guid}")]
 	[ProducesResponseType(200)]
 	[ProducesResponseType(404)]
@@ -66,16 +65,16 @@ internal class EmployeesController(
 	[HttpPost("upload-file")]
 	public async Task<IActionResult> UploadExcelFile(List<IFormFile> file, CancellationToken cancellationToken)
 	{
-		var size = file.Sum(f => f.Length);
-		var guids = new List<Guid>();
+		var _size = file.Sum(f => f.Length);
+		var _guids = new List<Guid>();
 
-		foreach(var formFile in file) {
-			if(formFile.Length > 0) {
-				guids.Add(await service.AddFileAsync(formFile, cancellationToken));
+		foreach(var _formFile in file) {
+			if(_formFile.Length > 0) {
+				_guids.Add(await service.AddFileAsync(_formFile, cancellationToken));
 			}
 		}
 
-		return Ok(new { count = file.Count, size, guids });
+		return Ok(new { count = file.Count, size = _size, guids = _guids });
 	}
 
 

@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Users.Core.Entities;
 using WebAGK.Module.Users.Core.Exceptions;
 using WebAGK.Module.Users.Core.Repositories;
+using WebAGK.Module.Users.UseCases.Specifications;
 using WebAGK.Shared.Abstractions;
 using WebAGK.Shared.Abstractions.Auth;
 using WebAGK.Shared.Abstractions.Exceptions;
@@ -12,63 +14,69 @@ using WebAGK.Shared.Infrastructure.Services;
 namespace WebAGK.Module.Users.UseCases.Commands.SignUp;
 internal class SignUpHandler(
 	IUserRepository repository,
+	IUserUnitOfWork	unitOfWork,
 	IPasswordHasher<User> passwordHasher,
 	ITokenProvider tokenProvider,
 	IClock clock) : IRequestHandler<SignUpCommand, Guid>
 {
 	public async Task<Guid> Handle(SignUpCommand request, CancellationToken cancellationToken)
 	{
-		var error = new ApiError();
-		var user = await repository.GetByEmailAsync(request.Email, cancellationToken);
-		if(user is not null) {
-			error.AddValidationError("EmailMessage", "email_is_unavailable", "EmailMessage is unavailable.");
+		var _error = new ApiError();
+		var _userExist = await repository
+			.Get(new UserByEmailSpecification(request.Email))
+			.AnyAsync(cancellationToken);
+		if(_userExist) {
+			_error.AddValidationError("EmailMessage", "email_is_unavailable", "EmailMessage is unavailable.");
 		}
 
-		user = await repository.GetByNameAsync(request.UserName, cancellationToken);
-		if(user is not null) {
-			error.AddValidationError("UserName", "username_is_unavailable", "UserName is unavailable.");
+		_userExist = await repository
+			.Get(new UserByNameSpecification(request.UserName))
+			.AnyAsync(cancellationToken);
+		if(_userExist) {
+			_error.AddValidationError("UserName", "username_is_unavailable", "UserName is unavailable.");
 		}
 
-		if(error.ValidationErrors.Any()) {
+		if(_error.ValidationErrors.Any()) {
 			throw new InvalidCredentialsException()
 			{
-				Error = error
+				Error = _error
 			};
 		}
 
-		var password = passwordHasher.HashPassword(default, request.Password);
+		var _password = passwordHasher.HashPassword(default, request.Password);
 
-		user = User.Create(
+		var _user = User.Create(
 			name:request.UserName,
 			email:request.Email,
-			password: password,
+			password: _password,
 			emailToConfirm:request.ConfirmEmailUrl,
 			createdAt: clock.CurrentDate());
 
-		var token = tokenProvider.GenerateConfirmEmailToken(user.Id, user.Email);
+		var _token = tokenProvider.GenerateConfirmEmailToken(_user.Id, _user.Email);
 
-		user.EmailConfirmToken = token;
+		_user.EmailConfirmToken = _token;
 
-		await repository.AddAsync(user, cancellationToken);
-
+		repository.Add(_user);
+		await unitOfWork.SaveChangesAsync(cancellationToken);
+		
 		await CreateEmail(
-			request.ConfirmEmailUrl.Replace("__token__", token),
-			user.EmailToConfirm,
+			request.ConfirmEmailUrl.Replace("__token__", _token),
+			_user.EmailToConfirm,
 			cancellationToken);
 
-		return user.Id;
+		return _user.Id;
 	}
 
 	private static async Task CreateEmail(string confirmEmailUrl, string emailAddress, CancellationToken cancellationToken)
 	{
-		var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", "EmailConfirmTokenTemplate.html");
-		var template = await File.ReadAllTextAsync(path, cancellationToken);
-		var email = new EmailMessage
+		var _path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", "EmailConfirmTokenTemplate.html");
+		var _template = await File.ReadAllTextAsync(_path, cancellationToken);
+		var _email = new EmailMessage
 		{
-			Body = template.Replace("{{ConfirmUrl}}", confirmEmailUrl),
+			Body = _template.Replace("{{ConfirmUrl}}", confirmEmailUrl),
 			Subject = "Potwierdzenie adresu email w aplikacji WebAGK",
 			Recievers = [emailAddress]
 		};
-		EmailsQueue.Add(email);
+		EmailsQueue.Add(_email);
 	}
 }

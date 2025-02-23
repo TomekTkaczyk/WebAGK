@@ -5,56 +5,64 @@ using WebAGK.Shared.Abstractions.Auth;
 using WebAGK.Shared.Abstractions.Services;
 using WebAGK.Shared.Infrastructure.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.EntityFrameworkCore;
+using WebAGK.Module.Users.Core.Entities;
+using WebAGK.Shared.Abstractions.Repositories;
+using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Users.UseCases.Commands.ConfirmEmail;
 internal class ConfirmEmailHandler(
 	IUserRepository repository,
+	IUserUnitOfWork unitOfWork,
 	IEmailConfirmerFactory emailConfirmerFactory) : IRequestHandler<ConfirmEmailCommand>
 {
 	public async Task Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
 	{
-		var confirmToken = DecodeJwt(request.Token);
+		var _confirmToken = DecodeJwt(request.Token);
 
-		var idClaim = confirmToken.Claims.FirstOrDefault(c => c.Type == "sub")?.Value
+		var _idClaim = _confirmToken.Claims.FirstOrDefault(c => c.Type == "sub")?.Value
 			?? throw new InvalidEmailTokenException();
 
-		if(!Guid.TryParse(idClaim, out Guid id)) {
+		if(!Guid.TryParse(_idClaim, out Guid id)) {
 			throw new InvalidEmailTokenException();
 		}
 
-		var emailClaim = confirmToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value
+		var _emailClaim = _confirmToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value
 			?? throw new InvalidEmailTokenException();
 
-		var user = await repository.GetAsync(id, cancellationToken)
+		var _user = await repository
+            .Get(new ByIdSpecification<User>(id))
+            .SingleOrDefaultAsync(cancellationToken)
 			?? throw new InvalidEmailTokenException();
 
-		if(!user.IsActive) {
-			throw new UserNotActiveException(user.Id);
+		if(!_user.IsActive) {
+			throw new UserNotActiveException(_user.Id);
 		}
 
-		if(!user.EmailToConfirm.Equals(emailClaim)) {
+		if(!_user.EmailToConfirm.Equals(_emailClaim)) {
 			throw new InvalidEmailTokenException();
 		}
 
-		var emailConfirmer = emailConfirmerFactory.GetEmailConfirmer(EmailConfirmTypes.Jwt);
-		if(!emailConfirmer.Confirm(user.EmailConfirmToken, request.Token, emailClaim)) {
+		var _emailConfirmer = emailConfirmerFactory.GetEmailConfirmer(EmailConfirmTypes.Jwt);
+		if(!_emailConfirmer.Confirm(_user.EmailConfirmToken, request.Token, _emailClaim)) {
 			throw new UserEmailConfirmException();
 		}
 
-		user.Email = emailClaim;
-		user.EmailConfirm = true;
+		_user.Email = _emailClaim;
+		_user.EmailConfirm = true;
 
-		await repository.UpdateAsync(user, cancellationToken);
+		repository.Update(_user);
+		await unitOfWork.SaveChangesAsync(cancellationToken);
 	}
 
 	private static JwtSecurityToken DecodeJwt(string token)
 	{
-		var tokenHandler = new JwtSecurityTokenHandler();
+		var _tokenHandler = new JwtSecurityTokenHandler();
 
-		if(!tokenHandler.CanReadToken(token)) {
+		if(!_tokenHandler.CanReadToken(token)) {
 			throw new InvalidEmailTokenException();
 		}
 
-		return tokenHandler.ReadJwtToken(token);
+		return _tokenHandler.ReadJwtToken(token);
 	}
 }

@@ -3,7 +3,7 @@ using WebAGK.Shared.Infrastructure.ValueObject;
 
 namespace WebAGK.Module.Users.Core.Entities;
 
-public class User : EntityBase
+public class User : ActiveStatusEntity
 {
 	public Email Email { get; set; }
 	public string Name { get; set; }

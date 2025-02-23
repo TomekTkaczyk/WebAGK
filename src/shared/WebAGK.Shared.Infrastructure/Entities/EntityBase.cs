@@ -4,11 +4,23 @@ namespace WebAGK.Shared.Infrastructure.Entities;
 public abstract class EntityBase : IEntityBase {
 	public Guid Id { get; init; } = Guid.NewGuid();
 	public DateTime CreatedAt { get; protected set; }
-	
+	public DateTime ModifiedAt { get; protected set; }
+	public Guid CreatedBy { get; protected set; }
+	public Guid ModifiedBy { get; protected set; }
 	public Guid ConcurrencyStamp { get; private set; }
 
 	public void SetConcurrencyStamp() {
 		ConcurrencyStamp = Guid.NewGuid();
+	}
+
+	public void SetCreateBy(Guid userId, DateTime timeStamp) {
+		CreatedAt = timeStamp;
+		CreatedBy = userId;
+	}
+	
+	public void SetModifiedBy(Guid userId, DateTime timeStamp) {
+		ModifiedAt = timeStamp;
+		ModifiedBy = userId;
 	}
 
 	public override int GetHashCode() {
@@ -36,11 +48,11 @@ public abstract class EntityBase : IEntityBase {
 			return false;
 		}
 
-		if(obj is not EntityBase entity) {
+		if(obj is not EntityBase _entity) {
 			return false;
 		}
 
-		return entity.Id.ToString() == Id.ToString();
+		return _entity.Id.ToString() == Id.ToString();
 	}
 	
 	public bool Equals(EntityBase other) {

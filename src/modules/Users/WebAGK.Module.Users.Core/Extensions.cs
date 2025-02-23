@@ -16,7 +16,6 @@ internal static class Extensions
 	{
 		services.AddDatabase<UsersDbContext>(configuration);
 		services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
-		services.AddScoped<IUserRepository, UserRepository>();
 		services.AddScoped<IEmailVerificationService, EmailVerificationService>();
 
 		return services;

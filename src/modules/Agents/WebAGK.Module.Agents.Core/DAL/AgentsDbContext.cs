@@ -3,7 +3,8 @@ using Microsoft.Extensions.Logging;
 using WebAGK.Module.Agents.Core.Entities;
 
 namespace WebAGK.Module.Agents.Core.DAL;
-internal class AgentsDbContext(DbContextOptions<AgentsDbContext> options, ILogger<AgentsDbContext> logger) : DbContext(options)
+
+public class AgentsDbContext(DbContextOptions<AgentsDbContext> options) : DbContext(options)
 {
 	public DbSet<Agent> Agents { get; set; }
 

@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Users.Core.Exceptions;
 using WebAGK.Module.Users.Core.Repositories;
+using WebAGK.Module.Users.UseCases.Specifications;
 using WebAGK.Shared.Abstractions.Services;
 using WebAGK.Shared.Infrastructure.Services;
 
@@ -11,18 +13,20 @@ internal class RemindPasswordHandler(
 {
 	public async Task Handle(RemindPasswordCommand request, CancellationToken cancellationToken)
 	{
-		var user = await repository.GetByEmailAsync(request.Email, cancellationToken)
+		var _user = await repository
+			.Get(new UserByEmailSpecification(request.Email))
+			.SingleOrDefaultAsync(cancellationToken)
 			?? throw new InvalidCredentialsException();
 
-		var emailConfirmer = emailConfirmerFactory.GetEmailConfirmer();
+		var _emailConfirmer = emailConfirmerFactory.GetEmailConfirmer();
 
-		var forgotEmail = new EmailMessage
+		var _forgotEmail = new EmailMessage
 		{
-			Body = emailConfirmer.GetRemindPasswordBody(user.Id, user.Email),
+			Body = _emailConfirmer.GetRemindPasswordBody(_user.Id, _user.Email),
 			Subject = "Remind your password in the WebAGK application",
-			Recievers = [user.Email]
+			Recievers = [_user.Email]
 		};
 
-		EmailsQueue.Add(forgotEmail);
+		EmailsQueue.Add(_forgotEmail);
 	}
 }

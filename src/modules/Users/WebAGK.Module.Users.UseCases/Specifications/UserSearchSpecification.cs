@@ -1,14 +1,15 @@
-﻿using WebAGK.Module.Users.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using WebAGK.Module.Users.Core.Entities;
 using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Users.UseCases.Specifications;
-internal sealed class UserSearchSpecification(bool? isActive = null, string searchString = null)
+internal sealed class UserSearchSpecification(bool? isActive = null, string searchText = null)
 	: Specification<User>(
 		user => 
 			(isActive == null || user.IsActive == isActive) 
 			&& 
-			(string.IsNullOrEmpty(searchString) 
-			|| ((string)user.Name).Contains(searchString)
-			|| ((string)user.FirstName).Contains(searchString)
-			|| ((string)user.LastName).Contains(searchString))
+			(string.IsNullOrWhiteSpace(searchText) 
+			|| EF.Functions.ILike(user.Name, $"%{searchText}%"))
+			|| EF.Functions.ILike(user.FirstName, $"%{searchText}%")
+			|| EF.Functions.ILike(user.LastName, $"%{searchText}%")
 		) { }
