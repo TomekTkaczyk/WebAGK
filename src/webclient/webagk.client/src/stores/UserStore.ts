@@ -11,7 +11,7 @@ export const useUserStore = defineStore('users',{
   actions: {
     async getUsers() {
       try{
-        return await httpApiClient.get('/users-module');
+        return await httpApiClient.get('/users-module/users');
       } catch (error) {
         errorHandle(error);
       }
@@ -19,7 +19,7 @@ export const useUserStore = defineStore('users',{
 
     async getUser(id: string) {
       try{
-        return await httpApiClient.get(`/users-module/${id}`);
+        return await httpApiClient.get(`/users-module/users/${id}`);
       } catch (error) {
         errorHandle(error);
       }
@@ -35,7 +35,7 @@ export const useUserStore = defineStore('users',{
 
     async updatePermissions(command: IUpdatePermissionsCommand) {
       try{
-        await httpApiClient.post('/users-module/update-permissions', command);
+        await httpApiClient.post('/users-module/users/update-permissions', command);
         const alertMessage = new AlerMessage();
         alertMessage.Show('Uprawnienia zostały zaktualizowane.');
       } catch (error) {

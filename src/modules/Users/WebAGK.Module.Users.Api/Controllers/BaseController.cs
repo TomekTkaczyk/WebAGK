@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAGK.Shared.Infrastructure.Api;
 
-namespace WebAGK.Module.Agents.Api.Controllers;
+namespace WebAGK.Module.Users.Api.Controllers;
 
 [ApiController]
-[Route(AgentModule.BasePath)]
-[ProducesDefaultContentType]
-internal abstract class HomeControllerBase : ControllerBase
+[Route(UserModule.BasePath+"/[controller]")]
+internal abstract class BaseController : ControllerBase
 {
 	protected ActionResult<T> OkOrNotFound<T>(T model)
 	{

@@ -9,6 +9,8 @@ defineProps<{
   user: userDto
 }>();
 
+// console.log(user)
+
 </script>
 
 <!-- ***************************************************  -->
@@ -20,6 +22,7 @@ defineProps<{
     <h3 class="user-name">{{ user.name }}</h3>
     <p class="content-item">Email: {{ user.email }}</p>
     <p class="content-item">Rola: {{ user.role }}</p>
+    <p class="content-item">Status: <span class="text-success" v-if="user.isActive">Aktywny</span><span class="text-danger" v-else>Nie aktywny</span></p>
   </div>
 </template>
 

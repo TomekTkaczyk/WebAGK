@@ -1,18 +1,14 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAGK.Module.Agents.UseCases.Commands.CreateAgent;
+using WebAGK.Module.Agents.UseCases.Commands.UpdateAgent;
 using WebAGK.Module.Agents.UseCases.Queries.GetAgent;
 using WebAGK.Module.Agents.UseCases.Queries.GetAgents;
-using WebAGK.Shared.Abstractions.Contexts;
-using WebAGK.Shared.Infrastructure.CQRS;
 
 namespace WebAGK.Module.Agents.Api.Controllers;
 
-[Route(AgentModule.BasePath + "/[controller]")]
 internal class AgentsController(
-    IMediator mediator) : HomeControllerBase {
+    IMediator mediator) : BaseController {
 	
     [HttpGet]
     public async Task<IActionResult> GetAsync(
@@ -42,5 +38,13 @@ internal class AgentsController(
 	    await mediator.Send(command, cancellationToken);
 	    
 	    return Created();
+    }
+
+    [HttpPost("update")]
+    public async Task<IActionResult> UpdateAgentAsync(UpdateAgentCommand command, CancellationToken cancellationToken) {
+	    
+	    await mediator.Send(command, cancellationToken);
+	    
+	    return NoContent();
     }
 }

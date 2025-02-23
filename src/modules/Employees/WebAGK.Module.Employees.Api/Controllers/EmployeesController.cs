@@ -8,7 +8,7 @@ namespace WebAGK.Module.Employees.Api.Controllers;
 
 [Route(EmployeeModule.BasePath + "/[controller]")]
 internal class EmployeesController(
-	IEmployeeService service) : HomeControllerBase
+	IEmployeeService service) : BaseController
 {
 	[HttpGet("{id:Guid}")]
 	[ProducesResponseType(200)]

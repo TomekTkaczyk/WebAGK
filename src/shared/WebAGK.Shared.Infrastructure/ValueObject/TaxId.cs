@@ -3,7 +3,7 @@ using WebAGK.Shared.Infrastructure.Exceptions;
 
 namespace WebAGK.Shared.Infrastructure.ValueObject;
 
-public sealed record TaxId {
+public sealed partial record TaxId {
     
     private readonly string _value;
 
@@ -23,16 +23,16 @@ public sealed record TaxId {
             return false;
         }
 
-        var match = Regex.Match(value, @"^(?<prefix>[A-Z]{2})?(?<nip>\d{10})$");
-        if (!match.Success) {
+        var _match = TaxIdRegex().Match(value);
+        if (!_match.Success) {
             return false;
         }
         
-        var nip = match.Groups["nip"].Value;
-        var prefix = match.Groups["prefix"].Value;
-        return prefix switch {
-            "" => IsValidPolishTaxId(nip),
-            "PL" => IsValidPolishTaxId(nip),
+        var _nip = _match.Groups["nip"].Value;
+        var _prefix = _match.Groups["prefix"].Value;
+        return _prefix switch {
+            "" => IsValidPolishTaxId(_nip),
+            "PL" => IsValidPolishTaxId(_nip),
             _ => false
         };
     }
@@ -41,14 +41,17 @@ public sealed record TaxId {
         if (nip.Length != 10 || !nip.All(char.IsDigit))
             return false;
 
-        int[] weights = { 6, 5, 7, 2, 3, 4, 5, 6, 7 };
-        var checksum = nip
+        int[] _weights = { 6, 5, 7, 2, 3, 4, 5, 6, 7 };
+        var _checksum = nip
             .Take(9)
-            .Select((digit, index) => (digit - '0') * weights[index])
+            .Select((digit, index) => (digit - '0') * _weights[index])
             .Sum();
 
-        var controlDigit = checksum % 11;
+        var _controlDigit = _checksum % 11;
         
-        return controlDigit == (nip[9] - '0');
+        return _controlDigit == (nip[9] - '0');
     }
+
+    [GeneratedRegex(@"^(?<prefix>[A-Z]{2})?(?<nip>\d{10})$")]
+    private static partial Regex TaxIdRegex();
 }
