@@ -7,35 +7,35 @@ internal static class ModuleLoader
 {
 	public static IList<Assembly> LoadAssemblies(IConfiguration configuration)
 	{
-		const string modulePart = "WebAGK.Module.";
+		const string _modulePart = "WebAGK.Module.";
 
-		var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
-		var location =	assemblies.Where(x => !x.IsDynamic).Select(x => x.Location).ToArray();
-		var files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll*")
-			.Where(x => !location.Contains(x, StringComparer.InvariantCultureIgnoreCase))
+		var _assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+		var _location =	_assemblies.Where(x => !x.IsDynamic).Select(x => x.Location).ToArray();
+		var _files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll*")
+			.Where(x => !_location.Contains(x, StringComparer.InvariantCultureIgnoreCase))
 			.ToList();
-		files.Sort();
+		_files.Sort();
 
-		var disableModules = new List<string>();
-		foreach(var file in files) {
-			if(!file.Contains(modulePart)) {
+		var _disableModules = new List<string>();
+		foreach(var _file in _files) {
+			if(!_file.Contains(_modulePart)) {
 				continue;
 			}
 			// Get module name e.g. Employyes
-			var moduleName = file.Split(modulePart)[1].Split(".")[0];
-			var enabled = configuration.GetValue<bool>($"modules:{moduleName}:enabled");
-			if(!enabled) {
-				disableModules.Add(file);
+			var _moduleName = _file.Split(_modulePart)[1].Split(".")[0];
+			var _enabled = configuration.GetValue<bool>($"modules:{_moduleName}:enabled");
+			if(!_enabled) {
+				_disableModules.Add(_file);
 			}
 		}
 
-		foreach(var disabledModule in disableModules) {
-			files.Remove(disabledModule);
+		foreach(var _disabledModule in _disableModules) {
+			_files.Remove(_disabledModule);
 		}
 
-		files.ForEach(x => assemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(x))));
+		_files.ForEach(x => _assemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(x))));
 
-		return assemblies;
+		return _assemblies;
 	}
 
 	public static IList<IModule> LoadModules(IEnumerable<Assembly> assemblies)

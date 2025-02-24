@@ -20,7 +20,7 @@ internal class EmailVerificationService(
 			.SingleOrDefaultAsync(x => x.Name.Equals(dto.Email) ,cancellationToken)
 			?? throw new InvalidCredentialsException();
 
-		if(!_user.IsActive) {
+		if(!_user.ActiveStatus) {
 			throw new UserNotActiveException(_user.Id);
 		}
 

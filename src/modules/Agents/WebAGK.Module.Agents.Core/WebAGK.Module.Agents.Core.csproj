@@ -7,12 +7,11 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="WebAGK.Module.Agents.Api" />
-    <InternalsVisibleTo Include="WebAGK.Module.Agents.Core" />
+    <InternalsVisibleTo Include="WebAGK.Module.Agents.UseCases" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\shared\WebAGK.Shared.Infrastructure\WebAGK.Shared.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Users\WebAGK.Module.Users.Core\WebAGK.Module.Users.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

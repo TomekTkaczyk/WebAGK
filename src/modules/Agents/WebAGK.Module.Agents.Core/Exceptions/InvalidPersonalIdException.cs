@@ -3,7 +3,7 @@ using WebAGK.Shared.Abstractions.Exceptions;
 
 namespace WebAGK.Module.Agents.Core.Exceptions;
 
-public class InvalidPersonalIdException(object objectToValidate) 
+internal class InvalidPersonalIdException(object objectToValidate) 
     : WebAGKException(
         "Invalid personal identifier specified.",
         StatusCodes.Status400BadRequest) {

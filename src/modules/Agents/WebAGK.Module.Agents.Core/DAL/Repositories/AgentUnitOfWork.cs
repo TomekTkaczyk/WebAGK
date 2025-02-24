@@ -5,5 +5,5 @@ using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Agents.Core.DAL.Repositories;
 
-public class AgentUnitOfWork(AgentsDbContext dbContext, IClock clock, IContext context) 
-    : UnitOfWork<AgentsDbContext>(dbContext, clock, context), IAgentUnitOfWork { }
+internal class AgentUnitOfWork(AgentsDbContext dbContext, IClock clock, IContext context) 
+    : UnitOfWork<AgentsDbContext>(dbContext, clock, context), IAgentUnitOfWork;

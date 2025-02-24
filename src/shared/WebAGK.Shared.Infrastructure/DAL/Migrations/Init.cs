@@ -12,11 +12,11 @@ namespace WebAGK.Shared.Infrastructure.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "Infrastructure");
+                name: "InfrastructureTests");
 
             migrationBuilder.CreateTable(
                 name: "StoredFiles",
-                schema: "Infrastructure",
+                schema: "InfrastructureTests",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -35,7 +35,7 @@ namespace WebAGK.Shared.Infrastructure.DAL.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_StoredFiles_FileStorageName",
-                schema: "Infrastructure",
+                schema: "InfrastructureTests",
                 table: "StoredFiles",
                 column: "FileStorageName",
                 unique: true);
@@ -46,7 +46,7 @@ namespace WebAGK.Shared.Infrastructure.DAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "StoredFiles",
-                schema: "Infrastructure");
+                schema: "InfrastructureTests");
         }
     }
 }

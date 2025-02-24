@@ -9,7 +9,7 @@ internal class InfrastructureDbContext(
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		modelBuilder.HasDefaultSchema("Infrastructure");
+		modelBuilder.HasDefaultSchema("InfrastructureTests");
 		modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
 	}
 }

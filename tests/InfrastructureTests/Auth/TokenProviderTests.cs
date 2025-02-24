@@ -2,6 +2,7 @@
 using WebAGK.Shared.Infrastructure.Auth;
 
 namespace InfrastructureTests.Auth;
+
 public class TokenProviderTests(TestFixture testFixture) : IClassFixture<TestFixture>
 {
 	private readonly TokenProvider _provider = new(testFixture.AuthOptions, testFixture.Clock);

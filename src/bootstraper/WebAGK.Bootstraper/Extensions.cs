@@ -10,19 +10,19 @@ internal static class Extensions
 
 	private static void EnsureDirectoryExists(string path)
 	{
-		var pathCombine = Path.Combine(Directory.GetCurrentDirectory(), path);
+		var _pathCombine = Path.Combine(Directory.GetCurrentDirectory(), path);
 
-		if(!Directory.Exists(pathCombine)) {
-			Directory.CreateDirectory(pathCombine);
+		if(!Directory.Exists(_pathCombine)) {
+			Directory.CreateDirectory(_pathCombine);
 		}
 	}
 	private static void EnsureFileExists(string path, string fileName, string template)
 	{
-		var pathCombine = Path.Combine(Directory.GetCurrentDirectory(), path, fileName);
+		var _pathCombine = Path.Combine(Directory.GetCurrentDirectory(), path, fileName);
 
-		if(!File.Exists(pathCombine)) {
-			File.Create(pathCombine);
-			File.WriteAllText(pathCombine, template);
+		if(!File.Exists(_pathCombine)) {
+			File.Create(_pathCombine);
+			File.WriteAllText(_pathCombine, template);
 		}
 	}
 

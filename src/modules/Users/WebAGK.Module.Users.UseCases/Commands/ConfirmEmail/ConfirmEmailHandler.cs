@@ -35,7 +35,7 @@ internal class ConfirmEmailHandler(
             .SingleOrDefaultAsync(cancellationToken)
 			?? throw new InvalidEmailTokenException();
 
-		if(!_user.IsActive) {
+		if(!_user.ActiveStatus) {
 			throw new UserNotActiveException(_user.Id);
 		}
 

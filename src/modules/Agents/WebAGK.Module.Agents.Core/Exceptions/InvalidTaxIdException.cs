@@ -3,7 +3,7 @@ using WebAGK.Shared.Abstractions.Exceptions;
 
 namespace WebAGK.Module.Agents.Core.Exceptions;
 
-public class InvalidtaxIdException(object objectToValidate) 
+internal class InvalidTaxIdException(object objectToValidate) 
     : WebAGKException(
         "Invalid identifier specified.",
         StatusCodes.Status400BadRequest) {

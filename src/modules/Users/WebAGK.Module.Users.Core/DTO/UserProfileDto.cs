@@ -15,7 +15,7 @@ public record UserProfileDto
 
 	public string Role { get; set; }
 	
-	public bool IsActive { get; set; }
+	public bool ActiveStatus { get; set; }
 
 
 	public static UserProfileDto Create(User user)
@@ -28,7 +28,7 @@ public record UserProfileDto
 			LastName = user.LastName,
 			Email = user.Email,
 			Role = user.Role,
-			IsActive = user.IsActive
+			ActiveStatus = user.ActiveStatus
 		};
 	}
 }

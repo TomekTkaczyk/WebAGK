@@ -1,12 +1,13 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Agents.Core.Entities;
+using WebAGK.Module.Agents.Core.Exceptions;
 using WebAGK.Module.Agents.Core.Repositories;
 using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Agents.UseCases.Commands.UpdateAgent;
 
-internal class UpdateAgentHandler(
+internal sealed class UpdateAgentHandler(
     IAgentRepository repository,
     IAgentUnitOfWork unitOfWork) : IRequestHandler<UpdateAgentCommand> {
     public async Task Handle(UpdateAgentCommand request, CancellationToken cancellationToken) {
@@ -20,7 +21,7 @@ internal class UpdateAgentHandler(
         _agent.SecondName = request.SecondName;
         _agent.PersonalId = request.PersonalId;
         _agent.TaxId = request.TaxId;
-        _agent.IsActive = request.IsActive;
+        _agent.ActiveStatus = request.ActiveStatus;
         _agent.IsCompany  = request.IsCompany;
         _agent.Description = request.Description;
         

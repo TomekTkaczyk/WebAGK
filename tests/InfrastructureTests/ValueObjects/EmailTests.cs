@@ -23,6 +23,8 @@ public class EmailTests {
     [InlineData("email@com")]
     [InlineData("email@")]
     [InlineData("email(at)address.com")]
+    [InlineData("")]
+    [InlineData(" ")]
     void Invalid_EmailAddress_should_throw_an_exception(string invalidPersonalId) {
 
         Assert.Throws<InvalidEmailException>(() => {

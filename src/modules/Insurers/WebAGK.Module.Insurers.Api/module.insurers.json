@@ -1,0 +1,8 @@
+{
+  "modules": {
+    "insurers": {
+      "name": "Insurers",
+      "enabled": true
+    }
+  }
+}

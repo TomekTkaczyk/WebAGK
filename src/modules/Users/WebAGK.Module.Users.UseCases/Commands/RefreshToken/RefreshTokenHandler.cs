@@ -42,7 +42,7 @@ internal class RefreshTokenHandler(
 			.SingleOrDefaultAsync(cancellationToken)       
 			?? throw new UnauthorisedException();
 
-		if(!_user.IsActive) {
+		if(!_user.ActiveStatus) {
 			throw new UserNotActiveException(_user.Id);
 		}
 

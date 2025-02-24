@@ -1,0 +1,1 @@
+dotnet ef migrations add %1 --startup-project ..\..\..\bootstraper\WebAGK.Bootstraper\WebAGK.Bootstraper.csproj --project .\WebAGK.Module.Insurers.Core.csproj -o .\DAL\Migrations --context InsurersDbContext -v

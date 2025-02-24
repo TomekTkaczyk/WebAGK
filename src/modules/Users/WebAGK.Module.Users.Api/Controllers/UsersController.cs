@@ -7,7 +7,7 @@ using WebAGK.Module.Users.UseCases.Queries.GetUsers;
 
 namespace WebAGK.Module.Users.Api.Controllers;
 
-[Authorize(Policy ="Users.UserManagerOrAdmin")]
+[Authorize(Policy ="UsersTests.UserManagerOrAdmin")]
 internal class UsersController(IMediator mediator) : BaseController
 {
 	[HttpGet]

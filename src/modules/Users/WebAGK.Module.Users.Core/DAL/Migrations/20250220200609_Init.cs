@@ -12,11 +12,11 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "Users");
+                name: "UsersTests");
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                schema: "Users",
+                name: "UsersTests",
+                schema: "UsersTests",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -44,15 +44,15 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
-                schema: "Users",
-                table: "Users",
+                schema: "UsersTests",
+                table: "UsersTests",
                 column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Name",
-                schema: "Users",
-                table: "Users",
+                schema: "UsersTests",
+                table: "UsersTests",
                 column: "Name",
                 unique: true);
         }
@@ -61,8 +61,8 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Users",
-                schema: "Users");
+                name: "UsersTests",
+                schema: "UsersTests");
         }
     }
 }

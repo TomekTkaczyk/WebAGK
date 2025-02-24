@@ -87,8 +87,8 @@ public static class Extensions
 			{
 				var _removedParts = new List<ApplicationPart>();
 				foreach(var _disableModule in _disableModules) {
-					var parts = manager.ApplicationParts.Where(x => x.Name.Contains(_disableModule, StringComparison.InvariantCultureIgnoreCase));
-					_removedParts.AddRange(parts);
+					var _parts = manager.ApplicationParts.Where(x => x.Name.Contains(_disableModule, StringComparison.InvariantCultureIgnoreCase));
+					_removedParts.AddRange(_parts);
 				}
 
 				foreach(var _part in _removedParts) {
@@ -152,21 +152,36 @@ public static class Extensions
 
 	private static void AddScoped(IServiceCollection services)
 	{
-		var _assemblies = AppDomain.CurrentDomain.GetAssemblies();
+		var _assemblies = AppDomain.CurrentDomain
+			.GetAssemblies()
+			.Where(x => x.GetName().Name.StartsWith("WebAGK", StringComparison.InvariantCultureIgnoreCase))
+			.ToList();
 		services.AddScoped<IStoredFileRepository, StoredFileRepository>();
-		services.Scan(scan => scan
-			.FromAssemblies(_assemblies)
-			.AddClasses(classes => classes.AssignableTo(typeof(IUnitOfWork)))
-			.AsImplementedInterfaces()
-			.WithScopedLifetime());
+		// services.Scan(scan => scan
+		// 	.FromAssemblies(_assemblies)
+		// 	.AddClasses(classes => classes.AssignableTo(typeof(IUnitOfWork)))
+		// 	.AsImplementedInterfaces()
+		// 	.WithScopedLifetime());
 		
 		var _repositories = _assemblies
 			.SelectMany(a => a.GetTypes())
 			.Where(t => t.IsClass && !t.IsAbstract)
 			.Where(t => t.GetInterfaces()
+				.Any(i => i.IsAssignableTo(typeof(IUnitOfWork))));
+		
+		Register(_repositories, services);
+		
+		_repositories = _assemblies
+			.SelectMany(a => a.GetTypes())
+			.Where(t => t.IsClass && !t.IsAbstract)
+			.Where(t => t.GetInterfaces()
 				.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRepository<>)));
 		
-		foreach (var _repoType in _repositories) {
+		Register(_repositories, services);
+	}
+
+	private static void Register(IEnumerable<Type> repositories, IServiceCollection services) {
+		foreach (var _repoType in repositories) {
 			var _interfaces = _repoType.GetInterfaces();
 			foreach (var _interfaceType in _interfaces) {
 				if (_interfaceType.IsGenericTypeDefinition) {
@@ -178,7 +193,7 @@ public static class Extensions
 			}
 		}
 	}
-
+	
 	private static void AddTransients(IServiceCollection services)
 	{
 		services.AddTransient<SmtpEmailSender>();

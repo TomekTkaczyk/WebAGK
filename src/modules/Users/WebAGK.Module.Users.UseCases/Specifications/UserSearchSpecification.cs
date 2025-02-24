@@ -6,7 +6,7 @@ namespace WebAGK.Module.Users.UseCases.Specifications;
 internal sealed class UserSearchSpecification(bool? isActive = null, string searchText = null)
 	: Specification<User>(
 		user => 
-			(isActive == null || user.IsActive == isActive) 
+			(isActive == null || user.ActiveStatus == isActive) 
 			&& 
 			(string.IsNullOrWhiteSpace(searchText) 
 			|| EF.Functions.ILike(user.Name, $"%{searchText}%"))

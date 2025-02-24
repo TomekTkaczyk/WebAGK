@@ -7,7 +7,7 @@ using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Agents.UseCases.Queries.GetAgent;
 
-internal class GetAgentHandler(IAgentRepository repository) : IRequestHandler<GetAgentQuery, AgentDto> {
+internal sealed class GetAgentHandler(IAgentRepository repository) : IRequestHandler<GetAgentQuery, AgentDto> {
     
     public async Task<AgentDto> Handle(GetAgentQuery request, CancellationToken cancellationToken) {
         var _specification = new ByIdSpecification<Agent>(request.Id);

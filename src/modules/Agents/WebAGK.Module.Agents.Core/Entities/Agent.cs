@@ -14,7 +14,6 @@ public class Agent : ActiveStatusEntity {
     public RpuId RpuId  {get; set;}
     public Address Address { get; set; }
     public bool IsCompany  { get; set; }
-    public bool IsActive { get; set; }
     public string Description {get; set;}
 
     private Agent() {}
@@ -35,7 +34,7 @@ public class Agent : ActiveStatusEntity {
             PersonalId = personalId,
             TaxId = taxId,
             IsCompany = isCompany,
-            IsActive = true
+            ActiveStatus = true
         };
     }
 }

@@ -10,7 +10,7 @@ public class AgentDto {
     public string TaxId { get; set; }
     public string PersonalId { get; set; }
     public bool IsCompany { get; set; }
-    public bool IsActive { get; set; } = true;
+    public bool ActiveStatus { get; set; } = true;
 
     private AgentDto() { }
     
@@ -23,7 +23,7 @@ public class AgentDto {
             TaxId = agent.TaxId,
             PersonalId = agent.PersonalId,
             IsCompany = agent.IsCompany,
-            IsActive = agent.IsActive,
+            ActiveStatus = agent.ActiveStatus,
         };
     }
 }

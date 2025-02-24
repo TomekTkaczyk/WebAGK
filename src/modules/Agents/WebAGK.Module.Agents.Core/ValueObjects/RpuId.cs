@@ -6,7 +6,7 @@ public sealed record RpuId {
     
     private readonly string _value;
 
-    public RpuId(string value) {
+    private RpuId(string value) {
         if (string.IsNullOrWhiteSpace(value)) {
             throw new InvalidRpuIdException(value);
         }

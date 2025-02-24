@@ -13,32 +13,32 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
         {
             migrationBuilder.AddColumn<bool>(
                 name: "ActiveStatus",
-                schema: "Users",
-                table: "Users",
+                schema: "UsersTests",
+                table: "UsersTests",
                 type: "boolean",
                 nullable: false,
                 defaultValue: false);
 
             migrationBuilder.AddColumn<Guid>(
                 name: "CreatedBy",
-                schema: "Users",
-                table: "Users",
+                schema: "UsersTests",
+                table: "UsersTests",
                 type: "uuid",
                 nullable: false,
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "ModifiedAt",
-                schema: "Users",
-                table: "Users",
+                schema: "UsersTests",
+                table: "UsersTests",
                 type: "timestamp with time zone",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<Guid>(
                 name: "ModifiedBy",
-                schema: "Users",
-                table: "Users",
+                schema: "UsersTests",
+                table: "UsersTests",
                 type: "uuid",
                 nullable: false,
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
@@ -49,23 +49,23 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "ActiveStatus",
-                schema: "Users",
-                table: "Users");
+                schema: "UsersTests",
+                table: "UsersTests");
 
             migrationBuilder.DropColumn(
                 name: "CreatedBy",
-                schema: "Users",
-                table: "Users");
+                schema: "UsersTests",
+                table: "UsersTests");
 
             migrationBuilder.DropColumn(
                 name: "ModifiedAt",
-                schema: "Users",
-                table: "Users");
+                schema: "UsersTests",
+                table: "UsersTests");
 
             migrationBuilder.DropColumn(
                 name: "ModifiedBy",
-                schema: "Users",
-                table: "Users");
+                schema: "UsersTests",
+                table: "UsersTests");
         }
     }
 }

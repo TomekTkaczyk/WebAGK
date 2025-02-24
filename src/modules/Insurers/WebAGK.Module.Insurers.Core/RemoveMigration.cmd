@@ -1,0 +1,1 @@
+dotnet-ef migrations remove --startup-project ..\..\..\bootstraper\WebAGK.Bootstraper\WebAGK.Bootstraper.csproj --project .\WebAGK.Module.Insurers.Core.csproj --context InsurersDbContext -v

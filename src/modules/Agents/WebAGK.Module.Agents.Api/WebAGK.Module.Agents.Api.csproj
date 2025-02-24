@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebAGK.Module.Agents.Core\WebAGK.Module.Agents.Core.csproj" />
     <ProjectReference Include="..\WebAGK.Module.Agents.UseCases\WebAGK.Module.Agents.UseCases.csproj" />
   </ItemGroup>
 

@@ -11,7 +11,6 @@ public class User : ActiveStatusEntity
 	public string LastName { get; set; }
 	public string FirstName { get; set; }
 	public string Role { get; set; }
-	public bool IsActive { get; set; }
 	public IDictionary<string, IEnumerable<string>> Permissions { get; set; }
 	public bool EmailConfirm { get; set; }
 	public string EmailToConfirm { get; set; }
@@ -37,7 +36,7 @@ public class User : ActiveStatusEntity
 			Permissions = new Dictionary<string, IEnumerable<string>>(),
 			EmailToConfirm = emailToConfirm,
 			EmailConfirm = false,
-			IsActive = true,
+			ActiveStatus = true,
 			CreatedAt = createdAt,
 		};
 	}

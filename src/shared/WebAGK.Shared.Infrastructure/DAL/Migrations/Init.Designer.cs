@@ -20,13 +20,13 @@ namespace WebAGK.Shared.Infrastructure.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("Infrastructure")
+                .HasDefaultSchema("InfrastructureTests")
                 .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("WebAGK.Shared.Infrastructure.Entities.StoredFile", b =>
+            modelBuilder.Entity("WebAGK.Shared.InfrastructureTests.Entities.StoredFile", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace WebAGK.Shared.Infrastructure.DAL.Migrations
                     b.HasIndex("FileStorageName")
                         .IsUnique();
 
-                    b.ToTable("StoredFiles", "Infrastructure");
+                    b.ToTable("StoredFiles", "InfrastructureTests");
                 });
 #pragma warning restore 612, 618
         }

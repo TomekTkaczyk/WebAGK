@@ -9,7 +9,6 @@ using WebAGK.Module.Users.Core.Entities;
 using WebAGK.Module.Users.Core.Repositories;
 using WebAGK.Module.Users.UseCases.Specifications;
 using WebAGK.Shared.Abstractions.Modules;
-using WebAGK.Shared.Abstractions.Repositories;
 using WebAGK.Shared.Infrastructure.Database;
 
 namespace WebAGK.Module.Users.Api;
@@ -18,7 +17,7 @@ internal class UserModule : IModule
 {
 	public const string BasePath = "users-module";
 
-	public string Name { get; } = "Users";
+	public string Name { get; } = "UsersTests";
 
 	public string Path => BasePath;
 
@@ -40,19 +39,6 @@ internal class UserModule : IModule
 			.ToArray();
 			cfg.RegisterServicesFromAssemblies(_assemblies);
 		});
-
-		//services.Scan(scan => scan
-		//	.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-		//	.AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
-		//	.AsImplementedInterfaces()
-		//	.WithScopedLifetime()
-		//);
-		//services.Scan(scan => scan
-		//	.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-		//	.AddClasses(classes => classes.AssignableTo(typeof(IRequest)))
-		//	.AsImplementedInterfaces()
-		//	.WithScopedLifetime()
-		//);
 	}
 
 	public void Use(IApplicationBuilder app) {
@@ -88,12 +74,12 @@ internal class UserModule : IModule
 				Name = "Admin",
 				Password = passwordHasher.HashPassword(null!, ""),
 				Role = "Admin",
-				IsActive = true,
+				ActiveStatus = true,
 				Email = configuration.GetSection("AdminEmail").Value,
 				EmailConfirm = true,
 				Permissions = new Dictionary<string, IEnumerable<string>>()
 				{
-					{ "Users", new List<string> { "UserManager" } }
+					{ "UsersTests", new List<string> { "UserManager" } }
 				}
 			};
 

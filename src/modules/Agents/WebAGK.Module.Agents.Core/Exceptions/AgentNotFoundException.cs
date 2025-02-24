@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using WebAGK.Shared.Abstractions.Exceptions;
 
-namespace WebAGK.Module.Agents.UseCases.Commands.UpdateAgent;
+namespace WebAGK.Module.Agents.Core.Exceptions;
 internal class AgentNotFoundException(Guid id)
     : WebAGKException($"Agent with ID: {id} is not exist.", StatusCodes.Status400BadRequest) 
 {
