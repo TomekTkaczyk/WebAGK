@@ -43,14 +43,14 @@ public class User : ActiveStatusEntity
 	
 	public IEnumerable<string> GetPermissions()
 	{
-		List<string> result = [];
+		List<string> _result = [];
 		if(Permissions is not null) {
-			result = Permissions.Aggregate(
-				result, 
+			_result = Permissions.Aggregate(
+				_result, 
 				(current, permission) 
 					=> [.. current, .. permission.Value.Select(x => $"{permission.Key}.{x}")]);
 		}
 
-		return result;
+		return _result;
 	}
 }

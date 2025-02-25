@@ -11,7 +11,7 @@ public abstract class UnitOfWork<TDbContext>(TDbContext dbContext, IClock clock,
 	public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
 		
 		var _utcNow = clock.CurrentDate();
-		var _userId = context.Identity.Id;
+		var _userId = context.Identity?.Id ?? Guid.Empty;
 
 		var _entities = dbContext.ChangeTracker.Entries<EntityBase>();
 		foreach(var _entityEntry in _entities) {
