@@ -12,11 +12,11 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "UsersTests");
+                name: "Users");
 
             migrationBuilder.CreateTable(
-                name: "UsersTests",
-                schema: "UsersTests",
+                name: "Users",
+                schema: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -26,7 +26,6 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                     LastName = table.Column<string>(type: "text", nullable: true),
                     FirstName = table.Column<string>(type: "text", nullable: true),
                     Role = table.Column<string>(type: "text", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     Permissions = table.Column<string>(type: "text", nullable: true),
                     EmailConfirm = table.Column<bool>(type: "boolean", nullable: false),
                     EmailToConfirm = table.Column<string>(type: "text", nullable: true),
@@ -35,7 +34,11 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                     RefreshToken = table.Column<string>(type: "text", nullable: true),
                     RefreshExpires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ConcurrencyStamp = table.Column<Guid>(type: "uuid", nullable: false)
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ConcurrencyStamp = table.Column<Guid>(type: "uuid", nullable: false),
+                    ActiveStatus = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,15 +47,15 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
-                schema: "UsersTests",
-                table: "UsersTests",
+                schema: "Users",
+                table: "Users",
                 column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Name",
-                schema: "UsersTests",
-                table: "UsersTests",
+                schema: "Users",
+                table: "Users",
                 column: "Name",
                 unique: true);
         }
@@ -61,8 +64,8 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UsersTests",
-                schema: "UsersTests");
+                name: "Users",
+                schema: "Users");
         }
     }
 }

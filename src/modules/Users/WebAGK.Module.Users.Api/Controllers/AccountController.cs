@@ -42,14 +42,14 @@ internal class AccountController(
 	[ProducesResponseType(401)]
 	public async Task<ActionResult> SignInAsync(SignInCommand command, CancellationToken cancellationToken)
 	{
-		var response = await mediator.Send(command, cancellationToken);
-		var cookieOptions = new CookieOptions
+		var _response = await mediator.Send(command, cancellationToken);
+		var _cookieOptions = new CookieOptions
 		{
 			HttpOnly = true,
 			SameSite = SameSiteMode.Strict,
 		};
-		Response.Cookies.Append("accessToken", response.AccessToken, cookieOptions);
-		Response.Cookies.Append("refreshToken", response.RefreshToken, cookieOptions);
+		Response.Cookies.Append("accessToken", _response.AccessToken, _cookieOptions);
+		Response.Cookies.Append("refreshToken", _response.RefreshToken, _cookieOptions);
 
 		return Ok();
 	}

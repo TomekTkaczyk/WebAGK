@@ -17,13 +17,13 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("UsersTests")
+                .HasDefaultSchema("Users")
                 .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("WebAGK.Module.UsersTests.Core.Entities.User", b =>
+            modelBuilder.Entity("WebAGK.Module.Users.Core.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,9 +59,6 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
 
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .HasColumnType("text");
@@ -100,7 +97,7 @@ namespace WebAGK.Module.Users.Core.DAL.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("UsersTests", "UsersTests");
+                    b.ToTable("Users", "Users");
                 });
 #pragma warning restore 612, 618
         }

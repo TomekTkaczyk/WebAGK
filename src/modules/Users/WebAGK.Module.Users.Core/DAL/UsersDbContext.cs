@@ -10,7 +10,7 @@ public class UsersDbContext(DbContextOptions<UsersDbContext> options) : DbContex
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		modelBuilder.HasDefaultSchema("UsersTests");
+		modelBuilder.HasDefaultSchema("Users");
 		modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
 	}
 }

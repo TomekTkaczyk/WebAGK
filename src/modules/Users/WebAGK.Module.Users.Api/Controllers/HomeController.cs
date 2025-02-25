@@ -6,5 +6,5 @@ namespace WebAGK.Module.Users.Api.Controllers;
 internal class HomeController : BaseController
 {
     [HttpGet]
-    public ActionResult<string> Get() =>"UsersTests API";
+    public ActionResult<string> Get() =>"Users API";
 }

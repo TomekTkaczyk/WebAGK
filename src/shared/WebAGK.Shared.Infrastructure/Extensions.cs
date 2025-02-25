@@ -157,21 +157,22 @@ public static class Extensions
 			.Where(x => x.GetName().Name.StartsWith("WebAGK", StringComparison.InvariantCultureIgnoreCase))
 			.ToList();
 		services.AddScoped<IStoredFileRepository, StoredFileRepository>();
-		// services.Scan(scan => scan
-		// 	.FromAssemblies(_assemblies)
-		// 	.AddClasses(classes => classes.AssignableTo(typeof(IUnitOfWork)))
-		// 	.AsImplementedInterfaces()
-		// 	.WithScopedLifetime());
+
+		services.Scan(scan => scan
+			.FromAssemblies(_assemblies)
+			.AddClasses(classes => classes.AssignableTo(typeof(IUnitOfWork)))
+			.AsImplementedInterfaces()
+			.WithScopedLifetime());
+		
+		// var _repositories = _assemblies
+		// 	.SelectMany(a => a.GetTypes())
+		// 	.Where(t => t.IsClass && !t.IsAbstract)
+		// 	.Where(t => t.GetInterfaces()
+		// 		.Any(i => i.IsAssignableTo(typeof(IUnitOfWork))));
+		//
+		// Register(_repositories, services);
 		
 		var _repositories = _assemblies
-			.SelectMany(a => a.GetTypes())
-			.Where(t => t.IsClass && !t.IsAbstract)
-			.Where(t => t.GetInterfaces()
-				.Any(i => i.IsAssignableTo(typeof(IUnitOfWork))));
-		
-		Register(_repositories, services);
-		
-		_repositories = _assemblies
 			.SelectMany(a => a.GetTypes())
 			.Where(t => t.IsClass && !t.IsAbstract)
 			.Where(t => t.GetInterfaces()
