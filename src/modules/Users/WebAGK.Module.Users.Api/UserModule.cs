@@ -88,7 +88,7 @@ internal class UserModule : IModule
 				Name = "Admin",
 				Password = passwordHasher.HashPassword(null!, ""),
 				Role = "Admin",
-				IsActive = true,
+				ActiveStatus = true,
 				Email = configuration.GetSection("AdminEmail").Value,
 				EmailConfirm = true,
 				Permissions = new Dictionary<string, IEnumerable<string>>()

@@ -3,7 +3,7 @@ using WebAGK.Shared.Abstractions.Repositories;
 
 namespace WebAGK.Module.Users.Core.Repositories;
 
-internal interface IUserRepository : IActiveStatusRepository<User> {
+internal interface IUserRepository : IRepository<User> {
 	
 	// Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken);
 	//

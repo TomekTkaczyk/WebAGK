@@ -6,7 +6,7 @@ using WebAGK.Shared.Infrastructure.Repositories;
 namespace WebAGK.Module.Agents.Core.DAL.Repositories;
 
 internal class AgentRepository(AgentsDbContext dbContext) 
-    : ActiveStatusRepository<Agent,AgentsDbContext>(dbContext), IAgentRepository {
+    : Repository<Agent,AgentsDbContext>(dbContext), IAgentRepository {
 
     public async Task<Agent> GetByTaxIdAsync(string taxId, CancellationToken cancellationToken)
         => await Entities.FirstOrDefaultAsync(x => x.TaxId == taxId, cancellationToken);

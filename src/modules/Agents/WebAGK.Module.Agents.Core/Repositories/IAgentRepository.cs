@@ -3,7 +3,7 @@ using WebAGK.Shared.Abstractions.Repositories;
 
 namespace WebAGK.Module.Agents.Core.Repositories;
 
-public interface IAgentRepository : IActiveStatusRepository<Agent> {
+public interface IAgentRepository : IRepository<Agent> {
     //
     // Task<Agent> GetByTaxIdAsync(string taxId, CancellationToken cancellationToken); 
     //

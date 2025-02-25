@@ -17,7 +17,7 @@ internal class UpdatePermissionsHandler(
 	        .SingleOrDefaultAsync(cancellationToken)
 	        ?? throw new UserNotFoundException(request.Id);
 		_user.Role = request.Role;
-		_user.IsActive = request.IsActive;
+		_user.ActiveStatus = request.IsActive;
 		_user.Permissions = request.Permissions;
 
 		repository.Update(_user);

@@ -6,7 +6,7 @@ using WebAGK.Shared.Infrastructure.Repositories;
 namespace WebAGK.Module.Users.Core.DAL.Repositories;
 
 internal class UserRepository(UsersDbContext context) 
-	: ActiveStatusRepository<User,UsersDbContext>(context), IUserRepository {
+	: Repository<User,UsersDbContext>(context), IUserRepository {
 	
 	// public async Task<User> GetByEmailToken(string token, CancellationToken cancellationToken)
 	// 	=> await Entities.SingleOrDefaultAsync(x => x.EmailConfirmToken.Equals(token), cancellationToken);

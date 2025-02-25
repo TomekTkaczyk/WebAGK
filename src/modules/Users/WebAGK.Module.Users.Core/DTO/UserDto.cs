@@ -9,7 +9,7 @@ public class UserDto {
 	public string LastName { get; set; }
 	public string Role { get; set; }
 	public IDictionary<string, IEnumerable<string>> Permissions { get; set; }
-	public bool IsActive { get; set; }
+	public bool ActiveStatus { get; set; }
 	public bool IsConfirmed { get; set; }
 
 	public static UserDto Create(User user)
@@ -23,7 +23,7 @@ public class UserDto {
 			LastName = user.LastName,
 			Role = user.Role,
 			Permissions = user.Permissions,
-			IsActive = user.IsActive,
+			ActiveStatus = user.ActiveStatus,
 			IsConfirmed = user.EmailConfirm
 		};
 	}
