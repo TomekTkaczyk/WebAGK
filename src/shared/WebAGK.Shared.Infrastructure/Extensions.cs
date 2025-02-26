@@ -158,26 +158,25 @@ public static class Extensions
 			.ToList();
 		services.AddScoped<IStoredFileRepository, StoredFileRepository>();
 
-		services.Scan(scan => scan
-			.FromAssemblies(_assemblies)
-			.AddClasses(classes => classes.AssignableTo(typeof(IUnitOfWork)))
-			.AsImplementedInterfaces()
-			.WithScopedLifetime());
-		
-		// var _repositories = _assemblies
-		// 	.SelectMany(a => a.GetTypes())
-		// 	.Where(t => t.IsClass && !t.IsAbstract)
-		// 	.Where(t => t.GetInterfaces()
-		// 		.Any(i => i.IsAssignableTo(typeof(IUnitOfWork))));
+		// services.Scan(scan => scan
+		// 	.FromAssemblies(_assemblies)
+		// 	.AddClasses(classes => classes.AssignableTo(typeof(IUnitOfWork)))
+		// 	.AsImplementedInterfaces()
+		// 	.WithScopedLifetime());
 		//
-		// Register(_repositories, services);
+		var _uow = _assemblies
+			.SelectMany(a => a.GetTypes())
+			.Where(t => t.IsClass && !t.IsAbstract)
+			.Where(t => t.GetInterfaces()
+				.Any(i => i.IsAssignableTo(typeof(IUnitOfWork))));
 		
+		Register(_uow, services);
+	
 		var _repositories = _assemblies
 			.SelectMany(a => a.GetTypes())
 			.Where(t => t.IsClass && !t.IsAbstract)
 			.Where(t => t.GetInterfaces()
 				.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRepository<>)));
-		
 		Register(_repositories, services);
 	}
 

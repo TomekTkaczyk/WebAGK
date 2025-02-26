@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
   import { computed, reactive, ref } from 'vue';
-  import type IUpdateProfileCommand from './requests/updatename-command.ts';
+  import type IUpdateNameCommand from './requests/updatename-command.ts';
   import TextInput from "@/components/TextInput.vue";
   import { useAuthStore } from '@/stores/AuthStore';
   import { FormErrors } from '@/types/FormErrors.ts';
@@ -16,18 +16,18 @@
     lastName: false,
   });
 
-  const formData = ref<IUpdateProfileCommand>({
+  const formData = ref<IUpdateNameCommand>({
       firstName: authStore.firstName as string || '',
       lastName: authStore.lastName as string || '',
   });
 
   const errors = new FormErrors();
 
-  async function updateProfile(data: IUpdateProfileCommand) {
+  async function updateProfile(data: IUpdateNameCommand) {
     try{
       touchedFields.value.firstName = false;
       touchedFields.value.lastName = false;
-      await authStore.updateProfile(data);
+      await authStore.updateName(data);
       await authStore.getUser();
     } catch (error: any) {
       await errors.CatchApiError("UpdateProfile", error);

@@ -39,7 +39,7 @@
         await authStore.signUpUser(data);
       }
     } catch (error: any) {
-      await errors.CatchApiError("SignUp", error.response?.data);
+      await errors.CatchApiError("SignUp", error);
     };
   };
 

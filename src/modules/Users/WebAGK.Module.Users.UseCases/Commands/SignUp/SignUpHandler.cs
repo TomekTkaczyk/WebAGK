@@ -26,14 +26,14 @@ internal class SignUpHandler(
 			.Get(new UserByEmailSpecification(request.Email))
 			.AnyAsync(cancellationToken);
 		if(_userExist) {
-			_error.AddValidationError("EmailMessage", "email_is_unavailable", "EmailMessage is unavailable.");
+			_error.AddValidationError("Email", "email_is_unavailable", "Email is unavailable.");
 		}
 
 		_userExist = await repository
 			.Get(new UserByNameSpecification(request.UserName))
 			.AnyAsync(cancellationToken);
 		if(_userExist) {
-			_error.AddValidationError("UserName", "username_is_unavailable", "UserName is unavailable.");
+			_error.AddValidationError("UserName", "username_is_unavailable", "User name is unavailable.");
 		}
 
 		if(_error.ValidationErrors.Any()) {

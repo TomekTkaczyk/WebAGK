@@ -17,7 +17,7 @@ internal class UserModule : IModule
 {
 	public const string BasePath = "users-module";
 
-	public string Name { get; } = "UsersTests";
+	public string Name { get; } = "Users";
 
 	public string Path => BasePath;
 
@@ -79,7 +79,7 @@ internal class UserModule : IModule
 				EmailConfirm = true,
 				Permissions = new Dictionary<string, IEnumerable<string>>()
 				{
-					{ "UsersTests", new List<string> { "UserManager" } }
+					{ "Users", new List<string> { "UserManager" } }
 				}
 			};
 
