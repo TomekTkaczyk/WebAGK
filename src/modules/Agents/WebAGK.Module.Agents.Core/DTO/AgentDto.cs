@@ -9,7 +9,7 @@ public class AgentDto {
     public string LastName { get; set; }
     public string TaxId { get; set; }
     public string PersonalId { get; set; }
-    public bool IsCompany { get; set; }
+    public bool IsCompany { get; set; } = false;
     public bool ActiveStatus { get; set; } = true;
 
     private AgentDto() { }

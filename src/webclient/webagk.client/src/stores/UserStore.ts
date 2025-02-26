@@ -35,7 +35,7 @@ export const useUserStore = defineStore('users',{
 
     async updatePermissions(command: IUpdatePermissionsCommand) {
       try{
-        await httpApiClient.post('/users-module/users/update-permissions', command);
+        await httpApiClient.put('/users-module/users/update-permissions', command);
         const alertMessage = new AlerMessage();
         alertMessage.Show('Uprawnienia zostały zaktualizowane.');
       } catch (error) {

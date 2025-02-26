@@ -30,9 +30,11 @@ internal class AccountController(
 	[ProducesResponseType(200)]
 	[ProducesResponseType(401)]
 	[ProducesResponseType(404)]
-	public async Task<ActionResult<UserDto>> GetAsync(CancellationToken cancellationToken)
-	{
-		return OkOrNotFound(await mediator.Send(new GetUserQuery(context.Identity.Id), cancellationToken));
+	public async Task<ActionResult<UserDto>> GetAsync(CancellationToken cancellationToken = default) {
+		
+		var _user = await mediator.Send(new GetUserQuery(context.Identity.Id), cancellationToken);
+		
+		return Ok(_user);
 	}
 
 
@@ -40,7 +42,9 @@ internal class AccountController(
 	[ProducesResponseType(204)]
 	[ProducesResponseType(400)]
 	[ProducesResponseType(401)]
-	public async Task<ActionResult> SignInAsync(SignInCommand command, CancellationToken cancellationToken)
+	public async Task<ActionResult> SignInAsync(
+		[FromBody] SignInCommand command, 
+		CancellationToken cancellationToken = default)
 	{
 		var _response = await mediator.Send(command, cancellationToken);
 		var _cookieOptions = new CookieOptions
@@ -59,7 +63,9 @@ internal class AccountController(
 	[EnableCors("cors-fronturl-header")]
 	[ProducesResponseType(204)]
 	[ProducesResponseType(400)]
-	public async Task<ActionResult> SignUpAsync(SignUpRequest request, CancellationToken cancellationToken)
+	public async Task<ActionResult> SignUpAsync(
+		[FromBody] SignUpRequest request, 
+		CancellationToken cancellationToken = default)
 	{
 		var _confirmEmailUrl = Request.Headers["X-Confirmemail-Url"].ToString();
 		if(_confirmEmailUrl.IsNullOrEmpty()) {
@@ -89,20 +95,20 @@ internal class AccountController(
 	[HttpPost("refresh-token")]
 	[ProducesResponseType(204)]
 	[ProducesResponseType(401)]
-	public async Task<ActionResult> RefreshToken(CancellationToken cancellationToken)
+	public async Task<ActionResult> RefreshToken(CancellationToken cancellationToken = default)
 	{
-		var refreshToken = Request.Cookies["refreshtoken"];
-		var command = new RefreshTokenCommand(refreshToken);
+		var _refreshToken = Request.Cookies["refreshtoken"];
+		var _command = new RefreshTokenCommand(_refreshToken);
 
-		var jwt = await mediator.Send(command, cancellationToken);
+		var _jwt = await mediator.Send(_command, cancellationToken);
 
-		var cookieOptions = new CookieOptions
+		var _cookieOptions = new CookieOptions
 		{
 			HttpOnly = true,
 			SameSite = SameSiteMode.Strict,
 		};
-		Response.Cookies.Append("accessToken", jwt.AccessToken, cookieOptions);
-		Response.Cookies.Append("refreshToken", jwt.RefreshToken, cookieOptions);
+		Response.Cookies.Append("accessToken", _jwt.AccessToken, _cookieOptions);
+		Response.Cookies.Append("refreshToken", _jwt.RefreshToken, _cookieOptions);
 
 		return NoContent();
 	}
@@ -112,45 +118,47 @@ internal class AccountController(
 	[Authorize]
 	[ProducesResponseType(204)]
 	[ProducesResponseType(401)]
-	public async Task<ActionResult> Logout(CancellationToken cancellationToken)
+	public async Task<ActionResult> Logout(CancellationToken cancellationToken = default)
 	{
 
 		await mediator.Send(new LogoutCommand(context.Identity.Id), cancellationToken);
 
-		var cookieOptions = new CookieOptions
+		var _cookieOptions = new CookieOptions
 		{
 			HttpOnly = true,
 			SameSite = SameSiteMode.Strict,
 			Expires = DateTime.UtcNow.AddDays(-1),
 		};
-		Response.Cookies.Append("accessToken", "", cookieOptions);
-		Response.Cookies.Append("refreshToken", "", cookieOptions);
+		Response.Cookies.Append("accessToken", "", _cookieOptions);
+		Response.Cookies.Append("refreshToken", "", _cookieOptions);
 
 		return NoContent();
 	}
 
 		
-	[HttpPost("change-email")]
+	[HttpPatch("change-email")]
 	[Authorize]
 	[EnableCors("cors-fronturl-header")]
 	[ProducesResponseType(204)]
 	[ProducesResponseType(400)]
-	public async Task<IActionResult> ChangeEmailAsync([FromQuery] string email, CancellationToken cancellationToken)
+	public async Task<IActionResult> ChangeEmailAsync(
+		[FromQuery] string email, 
+		CancellationToken cancellationToken = default)
 	{
-		var confirmEmailUrl = Request.Headers["X-Confirmemail-Url"].ToString();
+		var _confirmEmailUrl = Request.Headers["X-Confirmemail-Url"].ToString();
 
-		if(confirmEmailUrl.IsNullOrEmpty()) {
-			confirmEmailUrl = Url.Action("ConfirmEmail", "Account", null, Request.Scheme);
+		if(_confirmEmailUrl.IsNullOrEmpty()) {
+			_confirmEmailUrl = Url.Action("ConfirmEmail", "Account", null, Request.Scheme);
 		}
 
-		var command = new ChangeEmailCommand()
+		var _command = new ChangeEmailCommand()
 		{
 			Id = context.Identity.Id,
 			Email = email,
-			ConfirmEmailUrl = confirmEmailUrl
+			ConfirmEmailUrl = _confirmEmailUrl
 		};
 
-		await mediator.Send(command, cancellationToken);
+		await mediator.Send(_command, cancellationToken);
 
 		return NoContent();
 	}
@@ -160,31 +168,35 @@ internal class AccountController(
 	[EnableCors("cors-fronturl-header")]
 	[ProducesResponseType(204)]
 	[ProducesResponseType(400)]
-	public async Task<IActionResult> RemindPasswordAsync([FromQuery] string email, CancellationToken cancellationToken)
+	public async Task<IActionResult> RemindPasswordAsync(
+		[FromQuery] string email, 
+		CancellationToken cancellationToken = default)
 	{
-		var resetPasswordUrl = Request.Headers["X-Frontend-Url"].ToString();
+		var _resetPasswordUrl = Request.Headers["X-Frontend-Url"].ToString();
 
 		await mediator.Send(new RemindPasswordCommand() {
 			Email = email,
-			ResetPasswordUrl = resetPasswordUrl}, cancellationToken);
+			ResetPasswordUrl = _resetPasswordUrl}, cancellationToken);
 
 		return NoContent();
 	}
 
 
-	[HttpPost("change-password")]
+	[HttpPatch("change-password")]
 	[Authorize]
 	[ProducesResponseType(204)]
 	[ProducesResponseType(400)]
-	public async Task<IActionResult> ChangePasswordAsync(ChangePasswordRequest request, CancellationToken cancellationToken)
+	public async Task<IActionResult> ChangePasswordAsync(
+		[FromBody] ChangePasswordRequest request, 
+		CancellationToken cancellationToken = default)
 	{
-		var command = new ChangePasswordCommand()
+		var _command = new ChangePasswordCommand()
 		{
 			Id = context.Identity.Id,
 			CurrentPassword = request.CurrentPassword,
 			Password = request.Password
 		};
-		await mediator.Send(command, cancellationToken);
+		await mediator.Send(_command, cancellationToken);
 
 		return NoContent();
 	}
@@ -194,15 +206,17 @@ internal class AccountController(
 	[Authorize]
 	[ProducesResponseType(204)]
 	[ProducesResponseType(400)]
-	public async Task<IActionResult> UpdateNameAsync(UpdateNameRequest request, CancellationToken cancellationToken)
+	public async Task<IActionResult> UpdateNameAsync(
+		[FromBody] UpdateNameRequest request, 
+		CancellationToken cancellationToken = default)
 	{
-		var command = new UpdateNameCommand()
+		var _command = new UpdateNameCommand()
 		{
 			Id = context.Identity.Id,
 			FirstName = request.FirstName,
 			LastName = request.LastName
 		};
-		await mediator.Send(command, cancellationToken);
+		await mediator.Send(_command, cancellationToken);
 
 		return NoContent();
 	}
@@ -211,7 +225,9 @@ internal class AccountController(
 	[HttpGet("confirm-email")]
 	[ProducesResponseType(200)]
 	[ProducesResponseType(400)]
-	public async Task<ActionResult> ConfirmEmailAsync([FromQuery] string token, CancellationToken cancellationToken)
+	public async Task<ActionResult> ConfirmEmailAsync(
+		[FromQuery] string token, 
+		CancellationToken cancellationToken = default)
 	{
 		await mediator.Send(new ConfirmEmailCommand(token), cancellationToken);
 

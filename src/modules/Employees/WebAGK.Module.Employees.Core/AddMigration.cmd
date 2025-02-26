@@ -1,1 +1,0 @@
-dotnet ef migrations add %1 --startup-project ..\..\..\bootstraper\WebAGK.Bootstraper\WebAGK.Bootstraper.csproj --project .\WebAGK.Module.Employees.Core.csproj -o .\DAL\Migrations --context EmployeesDbContext -v

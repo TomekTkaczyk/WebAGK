@@ -11,15 +11,15 @@ internal class GetAgentsHandler(IAgentRepository repository) : IRequestHandler<G
     public async Task<Page<AgentDto>> Handle(GetAgentsQuery request, CancellationToken cancellationToken) {
         var _query = repository.Get(new SearchAgentSpecification());
         var _total = await _query.CountAsync(cancellationToken);
-        var _query1 = _query
+        var _agents = _query
             .OrderBy(x => x.LastName)
             .ThenBy(x => x.FirstName)
             .ThenBy(x => x.SecondName)
             .Skip(request.PageSize * (request.PageNumber - 1));
         if (request.PageSize > 0) {
-            _query = _query.Take(request.PageSize);
+            _agents = _agents.Take(request.PageSize);
         }
-        var _collection = await _query
+        var _collection = await _agents
             .Select(x => AgentDto.Create(x))
             .ToListAsync(cancellationToken);  
         

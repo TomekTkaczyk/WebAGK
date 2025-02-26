@@ -79,7 +79,7 @@ export const useAuthStore = defineStore('auth', {
 
     async changePassword(command: IChangePasswordCommand) {
       try{
-        await httpApiClient.post('/users-module/Account/change-password', command);
+        await httpApiClient.patch('/users-module/Account/change-password', command);
         const alertMessage = new AlerMessage();
         alertMessage.Show('Hasło zostało zmienione.');
       } catch (error) {
@@ -89,7 +89,7 @@ export const useAuthStore = defineStore('auth', {
 
     async changeEmail(email: string) {
       try{
-        await httpApiClient.post('/users-module/Account/change-email', null,
+        await httpApiClient.patch('/users-module/Account/change-email', null,
           {
             params: {email: email},
             headers: {'X-Confirmemail-Url': window.location.origin+"/ConfirmEmail"}
