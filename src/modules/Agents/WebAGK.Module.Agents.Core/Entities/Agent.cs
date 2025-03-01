@@ -1,6 +1,6 @@
 ﻿using WebAGK.Module.Agents.Core.ValueObjects;
 using WebAGK.Shared.Infrastructure.Entities;
-using WebAGK.Shared.Infrastructure.ValueObject;
+using WebAGK.Shared.Infrastructure.ValueObjects;
 
 namespace WebAGK.Module.Agents.Core.Entities;
 public class Agent : ActiveStatusEntity {

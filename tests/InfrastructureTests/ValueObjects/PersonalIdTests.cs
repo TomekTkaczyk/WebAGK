@@ -1,5 +1,6 @@
 using WebAGK.Shared.Infrastructure.Exceptions;
-using WebAGK.Shared.Infrastructure.ValueObject;
+using WebAGK.Shared.Infrastructure.ValueObjects;
+using TaxId = WebAGK.Shared.Infrastructure.ValueObjects.TaxId;
 
 namespace InfrastructureTests.ValueObjects;
 

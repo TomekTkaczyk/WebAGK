@@ -8,8 +8,7 @@ using WebAGK.Shared.Infrastructure.CQRS;
 namespace WebAGK.Module.Insurers.UseCases.Queries.GetInsurers;
 
 internal class GetInsurersHandler(
-    IInsurerRepository repository,
-    IInsurerUnitOfWork unitOfWork)
+    IInsurerRepository repository)
     : IRequestHandler<GetInsurersQuery, Page<InsurerDto>> {
     public async Task<Page<InsurerDto>> Handle(GetInsurersQuery request, CancellationToken cancellationToken) {
         var _query = repository.Get(new SearchInsurerSpecification());

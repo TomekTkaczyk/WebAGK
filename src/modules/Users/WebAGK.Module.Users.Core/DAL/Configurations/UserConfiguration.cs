@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Text.Json;
 using WebAGK.Module.Users.Core.Entities;
-using WebAGK.Shared.Infrastructure.ValueObject;
 
 namespace WebAGK.Module.Users.Core.DAL.Configurations;
 

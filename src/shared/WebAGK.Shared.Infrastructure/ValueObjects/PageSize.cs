@@ -1,6 +1,6 @@
 ﻿using WebAGK.Shared.Infrastructure.Exceptions;
 
-namespace WebAGK.Shared.Infrastructure.ValueObject;
+namespace WebAGK.Shared.Infrastructure.ValueObjects;
 
 public sealed record PageSize {
 	

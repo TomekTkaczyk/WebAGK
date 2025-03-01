@@ -10,8 +10,7 @@ using WebAGK.Shared.Infrastructure.Repositories;
 namespace WebAGK.Module.Insurers.UseCases.Queries.GetInsurer;
 
 public class GetInsurerHandler(
-    IInsurerRepository repository,
-    IInsurerUnitOfWork unitOfWork) 
+    IInsurerRepository repository) 
     : IRequestHandler<GetInsurerQuery,InsurerDto> {
     public async Task<InsurerDto> Handle(GetInsurerQuery request, CancellationToken cancellationToken) {
         var _insurer = await repository

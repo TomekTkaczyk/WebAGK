@@ -1,8 +1,7 @@
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using WebAGK.Shared.Infrastructure.Exceptions;
 
-namespace WebAGK.Shared.Infrastructure.ValueObject;
+namespace WebAGK.Shared.Infrastructure.ValueObjects;
 
 public sealed partial record Email {
     

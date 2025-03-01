@@ -1,7 +1,7 @@
 using MediatR;
 using WebAGK.Module.Agents.Core.DTO;
 using WebAGK.Shared.Infrastructure.CQRS;
-using WebAGK.Shared.Infrastructure.ValueObject;
+using WebAGK.Shared.Infrastructure.ValueObjects;
 
 namespace WebAGK.Module.Agents.UseCases.Queries.GetAgents;
 

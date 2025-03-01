@@ -17,7 +17,6 @@
     <ProjectReference Include="..\..\modules\Agents\WebAGK.Module.Agents.Api\WebAGK.Module.Agents.Api.csproj" />
     <ProjectReference Include="..\..\modules\Agents\WebAGK.Module.Agents.Core\WebAGK.Module.Agents.Core.csproj" />
     <ProjectReference Include="..\..\modules\Agents\WebAGK.Module.Agents.UseCases\WebAGK.Module.Agents.UseCases.csproj" />
-    <ProjectReference Include="..\..\modules\Employees\WebAGK.Module.Employees.Api\WebAGK.Module.Employees.Api.csproj" />
     <ProjectReference Include="..\..\modules\Insurers\WebAGK.Module.Insurers.Api\WebAGK.Module.Insurers.Api.csproj" />
     <ProjectReference Include="..\..\modules\Users\WebAGK.Module.Users.Api\WebAGK.Module.Users.Api.csproj" />
   </ItemGroup>

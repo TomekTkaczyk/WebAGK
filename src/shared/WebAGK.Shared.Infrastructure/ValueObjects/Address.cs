@@ -1,4 +1,4 @@
-namespace WebAGK.Shared.Infrastructure.ValueObject;
+namespace WebAGK.Shared.Infrastructure.ValueObjects;
 
 public sealed record Address {
     public string Street { get; init; }

@@ -1,5 +1,5 @@
 using WebAGK.Shared.Infrastructure.Exceptions;
-using WebAGK.Shared.Infrastructure.ValueObject;
+using Email = WebAGK.Shared.Infrastructure.ValueObjects.Email;
 
 namespace InfrastructureTests.ValueObjects;
 

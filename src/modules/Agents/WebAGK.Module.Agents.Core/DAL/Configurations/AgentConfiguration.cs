@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebAGK.Module.Agents.Core.Entities;
-using WebAGK.Shared.Infrastructure.ValueObject;
+using WebAGK.Shared.Infrastructure.ValueObjects;
 
 namespace WebAGK.Module.Agents.Core.DAL.Configurations;
 
