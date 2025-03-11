@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Agents.Core.Entities;
+using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Agents.Core.DAL;
 

@@ -35,8 +35,7 @@ internal class AgentModule : IModule
 		});
 	}
 
-	public void Use(IApplicationBuilder app)
-	{
+	public void Use(IApplicationBuilder app) {
 		app.MigrateDatabase<AgentsDbContext>();
 	}
 }

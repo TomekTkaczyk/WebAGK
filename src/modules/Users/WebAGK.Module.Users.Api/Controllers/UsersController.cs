@@ -18,7 +18,7 @@ internal class UsersController(IMediator mediator) : BaseController
 	}
 
 	[HttpGet("{id:guid}")]
-	public async Task<IActionResult> GetUser(Guid id, CancellationToken cancellationToken)
+	public async Task<IActionResult> GetUser([FromRoute] Guid id, CancellationToken cancellationToken)
 	{
 		return Ok(await mediator.Send(new GetUserQuery(id), cancellationToken));
 	}

@@ -5,14 +5,23 @@ namespace WebAGK.Shared.Infrastructure.Exceptions;
 internal class ExceptionToResponseMapper : IExceptionToResponseMapper
 {
 	public ExceptionResponse Map(Exception exception)
-		=> exception switch {
-			WebAGKException ex => new ExceptionResponse(ex.Error, GetStatusCode(ex.Error.Status)), 
-			_ => new ExceptionResponse(new ApiError()
-			{
-				Code = "internal_server_error",
-				Message = "There was an error."
-			}, HttpStatusCode.InternalServerError)
-		};
+	{
+
+		switch(exception) {
+			case WebAGKException ex:
+				ex.Error.Message = ex.Message;
+				ex.Error.Status = (int)GetStatusCode(ex.Error.Status);
+				return new ExceptionResponse(ex.Error, GetStatusCode(ex.Error.Status));
+
+			default:
+				return new ExceptionResponse(new ApiError()
+				{
+					Code = "internal_server_error",
+					Message = "There was an error.",
+					Status = (int)HttpStatusCode.InternalServerError
+				}, HttpStatusCode.InternalServerError);
+		}
+	}
 
 	private record ErrorsResponse(ApiError Error);
 

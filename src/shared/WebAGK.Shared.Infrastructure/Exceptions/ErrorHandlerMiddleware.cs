@@ -15,23 +15,23 @@ internal class ErrorHandlerMiddleware(
 		try {
 			await next(context);
 		}
-		catch(Exception exception) {
-			_logger.LogError(exception, "An error occurred: {Message}", exception.Message);
-			await HandleErrorAsync(context, exception);
+		catch(Exception _exception) {
+			_logger.LogError(_exception, "An error occurred: {Message}", _exception.Message);
+			await HandleErrorAsync(context, _exception);
 		}
 	}
 
 	private async Task HandleErrorAsync(HttpContext context, Exception exception)
 	{
 
-		var errorResponse = _exceptionCompositionRoot.Map(exception);
-		context.Response.StatusCode = (int)(errorResponse?.StatusCode ?? HttpStatusCode.InternalServerError);
-		var response = errorResponse?.Response;
+		var _errorResponse = _exceptionCompositionRoot.Map(exception);
+		context.Response.StatusCode = (int)(_errorResponse?.StatusCode ?? HttpStatusCode.InternalServerError);
+		var _response = _errorResponse?.Response;
 
-		if(response is null) {
+		if(_response is null) {
 			return;
 		}
 
-		await context.Response.WriteAsJsonAsync(response);
+		await context.Response.WriteAsJsonAsync(_response);
 	}
 }

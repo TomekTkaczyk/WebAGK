@@ -14,9 +14,10 @@ public sealed partial record TaxId {
         _value = value;
     }
     
-    public static implicit operator string(TaxId data) => data._value;
+    public static implicit operator string(TaxId data) => data?._value;
 
-    public static implicit operator TaxId(string value) => new(value);
+    public static implicit operator TaxId(string value) => 
+        string.IsNullOrWhiteSpace(value) ? null : new TaxId(value);
 
     private static bool IsValid(string value) {
         if (string.IsNullOrWhiteSpace(value)) {

@@ -8,7 +8,7 @@ namespace WebAGK.Shared.Infrastructure.Repositories;
 
 public abstract class UnitOfWork<TDbContext>(TDbContext dbContext, IClock clock, IContext context) : IUnitOfWork
 	where TDbContext : DbContext {
-	public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
+	public virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
 		
 		var _utcNow = clock.CurrentDate();
 		var _userId = context.Identity?.Id ?? Guid.Empty;

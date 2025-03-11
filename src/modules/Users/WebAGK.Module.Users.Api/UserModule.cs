@@ -67,7 +67,8 @@ internal class UserModule : IModule
 
 		var _user = await repository.Get(new UserByNameSpecification("Admin"))
 			.SingleOrDefaultAsync();
-		if (_user == null) {
+		if (_user is null) {
+			
 			_user = new User
 			{
 				Id = Guid.NewGuid(),

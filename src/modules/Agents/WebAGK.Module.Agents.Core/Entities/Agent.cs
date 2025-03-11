@@ -1,4 +1,5 @@
-﻿using WebAGK.Module.Agents.Core.ValueObjects;
+﻿using WebAGK.Module.Agents.Core.Exceptions;
+using WebAGK.Module.Agents.Core.ValueObjects;
 using WebAGK.Shared.Infrastructure.Entities;
 using WebAGK.Shared.Infrastructure.ValueObjects;
 
@@ -17,6 +18,16 @@ public class Agent : ActiveStatusEntity {
     public string Description {get; set;}
 
     private Agent() {}
+
+    public void Validate() {
+        if (IsCompany && TaxId is null) {
+            throw new InvalidCompanyTaxIdException();
+        }
+
+        if (PersonalId is null && TaxId is null) {
+            throw new InvalidIdentifierException();
+        }
+    }
 
     public static Agent Create(
         string lastName,

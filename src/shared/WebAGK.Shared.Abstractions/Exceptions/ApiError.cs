@@ -6,8 +6,8 @@ public class ApiError
 {
 	private readonly List<ValidationError> _validationErrors = [];
 
-	public string Message { get; init; }
-	public int Status { get; init; }
+	public string Message { get; set; }
+	public int Status { get; set; }
 	public string Code { get; set; }
 	public string Title { get; set; }
 	public string Type { get; set; }

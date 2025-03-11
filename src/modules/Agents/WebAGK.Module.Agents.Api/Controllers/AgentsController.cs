@@ -24,9 +24,7 @@ internal class AgentsController(IMediator mediator) : BaseController {
     }
 	
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetAgentAsync(
-	    [FromQuery] Guid id, 
-	    CancellationToken cancellationToken = default) {
+    public async Task<IActionResult> GetAgentAsync([FromRoute] Guid id, CancellationToken cancellationToken = default) {
 		
         var _query = new GetAgentQuery(id);
 		
@@ -45,11 +43,11 @@ internal class AgentsController(IMediator mediator) : BaseController {
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateAgentAsync(
-	    [FromQuery] Guid id, 
+	    [FromRoute] Guid id, 
 	    [FromBody] UpdateAgentCommand command, 
 	    CancellationToken cancellationToken = default) {
 
-	    if (id.Equals(command.Id)) {
+	    if (!id.Equals(command.Id)) {
 		    return BadRequest();
 	    }
 	    await mediator.Send(command, cancellationToken);

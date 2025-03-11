@@ -29,7 +29,6 @@ public abstract class Specification<T> : ISpecification<T>
         Criteria = criteria;
     }
 
-
     protected void AddInclude(Expression<Func<T, object>> includeExpression)
         => Includes.Add(includeExpression);
 

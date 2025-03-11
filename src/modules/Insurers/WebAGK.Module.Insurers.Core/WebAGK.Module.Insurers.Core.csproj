@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="DAL\Migrations\" />
       <Folder Include="ValueObjects\" />
     </ItemGroup>
 

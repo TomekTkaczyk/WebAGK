@@ -11,7 +11,7 @@ internal class GetInsurersHandler(
     IInsurerRepository repository)
     : IRequestHandler<GetInsurersQuery, Page<InsurerDto>> {
     public async Task<Page<InsurerDto>> Handle(GetInsurersQuery request, CancellationToken cancellationToken) {
-        var _query = repository.Get(new SearchInsurerSpecification());
+        var _query = repository.Get();
         var _total = await _query.CountAsync(cancellationToken);
         var _agents = _query
             .OrderBy(x => x.Name)

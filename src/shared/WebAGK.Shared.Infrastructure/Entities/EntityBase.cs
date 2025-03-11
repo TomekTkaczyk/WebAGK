@@ -1,69 +1,59 @@
-﻿using WebAGK.Shared.Abstractions.Entities;
+using WebAGK.Shared.Abstractions.Entities;
 
 namespace WebAGK.Shared.Infrastructure.Entities;
-public abstract class EntityBase : IEntityBase {
-	public Guid Id { get; init; } = Guid.NewGuid();
-	public DateTime CreatedAt { get; protected set; }
-	public DateTime ModifiedAt { get; protected set; }
-	public Guid CreatedBy { get; protected set; }
-	public Guid ModifiedBy { get; protected set; }
-	public Guid ConcurrencyStamp { get; private set; }
 
-	public void SetConcurrencyStamp() {
-		ConcurrencyStamp = Guid.NewGuid();
-	}
+public abstract class EntityBase : IEntityBase
+{
+    public Guid Id { get; init; } = Guid.NewGuid();
+    public DateTime CreatedAt { get; protected set; }
+    public DateTime ModifiedAt { get; protected set; }
+    public Guid CreatedBy { get; protected set; }
+    public Guid ModifiedBy { get; protected set; }
+    public Guid ConcurrencyStamp { get; private set; }
 
-	public void SetCreateBy(Guid userId, DateTime timeStamp) {
-		CreatedAt = timeStamp;
-		CreatedBy = userId;
-	}
-	
-	public void SetModifiedBy(Guid userId, DateTime timeStamp) {
-		ModifiedAt = timeStamp;
-		ModifiedBy = userId;
-	}
+    public void SetConcurrencyStamp()
+    {
+        ConcurrencyStamp = Guid.NewGuid();
+    }
 
-	public override int GetHashCode() {
-		return Id.GetHashCode();
-	}
-	
-	public static bool operator ==(EntityBase left, EntityBase right) {
-		if(left is null && right is null) {
-			return true;
-		}
+    public void SetCreateBy(Guid userId, DateTime timeStamp)
+    {
+        CreatedAt = timeStamp;
+        CreatedBy = userId;
+    }
 
-		return left is not null && right is not null && left.Equals(right);
-	}
+    public void SetModifiedBy(Guid userId, DateTime timeStamp)
+    {
+        ModifiedAt = timeStamp;
+        ModifiedBy = userId;
+    }
 
-	public static bool operator !=(EntityBase left, EntityBase right) {
-		return !(left == right);
-	}
-	
-	public override bool Equals(object obj) {
-		if(obj is null) {
-			return false;
-		}
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
 
-		if(obj.GetType() != GetType()) {
-			return false;
-		}
+    public static bool operator == (EntityBase left, EntityBase right)
+    {
+        return left is not null && right is not null && left.Equals(right);
+    }
 
-		if(obj is not EntityBase _entity) {
-			return false;
-		}
+    public static bool operator != (EntityBase left, EntityBase right)
+    {
+        return !(left == right);
+    }
 
-		return _entity.Id.ToString() == Id.ToString();
-	}
-	
-	public bool Equals(EntityBase other) {
-		if(other is null) {
-			return false;
-		}
+    public bool Equals(IEntityBase other) {
+        throw new NotImplementedException();
+    }
 
-		if(other.GetType() != GetType()) {
-			return false;
-		}
+    public override bool Equals(object obj)
+    {
+        return obj is EntityBase _other && Equals(_other);
+    }
 
-		return other.Id.ToString() == Id.ToString();
-	}
+    public bool Equals(EntityBase other)
+    {
+        return other is not null && Id.Equals(other.Id);
+    }
 }

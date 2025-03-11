@@ -8,7 +8,7 @@ using WebAGK.Module.Insurers.UseCases.Queries.GetInsurers;
 
 namespace WebAGK.Module.Insurers.Api.Controllers;
 
-internal class InsurerController(IMediator mediator) : BaseController {
+internal class InsurersController(IMediator mediator) : BaseController {
 
     [HttpGet]
     public async Task<IActionResult> GetAsync(

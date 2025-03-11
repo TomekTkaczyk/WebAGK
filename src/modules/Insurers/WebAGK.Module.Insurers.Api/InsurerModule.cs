@@ -2,9 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebAGK.Module.Insurers.Core;
+using WebAGK.Module.Insurers.Core.DAL;
 using WebAGK.Shared.Abstractions.Modules;
+using WebAGK.Shared.Infrastructure.Database;
 
 namespace WebAGK.Module.Insurers.Api;
+
 internal class InsurerModule : IModule
 {
 	public const string BasePath = "insurers-module";
@@ -33,8 +36,7 @@ internal class InsurerModule : IModule
 		});
 	}
 
-	public void Use(IApplicationBuilder app)
-	{
-		// app.MigrateDatabase<AgentsDbContext>();
+	public void Use(IApplicationBuilder app) {
+		app.MigrateDatabase<InsurersDbContext>();
 	}
 }
