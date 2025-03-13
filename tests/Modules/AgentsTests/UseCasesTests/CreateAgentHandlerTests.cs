@@ -43,7 +43,7 @@ public class CreateAgentHandlerTests : IAsyncLifetime {
             SecondName: "Andrzej",
             TaxId: "6941297604",
             PersonalId: "68102910014",
-            IsActive: true,
+            RpuId: "",
             IsCompany: false
         );
 
@@ -55,29 +55,27 @@ public class CreateAgentHandlerTests : IAsyncLifetime {
             "6941297604", 
             false);
 
-		var existingAgents = new List<Agent> { _existingAgent }.AsQueryable();
+		var _existingAgents = new List<Agent> { _existingAgent }.AsQueryable();
 
-		var mockDbSet = new Mock<DbSet<Agent>>();
-		mockDbSet.As<IQueryable<Agent>>()
+		var _mockDbSet = new Mock<DbSet<Agent>>();
+		_mockDbSet.As<IQueryable<Agent>>()
 			.Setup(m => m.Provider)
 			.Returns(new List<Agent> { _existingAgent }.AsQueryable().Provider);
 
-		mockDbSet.As<IQueryable<Agent>>()
+		_mockDbSet.As<IQueryable<Agent>>()
 			.Setup(m => m.Expression)
 			.Returns(new List<Agent> { _existingAgent }.AsQueryable().Expression);
-		mockDbSet.As<IQueryable<Agent>>()
+		_mockDbSet.As<IQueryable<Agent>>()
 			.Setup(m => m.ElementType)
 			.Returns(new List<Agent> { _existingAgent }.AsQueryable().ElementType);
-		mockDbSet.As<IQueryable<Agent>>()
+		_mockDbSet.As<IQueryable<Agent>>()
 			.Setup(m => m.GetEnumerator())
 			.Returns(new List<Agent> { _existingAgent }.AsQueryable().GetEnumerator());
 		_repositoryMock.Setup(r => r.Get(It.IsAny<ISpecification<Agent>>()))
-			.Returns(mockDbSet.Object);
+			.Returns(_mockDbSet.Object);
 		_repositoryMock.Setup(r => r.Get(It.IsAny<ISpecification<Agent>>())
 				.SingleOrDefaultAsync(It.IsAny<CancellationToken>()))
 			.ReturnsAsync(_existingAgent);
-
-		var _handler = new CreateAgentHandler(_repositoryMock.Object, _unitOfWorkMock.Object);
 
 		await Assert.ThrowsAsync<InvalidIdentifierException>(() => _handler.Handle(_command, CancellationToken.None));
 

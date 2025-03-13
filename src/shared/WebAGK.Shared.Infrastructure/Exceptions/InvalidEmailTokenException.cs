@@ -2,4 +2,4 @@
 using WebAGK.Shared.Abstractions.Exceptions;
 
 namespace WebAGK.Shared.Infrastructure.Exceptions;
-public sealed class InvalidEmailTokenException() : WebAGKException("Invalid email token.", StatusCodes.Status401Unauthorized) { }
+public sealed class InvalidEmailTokenException() : WebAgkException("Invalid email token.", StatusCodes.Status401Unauthorized) { }

@@ -19,11 +19,10 @@ public sealed partial record TaxId {
     public static implicit operator TaxId(string value) => 
         string.IsNullOrWhiteSpace(value) ? null : new TaxId(value);
 
-    private static bool IsValid(string value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return false;
+    public static bool IsValid(string value) {
+        if (value is null) {
+            return true;
         }
-
         var _match = TaxIdRegex().Match(value);
         if (!_match.Success) {
             return false;

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Agents.Core.Entities;
 using WebAGK.Module.Agents.Core.Exceptions;
 using WebAGK.Module.Agents.Core.Repositories;
+using WebAGK.Module.Agents.Core.Validators;
 using WebAGK.Shared.Abstractions.Exceptions;
 using WebAGK.Shared.Infrastructure.Repositories;
 
@@ -24,14 +25,14 @@ internal sealed class UpdateAgentHandler(
         try {
             _agent.PersonalId = request.PersonalId;
         }
-        catch (WebAGKException _ex) {
+        catch (WebAgkException _ex) {
             _error.Message = _ex.Message;
             _error.AddValidationError("PersonalId", "invalid_personalid", "Invalid Personal id.");
         }
         try {
             _agent.TaxId = request.TaxId;
         }
-        catch (WebAGKException _ex) {
+        catch (WebAgkException _ex) {
             _error.Message = _ex.Message;
             _error.AddValidationError("TaxId", "invalid_taxid", "Invalid Tax id.");
         }

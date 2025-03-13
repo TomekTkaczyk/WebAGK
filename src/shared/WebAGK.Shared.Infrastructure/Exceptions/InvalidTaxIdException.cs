@@ -4,7 +4,7 @@ using WebAGK.Shared.Abstractions.Exceptions;
 namespace WebAGK.Shared.Infrastructure.Exceptions;
 
 public class InvalidTaxIdException(object id) 
-    : WebAGKException(
+    : WebAgkException(
         "Cannot set: {id} as tax identifier.", 
         StatusCodes.Status400BadRequest) {
     

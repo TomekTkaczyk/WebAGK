@@ -37,7 +37,7 @@ public class Agent : ActiveStatusEntity {
         string taxId,
         bool isCompany
     ) {
-        return new Agent() {
+        var _agent = new Agent() {
             Id = Guid.NewGuid(),
             LastName = lastName,
             FirstName = firstName,
@@ -47,5 +47,7 @@ public class Agent : ActiveStatusEntity {
             IsCompany = isCompany,
             ActiveStatus = true
         };
+        _agent.Validate();
+        return _agent;
     }
 }

@@ -8,7 +8,7 @@ internal class ExceptionToResponseMapper : IExceptionToResponseMapper
 	{
 
 		switch(exception) {
-			case WebAGKException ex:
+			case WebAgkException ex:
 				ex.Error.Message = ex.Message;
 				ex.Error.Status = (int)GetStatusCode(ex.Error.Status);
 				return new ExceptionResponse(ex.Error, GetStatusCode(ex.Error.Status));

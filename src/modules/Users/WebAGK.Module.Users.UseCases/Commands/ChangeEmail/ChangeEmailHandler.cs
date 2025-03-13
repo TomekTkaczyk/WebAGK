@@ -31,7 +31,7 @@ internal class ChangeEmailHandler(
 			if(!_user.Id.Equals(_anotherUser.Id)) {
 				throw new EmailIsInUseException();
 			}
-			if(_user.Email.Equals(_email) && _user.EmailConfirm) {
+			if(_user.Email.Equals(request.Email) && _user.EmailConfirm) {
 				throw new EmailNotChanged();
 			}
 		}

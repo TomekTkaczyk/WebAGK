@@ -1,10 +1,12 @@
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAGK.Module.Agents.UseCases.Commands.CreateAgent;
 using WebAGK.Module.Agents.UseCases.Commands.DeleteAgent;
 using WebAGK.Module.Agents.UseCases.Commands.UpdateAgent;
 using WebAGK.Module.Agents.UseCases.Queries.GetAgent;
 using WebAGK.Module.Agents.UseCases.Queries.GetAgents;
+using WebAGK.Shared.Infrastructure.Exceptions;
 
 namespace WebAGK.Module.Agents.Api.Controllers;
 
@@ -36,6 +38,15 @@ internal class AgentsController(IMediator mediator) : BaseController {
 	    [FromBody] CreateAgentCommand command,
 	    CancellationToken cancellationToken = default) {
 
+	    var _error = command.Validate();
+	    if (_error.ValidationErrors.Any()) {
+		    _error.Status = StatusCodes.Status400BadRequest;
+		    _error.Message = "Bad request";
+		    throw new BadRequestException() {
+			    Error = _error,
+		    };
+	    }
+	    
 	    await mediator.Send(command, cancellationToken);
 	    
 	    return Created();
@@ -46,10 +57,20 @@ internal class AgentsController(IMediator mediator) : BaseController {
 	    [FromRoute] Guid id, 
 	    [FromBody] UpdateAgentCommand command, 
 	    CancellationToken cancellationToken = default) {
-
+	    
 	    if (!id.Equals(command.Id)) {
 		    return BadRequest();
 	    }
+	    
+	    var _error = command.Validate();
+	    if (_error.ValidationErrors.Any()) {
+		    _error.Status = StatusCodes.Status400BadRequest;
+		    _error.Message = "Bad request";
+		    throw new BadRequestException() {
+			    Error = _error,
+		    };
+	    }
+	    
 	    await mediator.Send(command, cancellationToken);
 	    
 	    return NoContent();
@@ -57,7 +78,7 @@ internal class AgentsController(IMediator mediator) : BaseController {
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteAgentAsync(
-	    [FromQuery] Guid id, 
+	    [FromRoute] Guid id, 
 	    CancellationToken cancellationToken = default) {
 	    
 	    await mediator.Send(new DeleteAgentCommand(id), cancellationToken);

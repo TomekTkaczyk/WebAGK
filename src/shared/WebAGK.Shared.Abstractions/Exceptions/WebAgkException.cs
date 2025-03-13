@@ -2,13 +2,13 @@
 
 namespace WebAGK.Shared.Abstractions.Exceptions;
 
-public abstract class WebAGKException : Exception
+public abstract class WebAgkException : Exception
 {
 	private string ErrorCode => GetType().Name.Underscore().Replace("_exception", string.Empty).ToLowerInvariant();
 
 	public ApiError Error { get; init; }
 
-	public WebAGKException(string message, int status) : base(message)
+	protected WebAgkException(string message, int status) : base(message)
 	{
 		Error = new ApiError()
 		{

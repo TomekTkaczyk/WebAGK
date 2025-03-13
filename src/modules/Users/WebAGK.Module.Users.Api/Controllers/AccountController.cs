@@ -16,6 +16,7 @@ using WebAGK.Module.Users.UseCases.Commands.SignUp;
 using WebAGK.Module.Users.UseCases.Commands.UpdateName;
 using WebAGK.Module.Users.UseCases.Queries.GetUser;
 using WebAGK.Shared.Abstractions.Contexts;
+using WebAGK.Shared.Infrastructure.Exceptions;
 
 namespace WebAGK.Module.Users.Api.Controllers;
 
@@ -151,13 +152,20 @@ internal class AccountController(
 			_confirmEmailUrl = Url.Action("ConfirmEmail", "Account", null, Request.Scheme);
 		}
 
-		var _command = new ChangeEmailCommand()
-		{
-			Id = context.Identity.Id,
-			Email = email,
-			ConfirmEmailUrl = _confirmEmailUrl
-		};
+		var _command = new ChangeEmailCommand(
+			context.Identity.Id,
+			email,
+			_confirmEmailUrl);
 
+		var _error = _command.Validate();
+		if (_error.ValidationErrors.Any()) {
+			_error.Status = StatusCodes.Status400BadRequest;
+			_error.Message = "BadRequest";
+			throw new BadRequestException() {
+				Error = _error,
+			};
+		}
+		
 		await mediator.Send(_command, cancellationToken);
 
 		return NoContent();
@@ -188,14 +196,19 @@ internal class AccountController(
 	[ProducesResponseType(400)]
 	public async Task<IActionResult> ChangePasswordAsync(
 		[FromBody] ChangePasswordRequest request, 
-		CancellationToken cancellationToken = default)
-	{
-		var _command = new ChangePasswordCommand()
-		{
-			Id = context.Identity.Id,
-			CurrentPassword = request.CurrentPassword,
-			Password = request.Password
-		};
+		CancellationToken cancellationToken = default) {
+		var _command = new ChangePasswordCommand(
+			context.Identity.Id,
+			request.CurrentPassword,
+			request.Password);
+		
+		var _error = _command.Validate();
+		if (_error.ValidationErrors.Any()) {
+			_error.Status = StatusCodes.Status400BadRequest;
+			_error.Message = "BadRequest";
+			throw new BadRequestException();
+		}
+		
 		await mediator.Send(_command, cancellationToken);
 
 		return NoContent();

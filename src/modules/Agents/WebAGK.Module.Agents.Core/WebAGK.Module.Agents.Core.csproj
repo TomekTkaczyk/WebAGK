@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Abstaractions\" />
     <Folder Include="DAL\Migrations\" />
   </ItemGroup>
   

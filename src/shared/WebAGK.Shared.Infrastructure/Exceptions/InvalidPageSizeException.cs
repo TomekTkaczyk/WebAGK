@@ -4,7 +4,7 @@ using WebAGK.Shared.Abstractions.Exceptions;
 namespace WebAGK.Shared.Infrastructure.Exceptions;
 
 public class InvalidPageSizeException(object id) 
-    : WebAGKException(
+    : WebAgkException(
         "Page size is invalid.", 
         StatusCodes.Status400BadRequest) {
     

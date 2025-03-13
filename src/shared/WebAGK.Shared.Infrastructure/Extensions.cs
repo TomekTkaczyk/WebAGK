@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,8 +37,7 @@ public static class Extensions
 	public static IServiceCollection AddInfrastructure(
 		this IServiceCollection services,
 		IConfiguration configuration,
-		IList<IModule> modules)
-	{
+		IList<IModule> modules) {
 		AddSingletons(services);
 		AddScoped(services);
 		AddTransients(services);
@@ -143,15 +142,13 @@ public static class Extensions
 		return services;
 	}
 	
-	private static void AddSingletons(IServiceCollection services)
-	{
+	private static void AddSingletons(IServiceCollection services) {
 		services.AddSingleton<IClock, UtcClock>();
 		services.AddSingleton<ITokenValidator, TokenValidator>();
 		services.AddSingleton<IEmailSenderFactory, EmailSenderFactory>();
 	}
 
-	private static void AddScoped(IServiceCollection services)
-	{
+	private static void AddScoped(IServiceCollection services) {
 		var _assemblies = AppDomain.CurrentDomain
 			.GetAssemblies()
 			.Where(x => x.GetName().Name.StartsWith("WebAGK", StringComparison.InvariantCultureIgnoreCase))
@@ -194,16 +191,14 @@ public static class Extensions
 		}
 	}
 	
-	private static void AddTransients(IServiceCollection services)
-	{
+	private static void AddTransients(IServiceCollection services) {
 		services.AddTransient<SmtpEmailSender>();
 		services.AddTransient<FakeEmailSender>();
 	}
 
 	public static IApplicationBuilder UseInfrastructure(
 		this IApplicationBuilder app,
-		IWebHostEnvironment environment)
-	{
+		IWebHostEnvironment environment) {
 		app.UseErrorHandling();
 		
 		if(environment.IsDevelopment()) {
@@ -231,8 +226,7 @@ public static class Extensions
 		return app;
 	}
 
-	public static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T : class, new()
-	{
+	public static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T : class, new() {
 		var _options = new T();
 		configuration.GetSection(sectionName).Bind(_options);
 

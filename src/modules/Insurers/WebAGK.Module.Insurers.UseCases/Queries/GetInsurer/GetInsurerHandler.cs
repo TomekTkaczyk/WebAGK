@@ -23,7 +23,7 @@ public class GetInsurerHandler(
 }
 
 public class InsurerNotFoundException(Guid id) 
-    : WebAGKException($"Insurer with ID: {id} is not exist.", StatusCodes.Status400BadRequest) {
+    : WebAgkException($"Insurer with ID: {id} is not exist.", StatusCodes.Status400BadRequest) {
 
     public Guid Id { get; } = id;
 }

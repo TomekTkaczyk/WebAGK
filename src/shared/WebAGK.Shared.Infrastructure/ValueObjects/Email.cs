@@ -8,6 +8,21 @@ public sealed partial record Email {
     private readonly string _value;
     
     private Email(string value) {
+        if (!IsValid(value)) {
+            throw new InvalidEmailException(value);
+        }
+        _value = value;
+    }
+    
+    public static implicit operator string(Email data) => data._value;
+
+    public static implicit operator Email(string value) => 
+        string.IsNullOrWhiteSpace(value) ? null : new Email(value); 
+
+    public static bool IsValid(string value) {
+        if (value is null) {
+            return true;
+        }
         if (string.IsNullOrWhiteSpace(value)) {
             throw new InvalidEmailException(value);
         }
@@ -15,24 +30,9 @@ public sealed partial record Email {
         if (!EmailRegex().IsMatch(value)) {
             throw new InvalidEmailException(value);
         }
-        
-        _value = value;
+
+        return true;
     }
-    
-    public static implicit operator string(Email data) => data._value;
-    
-    public static implicit operator Email(string value) {
-        if (value is null) {
-            return null;
-        }
-    
-        if (string.IsNullOrWhiteSpace(value)) {
-            throw new InvalidEmailException(value);
-        }
-        
-        return new Email(value);
-    }
-    
     
     public bool Equals(Email other) {
         return other is not null && string.Equals(_value, other._value, StringComparison.OrdinalIgnoreCase);
