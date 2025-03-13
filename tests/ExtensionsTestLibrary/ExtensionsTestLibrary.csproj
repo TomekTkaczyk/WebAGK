@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+      <TargetFramework>net8.0</TargetFramework>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <IsPackable>false</IsPackable>
+      <IsTestProject>true</IsTestProject>
+      <RootNamespace>ExtensionsTests</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+      <PackageReference Include="coverlet.collector" Version="6.0.0" />
+      <PackageReference Include="Moq.EntityFrameworkCore" Version="8.0.1.7" />
+      <PackageReference Include="Testcontainers.PostgreSql" Version="4.3.0" />
+      <PackageReference Include="xunit" Version="2.9.3" />
+      <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\bootstraper\WebAGK.Bootstraper\WebAGK.Bootstraper.csproj" />
+    </ItemGroup>
+
+</Project>
