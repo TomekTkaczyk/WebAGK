@@ -1,10 +1,13 @@
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAGK.Module.Insurers.UseCases.Commands.CreateInsurer;
 using WebAGK.Module.Insurers.UseCases.Commands.DeleteInsurer;
 using WebAGK.Module.Insurers.UseCases.Commands.UpdateInsurer;
 using WebAGK.Module.Insurers.UseCases.Queries.GetInsurer;
 using WebAGK.Module.Insurers.UseCases.Queries.GetInsurers;
+using WebAGK.Module.Insurers.UseCases.Queries.GetInsurerStructure;
+using WebAGK.Shared.Infrastructure.Exceptions;
 
 namespace WebAGK.Module.Insurers.Api.Controllers;
 
@@ -25,10 +28,20 @@ internal class InsurersController(IMediator mediator) : BaseController {
     
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetInsurerAsync(
-        [FromQuery] Guid id, 
+        [FromRoute] Guid id, 
         CancellationToken cancellationToken = default) {
 		
         var _query = new GetInsurerQuery(id);
+		
+        return Ok(await mediator.Send(_query, cancellationToken));
+    }
+    
+    [HttpGet("{id:guid}/structure")]
+    public async Task<IActionResult> GetInsurerStructureAsync(
+        [FromRoute] Guid id, 
+        CancellationToken cancellationToken = default) {
+		
+        var _query = new GetInsurerStructureQuery(id);
 		
         return Ok(await mediator.Send(_query, cancellationToken));
     }
@@ -38,6 +51,15 @@ internal class InsurersController(IMediator mediator) : BaseController {
         [FromBody] CreateInsurerCommand command,
         CancellationToken cancellationToken = default) {
 
+        var _error = command.Validate();
+        if (_error.ValidationErrors.Any()) {
+            _error.Message = "Bad request";
+            _error.Status = StatusCodes.Status400BadRequest;
+            throw new BadRequestException() {
+                Error = _error,
+            };           
+        }
+        
         await mediator.Send(command, cancellationToken);
 	    
         return Created();
@@ -46,20 +68,32 @@ internal class InsurersController(IMediator mediator) : BaseController {
     
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateInsurerAsync(
-        [FromQuery] Guid id, 
+        [FromRoute] Guid id, 
         [FromBody] UpdateInsurerCommand command, 
         CancellationToken cancellationToken = default) {
 
         if (id.Equals(command.Id)) {
             return BadRequest();
         }
+        
+        var _error = command.Validate();
+        if (_error.ValidationErrors.Any()) {
+            _error.Message = "Bad request";
+            _error.Status = StatusCodes.Status400BadRequest;
+            throw new BadRequestException() {
+                Error = _error,
+            };           
+        }
+        
         await mediator.Send(command, cancellationToken);
 	    
         return NoContent();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteInsurerAsync([FromQuery] Guid id, CancellationToken cancellationToken = default) {
+    public async Task<IActionResult> DeleteInsurerAsync(
+        [FromRoute] Guid id, 
+        CancellationToken cancellationToken = default) {
         
         await mediator.Send(new DeleteInsurerCommand(id), cancellationToken);
 

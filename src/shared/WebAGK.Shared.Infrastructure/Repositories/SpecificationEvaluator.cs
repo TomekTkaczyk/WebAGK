@@ -19,17 +19,17 @@ public static class SpecificationEvaluator<T> where T : class
 		_query = specification.Includes.Aggregate(_query, (current, include) => current.Include(include));
 
 		if(specification.OrderByExpressions.Count > 0) {
-			var orderQueryable = specification.OrderByExpressions.First().Item2
+			var _orderQueryable = specification.OrderByExpressions.First().Item2
 				? _query.OrderByDescending(specification.OrderByExpressions.First().Item1)
 				: _query.OrderBy(specification.OrderByExpressions.First().Item1);
 
-			foreach(var expression in specification.OrderByExpressions.Skip(1)) {
-				orderQueryable = expression.Item2
-					? orderQueryable.ThenByDescending(expression.Item1)
-					: orderQueryable.ThenBy(expression.Item1);
+			foreach(var _expression in specification.OrderByExpressions.Skip(1)) {
+				_orderQueryable = _expression.Item2
+					? _orderQueryable.ThenByDescending(_expression.Item1)
+					: _orderQueryable.ThenBy(_expression.Item1);
 			}
 
-			_query = orderQueryable;
+			_query = _orderQueryable;
 		}
 
 		return _query;

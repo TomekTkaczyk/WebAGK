@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Insurers.Core.Entities;
 using WebAGK.Module.Insurers.Core.Exceptions;
 using WebAGK.Module.Insurers.Core.Repositories;
-using WebAGK.Shared.Infrastructure.Types;
 
 namespace WebAGK.Module.Insurers.UseCases.Commands.CreateInsurer;
 
@@ -24,10 +23,11 @@ public class CreateInsurerHandler(
         _insurer = Insurer.Create(request.Name);
         _insurer.Structure = await agentRepository
             .Get()
-            .Select(x => new Node<Agent> {
-                Value = x
-            })
+            .OrderBy(x => x.Name)
+            .Select(x => new Node() { Value = x })
             .ToListAsync(cancellationToken);
+        
+        _insurer.RenumberingStructure();
         
         insurerRepository.Add(_insurer);
         await unitOfWork.SaveChangesAsync(cancellationToken);

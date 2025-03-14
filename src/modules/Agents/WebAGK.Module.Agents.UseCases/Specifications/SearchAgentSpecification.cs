@@ -11,5 +11,7 @@ internal sealed class SearchAgentSpecification(string searchText = null, bool? a
     || EF.Functions.ILike(agent.LastName,$"%{searchText}%")
     || EF.Functions.ILike(agent.FirstName,$"%{searchText}%")
     || EF.Functions.ILike(agent.SecondName,$"%{searchText}%")
-    || EF.Functions.ILike(agent.Description,$"%{searchText}%")))
+    || EF.Functions.ILike(agent.Description,$"%{searchText}%")
+    || EF.Functions.ILike(agent.PersonalId,$"%{searchText}%")
+    || EF.Functions.ILike(agent.TaxId,$"%{searchText}%")))
 { }

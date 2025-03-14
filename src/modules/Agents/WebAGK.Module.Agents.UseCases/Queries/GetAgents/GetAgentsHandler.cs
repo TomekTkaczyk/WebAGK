@@ -9,7 +9,7 @@ namespace WebAGK.Module.Agents.UseCases.Queries.GetAgents;
 
 internal class GetAgentsHandler(IAgentRepository repository) : IRequestHandler<GetAgentsQuery, Page<AgentDto>> {
     public async Task<Page<AgentDto>> Handle(GetAgentsQuery request, CancellationToken cancellationToken) {
-        var _query = repository.Get(new SearchAgentSpecification());
+        var _query = repository.Get(new SearchAgentSpecification(request.SearchText, request.IsActive));
         var _total = await _query.CountAsync(cancellationToken);
         var _agents = _query
             .OrderBy(x => x.LastName)

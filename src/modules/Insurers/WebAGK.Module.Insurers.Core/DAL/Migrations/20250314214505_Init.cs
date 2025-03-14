@@ -15,7 +15,7 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                 name: "Insurers");
 
             migrationBuilder.CreateTable(
-                name: "Agent",
+                name: "Agents",
                 schema: "Insurers",
                 columns: table => new
                 {
@@ -30,104 +30,97 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("AgentId", x => x.Id);
+                    table.PrimaryKey("PK_Agents", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "InsurerDb",
+                name: "Insurers",
                 schema: "Insurers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ConcurrencyStamp = table.Column<Guid>(type: "uuid", nullable: false)
+                    ConcurrencyStamp = table.Column<Guid>(type: "uuid", nullable: false),
+                    ActiveStatus = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InsurerDb", x => x.Id);
+                    table.PrimaryKey("PK_Insurers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "NodeDb",
+                name: "Structures",
                 schema: "Insurers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    InsurerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ValueId = table.Column<Guid>(type: "uuid", nullable: false),
                     ParentId = table.Column<Guid>(type: "uuid", nullable: true),
-                    AgentId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Left = table.Column<int>(type: "integer", nullable: false),
-                    Right = table.Column<int>(type: "integer", nullable: false)
+                    InsurerId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NodeDb", x => x.Id);
+                    table.PrimaryKey("PK_Structures", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_NodeDb_Agent_AgentId",
-                        column: x => x.AgentId,
+                        name: "FK_Structures_Agents_ValueId",
+                        column: x => x.ValueId,
                         principalSchema: "Insurers",
-                        principalTable: "Agent",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_NodeDb_InsurerDb_InsurerId",
-                        column: x => x.InsurerId,
-                        principalSchema: "Insurers",
-                        principalTable: "InsurerDb",
+                        principalTable: "Agents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_NodeDb_NodeDb_ParentId",
+                        name: "FK_Structures_Insurers_InsurerId",
+                        column: x => x.InsurerId,
+                        principalSchema: "Insurers",
+                        principalTable: "Insurers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Structures_Structures_ParentId",
                         column: x => x.ParentId,
                         principalSchema: "Insurers",
-                        principalTable: "NodeDb",
+                        principalTable: "Structures",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_NodeDb_AgentId",
+                name: "IX_Structures_InsurerId",
                 schema: "Insurers",
-                table: "NodeDb",
-                column: "AgentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_NodeDb_InsurerId",
-                schema: "Insurers",
-                table: "NodeDb",
+                table: "Structures",
                 column: "InsurerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NodeDb_Left_Right",
+                name: "IX_Structures_ParentId",
                 schema: "Insurers",
-                table: "NodeDb",
-                columns: new[] { "Left", "Right" });
+                table: "Structures",
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NodeDb_ParentId",
+                name: "IX_Structures_ValueId",
                 schema: "Insurers",
-                table: "NodeDb",
-                column: "ParentId");
+                table: "Structures",
+                column: "ValueId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "NodeDb",
+                name: "Structures",
                 schema: "Insurers");
 
             migrationBuilder.DropTable(
-                name: "Agent",
+                name: "Agents",
                 schema: "Insurers");
 
             migrationBuilder.DropTable(
-                name: "InsurerDb",
+                name: "Insurers",
                 schema: "Insurers");
         }
     }

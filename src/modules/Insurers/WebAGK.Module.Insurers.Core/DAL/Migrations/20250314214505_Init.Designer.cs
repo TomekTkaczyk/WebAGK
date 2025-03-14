@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebAGK.Module.Insurers.Core.DAL;
@@ -11,9 +12,11 @@ using WebAGK.Module.Insurers.Core.DAL;
 namespace WebAGK.Module.Insurers.Core.DAL.Migrations
 {
     [DbContext(typeof(InsurersDbContext))]
-    partial class InsurersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250314214505_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,14 +107,8 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                     b.Property<Guid?>("InsurerId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Left")
-                        .HasColumnType("integer");
-
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid");
-
-                    b.Property<int>("Right")
-                        .HasColumnType("integer");
 
                     b.Property<Guid>("ValueId")
                         .HasColumnType("uuid");
