@@ -1,19 +1,16 @@
+using WebAGK.Module.Insurers.Core.DTO;
 using WebAGK.Shared.Infrastructure.Entities;
 
 namespace WebAGK.Module.Insurers.Core.Entities;
 
-public class Agent : ActiveStatusEntity, IEquatable<Agent> {
-    public string Name { get; set; }
+public class Agent : ActiveStatusEntity {
+    public string Name { get; private set; }
 
-    private Agent(){}
-    
-    public static Agent Create(string name) {
+    public static Agent Create(AgentDto agent) {
         return new Agent() {
-            Name = name,
+            Name = agent.Name,
+            Id = agent.Id,
+            ActiveStatus = agent.ActiveStatus
         };
-    }
-
-    public bool Equals(Agent other) {
-        return base.Equals(other);
     }
 }

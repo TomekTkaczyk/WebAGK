@@ -2,32 +2,21 @@ using WebAGK.Module.Insurers.Core.Entities;
 
 namespace WebAGK.Module.Insurers.Core.DTO;
 
-public sealed class InsurerDto {
-    
-    public Guid Id { get; init; }
-    public string Name { get; init; }
-    public bool ActiveStatus {get; init;}
-    public ICollection<NodeDto> Nodes { get; init; }
-    
-    private InsurerDto() { }
+internal sealed record InsurerDto (
+    Guid Id,
+    string Name,
+    bool ActiveStatus,
+    ICollection<NodeDto> Structure = null) {
 
-    public static InsurerDto Create(Insurer insurer) {
-        return new InsurerDto() {
-            Id = insurer.Id,
-            Name = insurer.Name,
-            ActiveStatus = insurer.ActiveStatus,
-            Nodes = GetNodes(insurer.Structure)
-        };
-    }
-
-    private static ICollection<NodeDto> GetNodes(ICollection<Node> nodes) {
-        return nodes.Select(x 
-            => new NodeDto(
-                x.Id, 
-                x.ParentId,
-                new AgentDto(x.Value.Id, x.Value.Name, x.Value.ActiveStatus), 
-                x.Left, 
-                x.Right,
-                GetNodes(x.Nodes))).ToList();
+    internal static ICollection<NodeDto> GetStructure(ICollection<Node> nodes) {
+        return nodes is null 
+            ? [] 
+            : (from _node in nodes ?? [] select new NodeDto(
+                _node.InsurerId, 
+                _node.Parent is null ? null : new AgentDto(_node.Parent.Id, _node.Parent.Name, _node.Parent.ActiveStatus), 
+                new AgentDto(_node.AgentId, _node.Agent.Name, _node.Agent.ActiveStatus), 
+                _node.Left, 
+                _node.Right, 
+                GetStructure(_node.Nodes))).ToList();
     }
 }

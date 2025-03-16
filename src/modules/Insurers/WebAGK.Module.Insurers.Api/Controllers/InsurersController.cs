@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using WebAGK.Module.Insurers.UseCases.Commands.CreateInsurer;
 using WebAGK.Module.Insurers.UseCases.Commands.DeleteInsurer;
 using WebAGK.Module.Insurers.UseCases.Commands.UpdateInsurer;
+using WebAGK.Module.Insurers.UseCases.Commands.UpdateStructure;
 using WebAGK.Module.Insurers.UseCases.Queries.GetInsurer;
 using WebAGK.Module.Insurers.UseCases.Queries.GetInsurers;
-using WebAGK.Module.Insurers.UseCases.Queries.GetInsurerStructure;
 using WebAGK.Shared.Infrastructure.Exceptions;
 
 namespace WebAGK.Module.Insurers.Api.Controllers;
@@ -32,16 +32,6 @@ internal class InsurersController(IMediator mediator) : BaseController {
         CancellationToken cancellationToken = default) {
 		
         var _query = new GetInsurerQuery(id);
-		
-        return Ok(await mediator.Send(_query, cancellationToken));
-    }
-    
-    [HttpGet("{id:guid}/structure")]
-    public async Task<IActionResult> GetInsurerStructureAsync(
-        [FromRoute] Guid id, 
-        CancellationToken cancellationToken = default) {
-		
-        var _query = new GetInsurerStructureQuery(id);
 		
         return Ok(await mediator.Send(_query, cancellationToken));
     }
@@ -72,7 +62,31 @@ internal class InsurersController(IMediator mediator) : BaseController {
         [FromBody] UpdateInsurerCommand command, 
         CancellationToken cancellationToken = default) {
 
-        if (id.Equals(command.Id)) {
+        if (!id.Equals(command.Id)) {
+            return BadRequest();
+        }
+        
+        var _error = command.Validate();
+        if (_error.ValidationErrors.Any()) {
+            _error.Message = "Bad request";
+            _error.Status = StatusCodes.Status400BadRequest;
+            throw new BadRequestException() {
+                Error = _error,
+            };           
+        }
+        
+        await mediator.Send(command, cancellationToken);
+	    
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}/structure")]
+    public async Task<IActionResult> UpdateStructureAsync(
+        [FromRoute] Guid id, 
+        [FromBody] UpdateStructureCommand command, 
+        CancellationToken cancellationToken = default) {
+
+        if (!id.Equals(command.Id)) {
             return BadRequest();
         }
         

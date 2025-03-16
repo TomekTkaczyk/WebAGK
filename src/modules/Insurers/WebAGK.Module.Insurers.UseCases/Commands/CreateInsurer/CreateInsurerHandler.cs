@@ -24,7 +24,10 @@ public class CreateInsurerHandler(
         _insurer.Structure = await agentRepository
             .Get()
             .OrderBy(x => x.Name)
-            .Select(x => new Node() { Value = x })
+            .Select(x => new Node() {
+                InsurerId = _insurer.Id,
+                Agent = x
+            })
             .ToListAsync(cancellationToken);
         
         _insurer.RenumberingStructure();

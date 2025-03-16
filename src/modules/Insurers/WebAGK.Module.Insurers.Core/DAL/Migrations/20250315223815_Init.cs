@@ -54,65 +54,59 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Structures",
+                name: "Structure",
                 schema: "Insurers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ValueId = table.Column<Guid>(type: "uuid", nullable: false),
+                    InsurerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AgentId = table.Column<Guid>(type: "uuid", nullable: false),
                     ParentId = table.Column<Guid>(type: "uuid", nullable: true),
-                    InsurerId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Left = table.Column<int>(type: "integer", nullable: false),
+                    Right = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Structures", x => x.Id);
+                    table.PrimaryKey("PK_Structure", x => new { x.InsurerId, x.AgentId });
                     table.ForeignKey(
-                        name: "FK_Structures_Agents_ValueId",
-                        column: x => x.ValueId,
+                        name: "FK_Structure_Agents_AgentId",
+                        column: x => x.AgentId,
                         principalSchema: "Insurers",
                         principalTable: "Agents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Structures_Insurers_InsurerId",
+                        name: "FK_Structure_Agents_ParentId",
+                        column: x => x.ParentId,
+                        principalSchema: "Insurers",
+                        principalTable: "Agents",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Structure_Insurers_InsurerId",
                         column: x => x.InsurerId,
                         principalSchema: "Insurers",
                         principalTable: "Insurers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Structures_Structures_ParentId",
-                        column: x => x.ParentId,
-                        principalSchema: "Insurers",
-                        principalTable: "Structures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Structures_InsurerId",
+                name: "IX_Structure_AgentId",
                 schema: "Insurers",
-                table: "Structures",
-                column: "InsurerId");
+                table: "Structure",
+                column: "AgentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Structures_ParentId",
+                name: "IX_Structure_ParentId",
                 schema: "Insurers",
-                table: "Structures",
+                table: "Structure",
                 column: "ParentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Structures_ValueId",
-                schema: "Insurers",
-                table: "Structures",
-                column: "ValueId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Structures",
+                name: "Structure",
                 schema: "Insurers");
 
             migrationBuilder.DropTable(

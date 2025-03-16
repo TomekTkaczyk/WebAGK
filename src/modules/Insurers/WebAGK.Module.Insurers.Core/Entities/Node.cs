@@ -1,13 +1,17 @@
-using WebAGK.Shared.Infrastructure.Types;
+using WebAGK.Module.Insurers.Core.DTO;
 
 namespace WebAGK.Module.Insurers.Core.Entities;
 
-public class Node : Node<Agent> {
-    public Guid Id { get; set; }
-    public Guid ValueId { get; set; }
+public class Node {
+    public Guid InsurerId { get; set; }
+    public Guid AgentId { get; set; }
+    public Agent Agent  { get; set; }
     public Guid? ParentId { get; set; }
-    public virtual Node Parent { get; set; } = null;
+    public Agent Parent  { get; set; }
     public int Left { get; set; }
     public int Right { get; set; }
+    
     public ICollection<Node> Nodes { get; set; } = [];
+
+
 }

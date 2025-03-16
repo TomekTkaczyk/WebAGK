@@ -13,14 +13,14 @@ internal class GetInsurersHandler(
     public async Task<Page<InsurerDto>> Handle(GetInsurersQuery request, CancellationToken cancellationToken) {
         var _query = repository.Get();
         var _total = await _query.CountAsync(cancellationToken);
-        var _agents = _query
+        var _insurers = _query
             .OrderBy(x => x.Name)
             .Skip(request.PageSize * (request.PageNumber - 1));
         if (request.PageSize > 0) {
-            _agents = _agents.Take(request.PageSize);
+            _insurers = _insurers.Take(request.PageSize);
         }
-        var _collection = await _agents
-            .Select(x => InsurerDto.Create(x))
+        var _collection = await _insurers
+            .Select(x => new InsurerDto(x.Id, x.Name, x.ActiveStatus, null))
             .ToListAsync(cancellationToken);      
         
         return Page<InsurerDto>.Create(request.PageNumber, request.PageSize, _total, _collection);

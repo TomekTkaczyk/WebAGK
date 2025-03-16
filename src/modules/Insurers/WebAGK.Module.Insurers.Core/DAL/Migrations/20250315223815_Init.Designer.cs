@@ -12,7 +12,7 @@ using WebAGK.Module.Insurers.Core.DAL;
 namespace WebAGK.Module.Insurers.Core.DAL.Migrations
 {
     [DbContext(typeof(InsurersDbContext))]
-    [Migration("20250314214505_Init")]
+    [Migration("20250315223815_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -98,63 +98,52 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                     b.ToTable("Insurers", "Insurers");
                 });
 
-            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Node", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("InsurerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ParentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ValueId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InsurerId");
-
-                    b.HasIndex("ParentId");
-
-                    b.HasIndex("ValueId");
-
-                    b.ToTable("Structures", "Insurers");
-                });
-
-            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Node", b =>
-                {
-                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Insurer", null)
-                        .WithMany("Structure")
-                        .HasForeignKey("InsurerId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Node", "Parent")
-                        .WithMany("Nodes")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Agent", "Value")
-                        .WithMany()
-                        .HasForeignKey("ValueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Parent");
-
-                    b.Navigation("Value");
-                });
-
             modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Insurer", b =>
                 {
-                    b.Navigation("Structure");
-                });
+                    b.OwnsMany("WebAGK.Module.Insurers.Core.Entities.Node", "Structure", b1 =>
+                        {
+                            b1.Property<Guid>("InsurerId")
+                                .HasColumnType("uuid");
 
-            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Node", b =>
-                {
-                    b.Navigation("Nodes");
+                            b1.Property<Guid>("AgentId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Left")
+                                .HasColumnType("integer");
+
+                            b1.Property<Guid?>("ParentId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Right")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("InsurerId", "AgentId");
+
+                            b1.HasIndex("AgentId");
+
+                            b1.HasIndex("ParentId");
+
+                            b1.ToTable("Structure", "Insurers");
+
+                            b1.HasOne("WebAGK.Module.Insurers.Core.Entities.Agent", "Agent")
+                                .WithMany()
+                                .HasForeignKey("AgentId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("InsurerId");
+
+                            b1.HasOne("WebAGK.Module.Insurers.Core.Entities.Agent", "Parent")
+                                .WithMany()
+                                .HasForeignKey("ParentId");
+
+                            b1.Navigation("Agent");
+
+                            b1.Navigation("Parent");
+                        });
+
+                    b.Navigation("Structure");
                 });
 #pragma warning restore 612, 618
         }
