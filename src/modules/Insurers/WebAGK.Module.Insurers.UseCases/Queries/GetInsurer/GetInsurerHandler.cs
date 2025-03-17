@@ -10,15 +10,18 @@ using WebAGK.Shared.Infrastructure.Repositories;
 namespace WebAGK.Module.Insurers.UseCases.Queries.GetInsurer;
 
 internal class GetInsurerHandler(
-    IInsurerRepository repository) 
+    IInsurerRepository insurerRepository) 
     : IRequestHandler<GetInsurerQuery,InsurerDto> {
     public async Task<InsurerDto> Handle(GetInsurerQuery request, CancellationToken cancellationToken) {
-        var _insurer = await repository
+        var _insurer = await insurerRepository
             .Get(new ByIdSpecification<Insurer>(request.Id))
-            .Include(x => x.Structure)
+            .Include(i => i.Structure)
             .ThenInclude(x => x.Agent)
+            .Include(x => x.Structure)
+            .ThenInclude(x => x.Nodes)
             .SingleOrDefaultAsync(cancellationToken)
             ?? throw new InsurerNotFoundException(request.Id);
+
         
         return new InsurerDto(
             _insurer.Id, 

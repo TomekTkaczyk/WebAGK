@@ -9,30 +9,33 @@ using WebAGK.Shared.Infrastructure.Repositories;
 namespace WebAGK.Module.Insurers.UseCases.Commands.UpdateStructure;
 
 public sealed class UpdateStructureHandler(
-    IInsurerRepository repository,
+    IInsurerRepository insurerRepository,
+    IAgentRepository agentRepository,
+    INodeRepository nodeRepository,
     IInsurerUnitOfWork unitOfWork) : IRequestHandler<UpdateStructureCommand> {
     public async Task Handle(UpdateStructureCommand request, CancellationToken cancellationToken) {
-        var _insurer = await repository
+        var _insurer = await insurerRepository
            .Get(new ByIdSpecification<Insurer>(request.Id))
            .Include(x => x.Structure)
+           .ThenInclude(x => x.Agent)
            .SingleOrDefaultAsync(cancellationToken)
             ?? throw new InsurerNotFoundException(request.Id);
         
-        _insurer.Structure = GetNodes(request.Structure);
+        _insurer.Structure = await GetNodes(request.Structure, _insurer.Id);
         _insurer.RenumberingStructure();
         
         await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private static ICollection<Node> GetNodes(ICollection<NodeDto> nodes) {
+    private async Task<ICollection<Node>> GetNodes(ICollection<NodeDto> nodes, Guid insurerId) {
         var _result  = new List<Node>();
         foreach (var _node in nodes) {
+            var _agent = await agentRepository.Get(new ByIdSpecification<Agent>(_node.Agent.Id)).SingleOrDefaultAsync();
             _result.Add(new Node() {
-                InsurerId = _node.InsurerId,
-                AgentId = _node.Agent is null ? Guid.Empty : _node.Agent.Id,
-                Agent = _node.Agent is null ? null : Agent.Create(_node.Agent),
-                Parent = _node.Parent is null ? null : Agent.Create(_node.Parent),
-                Nodes = GetNodes(_node.Nodes)
+                InsurerId = insurerId,
+                AgentId = _agent.Id,
+                Agent = _agent,
+                Nodes = await GetNodes(_node.Nodes, insurerId)
             });
         }
         

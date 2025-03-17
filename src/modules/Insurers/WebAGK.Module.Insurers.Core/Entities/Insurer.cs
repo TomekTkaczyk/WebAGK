@@ -27,9 +27,8 @@ public class Insurer : ActiveStatusEntity{
         var _result = new List<Node>();
         foreach (var _node in nodes) {
             _result.Add( new Node() {
-                InsurerId = this.Id,
+                InsurerId = Id,
                 Agent = _node is null ? null : Agent.Create(_node.Agent),
-                Parent = _node is null ? null : Agent.Create(_node.Parent),
                 Nodes = GetStructure(_node is null ? [] : _node.Nodes),
             });
         }
@@ -39,10 +38,10 @@ public class Insurer : ActiveStatusEntity{
 
     public void RenumberingStructure() {
         var _counter = 0;
-        RenumberingStructure(this.Structure, ref _counter);
+        RenumberingStructure(Structure, ref _counter);
     }
     
-    private static void RenumberingStructure(ICollection<Node> nodes, ref int counter) {
+    private void RenumberingStructure(ICollection<Node> nodes, ref int counter) {
         var _orderedNodes = nodes.OrderBy(x => x.Agent.Name);
         foreach (var _node in _orderedNodes) {
             _node.Left = ++counter;

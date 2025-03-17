@@ -58,15 +58,22 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                 schema: "Insurers",
                 columns: table => new
                 {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     InsurerId = table.Column<Guid>(type: "uuid", nullable: false),
                     AgentId = table.Column<Guid>(type: "uuid", nullable: false),
                     ParentId = table.Column<Guid>(type: "uuid", nullable: true),
                     Left = table.Column<int>(type: "integer", nullable: false),
-                    Right = table.Column<int>(type: "integer", nullable: false)
+                    Right = table.Column<int>(type: "integer", nullable: false),
+                    NodeId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ConcurrencyStamp = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Structure", x => new { x.InsurerId, x.AgentId });
+                    table.PrimaryKey("PK_Structure", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Structure_Agents_AgentId",
                         column: x => x.AgentId,
@@ -75,18 +82,25 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Structure_Agents_ParentId",
-                        column: x => x.ParentId,
-                        principalSchema: "Insurers",
-                        principalTable: "Agents",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Structure_Insurers_InsurerId",
                         column: x => x.InsurerId,
                         principalSchema: "Insurers",
                         principalTable: "Insurers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Structure_Structure_NodeId",
+                        column: x => x.NodeId,
+                        principalSchema: "Insurers",
+                        principalTable: "Structure",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Structure_Structure_ParentId",
+                        column: x => x.ParentId,
+                        principalSchema: "Insurers",
+                        principalTable: "Structure",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -94,6 +108,18 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                 schema: "Insurers",
                 table: "Structure",
                 column: "AgentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Structure_InsurerId",
+                schema: "Insurers",
+                table: "Structure",
+                column: "InsurerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Structure_NodeId",
+                schema: "Insurers",
+                table: "Structure",
+                column: "NodeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Structure_ParentId",

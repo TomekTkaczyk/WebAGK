@@ -12,7 +12,7 @@ using WebAGK.Module.Insurers.Core.DAL;
 namespace WebAGK.Module.Insurers.Core.DAL.Migrations
 {
     [DbContext(typeof(InsurersDbContext))]
-    [Migration("20250315223815_Init")]
+    [Migration("20250316214030_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -98,52 +98,96 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                     b.ToTable("Insurers", "Insurers");
                 });
 
+            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Node", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AgentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("InsurerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Left")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("NodeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Right")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AgentId");
+
+                    b.HasIndex("InsurerId");
+
+                    b.HasIndex("NodeId");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Structure", "Insurers");
+                });
+
+            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Node", b =>
+                {
+                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Agent", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Insurer", "Insurer")
+                        .WithMany("Structure")
+                        .HasForeignKey("InsurerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Node", null)
+                        .WithMany("Nodes")
+                        .HasForeignKey("NodeId");
+
+                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Node", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Insurer");
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Insurer", b =>
                 {
-                    b.OwnsMany("WebAGK.Module.Insurers.Core.Entities.Node", "Structure", b1 =>
-                        {
-                            b1.Property<Guid>("InsurerId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<Guid>("AgentId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int>("Left")
-                                .HasColumnType("integer");
-
-                            b1.Property<Guid?>("ParentId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int>("Right")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("InsurerId", "AgentId");
-
-                            b1.HasIndex("AgentId");
-
-                            b1.HasIndex("ParentId");
-
-                            b1.ToTable("Structure", "Insurers");
-
-                            b1.HasOne("WebAGK.Module.Insurers.Core.Entities.Agent", "Agent")
-                                .WithMany()
-                                .HasForeignKey("AgentId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b1.WithOwner()
-                                .HasForeignKey("InsurerId");
-
-                            b1.HasOne("WebAGK.Module.Insurers.Core.Entities.Agent", "Parent")
-                                .WithMany()
-                                .HasForeignKey("ParentId");
-
-                            b1.Navigation("Agent");
-
-                            b1.Navigation("Parent");
-                        });
-
                     b.Navigation("Structure");
+                });
+
+            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Node", b =>
+                {
+                    b.Navigation("Nodes");
                 });
 #pragma warning restore 612, 618
         }
