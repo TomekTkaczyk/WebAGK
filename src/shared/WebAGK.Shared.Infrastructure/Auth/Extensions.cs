@@ -17,47 +17,47 @@ public static class Extensions
 		IList<IModule> modules,
 		Action<JwtBearerOptions> optionsFactory = null)
 	{
-		var authOptions = configuration.GetOptions<AuthOptions>(AuthOptions.Section);
+		var _authOptions = configuration.GetOptions<AuthOptions>(AuthOptions.Section);
 
 		services.AddSingleton<ITokenProvider, TokenProvider>();
 		services.AddSingleton<IEmailConfirmerFactory, EmailConfirmerFactory>();
 
-		var tokenValidationParameters = new TokenValidationParameters
+		var _tokenValidationParameters = new TokenValidationParameters
 		{
-			RequireAudience = authOptions.RequireAudience,
-			ValidIssuer = authOptions.ValidIssuer,
-			ValidIssuers = authOptions.ValidIssuers,
-			ValidateActor = authOptions.ValidateActor,
-			ValidAudience = authOptions.ValidAudience,
-			ValidAudiences = authOptions.ValidAudiences,
-			ValidateAudience = authOptions.ValidateAudience,
-			ValidateIssuer = authOptions.ValidateIssuer,
-			ValidateLifetime = authOptions.ValidateLifetime,
-			ValidateTokenReplay = authOptions.ValidateTokenReplay,
-			ValidateIssuerSigningKey = authOptions.ValidateIssuerSigningKey,
-			SaveSigninToken = authOptions.SaveSigninToken,
-			RequireExpirationTime = authOptions.RequireExpirationTime,
-			RequireSignedTokens = authOptions.RequireSignedTokens,
+			RequireAudience = _authOptions.RequireAudience,
+			ValidIssuer = _authOptions.ValidIssuer,
+			ValidIssuers = _authOptions.ValidIssuers,
+			ValidateActor = _authOptions.ValidateActor,
+			ValidAudience = _authOptions.ValidAudience,
+			ValidAudiences = _authOptions.ValidAudiences,
+			ValidateAudience = _authOptions.ValidateAudience,
+			ValidateIssuer = _authOptions.ValidateIssuer,
+			ValidateLifetime = _authOptions.ValidateLifetime,
+			ValidateTokenReplay = _authOptions.ValidateTokenReplay,
+			ValidateIssuerSigningKey = _authOptions.ValidateIssuerSigningKey,
+			SaveSigninToken = _authOptions.SaveSigninToken,
+			RequireExpirationTime = _authOptions.RequireExpirationTime,
+			RequireSignedTokens = _authOptions.RequireSignedTokens,
 			ClockSkew = TimeSpan.Zero
 		};
 
-		if(string.IsNullOrWhiteSpace(authOptions.IssuerSigningKey)) {
-			throw new ArgumentException("Missing IssuerSigningKey in options.", nameof(authOptions.IssuerSigningKey));
+		if(string.IsNullOrWhiteSpace(_authOptions.IssuerSigningKey)) {
+			throw new ArgumentException("Missing IssuerSigningKey in options.", nameof(_authOptions.IssuerSigningKey));
 		}
 
-		if(!string.IsNullOrWhiteSpace(authOptions.AuthenticationType)) {
-			tokenValidationParameters.AuthenticationType = authOptions.AuthenticationType;
+		if(!string.IsNullOrWhiteSpace(_authOptions.AuthenticationType)) {
+			_tokenValidationParameters.AuthenticationType = _authOptions.AuthenticationType;
 		}
 
-		tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(
-			Encoding.UTF8.GetBytes(authOptions.IssuerSigningKey));
+		_tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(
+			Encoding.UTF8.GetBytes(_authOptions.IssuerSigningKey));
 
-		if(!string.IsNullOrWhiteSpace(authOptions.NameClaimType)) {
-			tokenValidationParameters.NameClaimType = authOptions.NameClaimType;
+		if(!string.IsNullOrWhiteSpace(_authOptions.NameClaimType)) {
+			_tokenValidationParameters.NameClaimType = _authOptions.NameClaimType;
 		}
 
-		if(!string.IsNullOrWhiteSpace(authOptions.RoleClaimType)) {
-			tokenValidationParameters.RoleClaimType = authOptions.RoleClaimType;
+		if(!string.IsNullOrWhiteSpace(_authOptions.RoleClaimType)) {
+			_tokenValidationParameters.RoleClaimType = _authOptions.RoleClaimType;
 		}
 
 		services.AddAuthentication(o =>
@@ -67,16 +67,16 @@ public static class Extensions
 			})
 			.AddJwtBearer(o =>
 			{
-				o.Authority = authOptions.Authority;
-				o.Audience = authOptions.Audience;
-				o.MetadataAddress = authOptions.MetadataAddress;
-				o.SaveToken = authOptions.SaveToken;
-				o.RefreshOnIssuerKeyNotFound = authOptions.RefreshOnIssuerKeyNotFound;
-				o.RequireHttpsMetadata = authOptions.RequireHttpsMetadata;
-				o.IncludeErrorDetails = authOptions.IncludeErrorDetails;
-				o.TokenValidationParameters = tokenValidationParameters;
-				if(!string.IsNullOrWhiteSpace(authOptions.Challenge)) {
-					o.Challenge = authOptions.Challenge;
+				o.Authority = _authOptions.Authority;
+				o.Audience = _authOptions.Audience;
+				o.MetadataAddress = _authOptions.MetadataAddress;
+				o.SaveToken = _authOptions.SaveToken;
+				o.RefreshOnIssuerKeyNotFound = _authOptions.RefreshOnIssuerKeyNotFound;
+				o.RequireHttpsMetadata = _authOptions.RequireHttpsMetadata;
+				o.IncludeErrorDetails = _authOptions.IncludeErrorDetails;
+				o.TokenValidationParameters = _tokenValidationParameters;
+				if(!string.IsNullOrWhiteSpace(_authOptions.Challenge)) {
+					o.Challenge = _authOptions.Challenge;
 				}
 
 				// add cookies
@@ -84,11 +84,11 @@ public static class Extensions
 				{
 					OnMessageReceived = (context) =>
 					{
-						var cookieToken = context.Request.Cookies["accessToken"];
-						if(!string.IsNullOrEmpty(cookieToken)) {
+						var _cookieToken = context.Request.Cookies["accessToken"];
+						if(!string.IsNullOrEmpty(_cookieToken)) {
 
-							context.Token = cookieToken;
-						};
+							context.Token = _cookieToken;
+						}
 						return Task.CompletedTask;
 					}
 				};
@@ -96,25 +96,25 @@ public static class Extensions
 				optionsFactory?.Invoke(o);
 			});
 
-		services.AddSingleton(authOptions);
-		services.AddSingleton(tokenValidationParameters);
+		services.AddSingleton(_authOptions);
+		services.AddSingleton(_tokenValidationParameters);
 
 		services.AddSingleton<IAuthorizationHandler, PermissionOrRoleHandler>();
 
 		services.AddAuthorization(auth =>
 		{
-			foreach(var module in modules) {
-				foreach(var policy in module.Policies) {
-					var policyName = $"{module.Name}.{policy}";
+			foreach(var _module in modules) {
+				foreach(var _policy in _module.Policies) {
+					var _policyName = $"{_module.Name}.{_policy}";
 
-					auth.AddPolicy(policyName, policy =>
+					auth.AddPolicy(_policyName, policy =>
 					   policy.Requirements.Add(new PermissionOrRoleRequirement(
-						[policyName], []))
+						[_policyName], []))
 					);
 
-					auth.AddPolicy(policyName+"OrAdmin", policy =>
+					auth.AddPolicy(_policyName+"OrAdmin", policy =>
 						policy.Requirements.Add(new PermissionOrRoleRequirement(
-						[policyName], ["Admin"]))
+						[_policyName], ["Admin"]))
 					);
 
 					//auth.AddPolicy(policyName, policy =>

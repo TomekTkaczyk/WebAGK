@@ -1,4 +1,4 @@
-﻿namespace Users.Services;
+﻿namespace UsersTests.Services;
 public class EmailVerificationServiceTests
 {
 }

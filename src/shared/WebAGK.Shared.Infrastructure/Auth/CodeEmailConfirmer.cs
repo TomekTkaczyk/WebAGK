@@ -1,7 +1,7 @@
 ﻿using WebAGK.Shared.Abstractions.Auth;
 
 namespace WebAGK.Shared.Infrastructure.Auth;
-internal class CodeEmailConfirmer() : IEmailConfirmer
+internal class CodeEmailConfirmer : IEmailConfirmer
 {
 	public string ConfirmToken { get; private set; }
 
@@ -21,8 +21,8 @@ internal class CodeEmailConfirmer() : IEmailConfirmer
 
 	private void GenerateVerificationCode()
 	{
-		var rnd = new Random();
-		ConfirmToken = rnd.Next(100000, 999999).ToString();
+		var _rnd = new Random();
+		ConfirmToken = _rnd.Next(100000, 999999).ToString();
 	}
 
 	public bool Confirm(string expected, string received, string email) => expected.Equals(received, StringComparison.InvariantCultureIgnoreCase);

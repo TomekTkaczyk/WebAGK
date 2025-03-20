@@ -9,7 +9,7 @@ internal static class Extensions
 	{
 		services.AddHttpContextAccessor();
 		services.AddSingleton<IContextFactory, ContextFactory>();
-		services.AddTransient<IContext>(sp => sp.GetRequiredService<IContextFactory>().Create());
+		services.AddTransient(sp => sp.GetRequiredService<IContextFactory>().Create());
 
 		return services;
 	} 

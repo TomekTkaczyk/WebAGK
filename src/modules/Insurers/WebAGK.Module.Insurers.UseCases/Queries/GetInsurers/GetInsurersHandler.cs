@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Insurers.Core.DTO;
 using WebAGK.Module.Insurers.Core.Repositories;
-using WebAGK.Module.Insurers.UseCases.Specifications;
 using WebAGK.Shared.Infrastructure.CQRS;
 
 namespace WebAGK.Module.Insurers.UseCases.Queries.GetInsurers;

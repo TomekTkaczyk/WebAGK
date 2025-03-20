@@ -8,9 +8,9 @@ public class EmailConfirmerFactory(AuthOptions options, IClock clock) : IEmailCo
 {
 	public IEmailConfirmer GetEmailConfirmer()
 	{
-		_ = Enum.TryParse<EmailConfirmTypes>(options.EmailConfirmType, true, out EmailConfirmTypes confirmType);
+		_ = Enum.TryParse(options.EmailConfirmType, true, out EmailConfirmTypes _confirmType);
 
-		return GetEmailConfirmer(confirmType);
+		return GetEmailConfirmer(_confirmType);
 	}
 
 	public IEmailConfirmer GetEmailConfirmer(EmailConfirmTypes confirmTypes)

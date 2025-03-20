@@ -14,8 +14,8 @@ internal class EmailBackgroundService(IEmailSenderFactory emailServiceFactory, I
 				}
 				await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
 			}
-			catch(Exception ex) {
-				logger.LogError(ex, "Error processing email.");
+			catch(Exception _ex) {
+				logger.LogError(_ex, "Error processing email.");
 			}
 		}
 	}
@@ -24,18 +24,18 @@ internal class EmailBackgroundService(IEmailSenderFactory emailServiceFactory, I
 	{
 		await Task.Run(async () =>
 		{
-			if(EmailsQueue.ErrorCount <= emailServiceFactory.RetryCountLimit && EmailsQueue.TryDequeue(out var email)) {
-				var emailService = emailServiceFactory.GetEmailSender();
-				var isEmailSent = await emailService.SendEmailAsync(email, cancellationToken);
-				if(!isEmailSent) {
+			if(EmailsQueue.ErrorCount <= emailServiceFactory.RetryCountLimit && EmailsQueue.TryDequeue(out var _email)) {
+				var _emailService = emailServiceFactory.GetEmailSender();
+				var _isEmailSent = await _emailService.SendEmailAsync(_email, cancellationToken);
+				if(!_isEmailSent) {
 					if(++EmailsQueue.ErrorCount > emailServiceFactory.RetryCountLimit) {
-						logger.LogError("Error sending email {Subject}.", email.Subject);
+						logger.LogError("Error sending email {Subject}.", _email.Subject);
 					} else {
-						EmailsQueue.Add(email);
+						EmailsQueue.Add(_email);
 					}
 				}
 				else {
-					logger.LogInformation("EmailMessage {Subject} sent.", email.Subject);
+					logger.LogInformation("EmailMessage {Subject} sent.", _email.Subject);
 					EmailsQueue.ErrorCount = 0;
 				}
 			}

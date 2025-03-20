@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WebAGK.Shared.Abstractions.Exceptions;
-using System.Net;
 
 namespace WebAGK.Shared.Infrastructure.Contexts;
 internal class VaidateModelAttribute : ActionFilterAttribute
@@ -14,14 +13,14 @@ internal class VaidateModelAttribute : ActionFilterAttribute
 			return;
 		}
 
-		var apiError = new ApiError
+		var _apiError = new ApiError
 		{
 			Code = "validation_error",
 			Status = StatusCodes.Status400BadRequest,
 			Message = "Request validation failed."
 		};
 
-		var validationErrors = context.ModelState
+		var _validationErrors = context.ModelState
 			.Where(ms => ms.Value.Errors.Count > 0)
 			.SelectMany(ms => ms.Value.Errors.Select(e => new ValidationError
 			(
@@ -31,10 +30,10 @@ internal class VaidateModelAttribute : ActionFilterAttribute
 			)))
 			.ToList();
 
-		foreach(var validationError in validationErrors) {
-			apiError.AddValidationError(validationError.Field, validationError.Code, validationError.Message);
+		foreach(var _validationError in _validationErrors) {
+			_apiError.AddValidationError(_validationError.Field, _validationError.Code, _validationError.Message);
 		}
 
-		context.Result = new BadRequestObjectResult(apiError);
+		context.Result = new BadRequestObjectResult(_apiError);
 	}
 }

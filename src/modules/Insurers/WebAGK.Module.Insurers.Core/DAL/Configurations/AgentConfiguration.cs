@@ -4,7 +4,7 @@ using WebAGK.Module.Insurers.Core.Entities;
 
 namespace WebAGK.Module.Insurers.Core.DAL.Configurations;
 
-public class AgentConfiguration : IEntityTypeConfiguration<Agent> {
+internal class AgentConfiguration : IEntityTypeConfiguration<Agent> {
     public void Configure(EntityTypeBuilder<Agent> builder)
     {
         // Podstawowa konfiguracja

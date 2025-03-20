@@ -19,8 +19,8 @@ internal class EmailSenderFactory : IEmailSenderFactory
 
 	public IEmailSender GetEmailSender()
 	{
-		var senderType = _configuration["EmailSettings:SenderType"];
-		return senderType switch
+		var _senderType = _configuration["EmailSettings:SenderType"];
+		return _senderType switch
 		{
 			"smtp" => _serviceProvider.GetService<SmtpEmailSender>(),
 			_ => _serviceProvider.GetService<FakeEmailSender>(),

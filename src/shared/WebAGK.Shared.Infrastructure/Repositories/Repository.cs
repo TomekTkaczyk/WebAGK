@@ -36,7 +36,7 @@ public abstract class Repository<TEntity, TDbContext> : IRepository<TEntity>
         var _result = Get(specification).Skip((pageNumber - 1) * pageSize);
         if(pageSize > 0) {
             _result = _result.Take(pageSize);
-        };
+        }
 
         return _result.AsNoTracking();
     }
@@ -45,7 +45,7 @@ public abstract class Repository<TEntity, TDbContext> : IRepository<TEntity>
         var _result = query.Skip((pageNumber - 1) * pageSize);
         if(pageSize > 0) {
             _result = _result.Take(pageSize);
-        };
+        }
 
         return _result.AsNoTracking();    
     }

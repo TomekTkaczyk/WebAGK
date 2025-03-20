@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Net;
-
-namespace WebAGK.Shared.Abstractions.Exceptions;
+﻿namespace WebAGK.Shared.Abstractions.Exceptions;
 public class ApiError
 {
 	private readonly List<ValidationError> _validationErrors = [];

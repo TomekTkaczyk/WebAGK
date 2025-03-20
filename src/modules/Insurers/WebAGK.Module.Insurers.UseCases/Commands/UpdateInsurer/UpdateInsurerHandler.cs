@@ -7,7 +7,7 @@ using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Insurers.UseCases.Commands.UpdateInsurer;
 
-public sealed class UpdateInsurerHandler(
+internal sealed class UpdateInsurerHandler(
     IInsurerRepository repository,
     IInsurerUnitOfWork unitOfWork) : IRequestHandler<UpdateInsurerCommand> {
     public async Task Handle(UpdateInsurerCommand request, CancellationToken cancellationToken) {

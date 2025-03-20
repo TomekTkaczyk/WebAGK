@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WebAGK.Shared.Abstractions.Services;
-using System.Diagnostics.Metrics;
-using System.Text.Json;
 
 namespace WebAGK.Shared.Infrastructure.Services;
 
@@ -12,11 +11,11 @@ internal class FakeEmailSender : IEmailSender
 	private readonly ILogger<FakeEmailSender> _logger;
 
 	private static Timer _debounceTimer;
-	private static readonly object _lock = new();
+	private static readonly object Lock = new();
 	private const int DebounceDelay = 1000; // milliseconds
 
 
-	public static int Counter = 0; 
+	private static int _counter; 
 
 	public FakeEmailSender(IOptionsMonitor<SmtpOptions> smtpOptionsMonitor, ILogger<FakeEmailSender> logger)
 	{
@@ -27,15 +26,15 @@ internal class FakeEmailSender : IEmailSender
 
 	private void OnSmtpOptionsChanged(SmtpOptions options, string name)
 	{
-		lock(_lock) {
-
-		_debounceTimer?.Change(Timeout.Infinite, Timeout.Infinite);
-		_debounceTimer = new Timer(_ =>
-		{
-			lock(_lock)
-			Counter++;
-			_logger.LogInformation($"\n[{Counter}] SmtpOptions changed (Name: {name}): {JsonSerializer.Serialize(options)}", Counter);
-		}, null, DebounceDelay, Timeout.Infinite);
+		lock(Lock) {
+			_debounceTimer?.Change(Timeout.Infinite, Timeout.Infinite);
+			_debounceTimer = new Timer(_ =>
+			{
+				lock (Lock) {
+					_counter++;
+				}
+				_logger.LogInformation($"\n[{_counter}] SmtpOptions changed (Name: {name}): {JsonSerializer.Serialize(options)}", _counter);
+			}, null, DebounceDelay, Timeout.Infinite);
 		}
 	}
 

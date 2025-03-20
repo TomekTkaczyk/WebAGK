@@ -6,9 +6,8 @@ using WebAGK.Module.Insurers.Core.Repositories;
 
 namespace WebAGK.Module.Insurers.UseCases.Commands.CreateInsurer;
 
-public class CreateInsurerHandler(
+internal class CreateInsurerHandler(
     IInsurerRepository insurerRepository,
-    IAgentRepository agentRepository,
     IInsurerUnitOfWork unitOfWork) 
     : IRequestHandler<CreateInsurerCommand, Guid> {
     public async Task<Guid> Handle(CreateInsurerCommand request, CancellationToken cancellationToken) {
@@ -21,16 +20,16 @@ public class CreateInsurerHandler(
         }
         
         _insurer = Insurer.Create(request.Name);
-        _insurer.Structure = await agentRepository
-            .Get()
-            .OrderBy(x => x.Name)
-            .Select(x => new Node() {
-                InsurerId = _insurer.Id,
-                Agent = x
-            })
-            .ToListAsync(cancellationToken);
-        
-        _insurer.RenumberingStructure();
+        // _insurer.Structure = await agentRepository
+        //     .Get()
+        //     .OrderBy(x => x.Name)
+        //     .Select(x => new Node() {
+        //         InsurerId = _insurer.Id,
+        //         Agent = x
+        //     })
+        //     .ToListAsync(cancellationToken);
+        //
+        // _insurer.RenumberingStructure();
         
         insurerRepository.Add(_insurer);
         await unitOfWork.SaveChangesAsync(cancellationToken);

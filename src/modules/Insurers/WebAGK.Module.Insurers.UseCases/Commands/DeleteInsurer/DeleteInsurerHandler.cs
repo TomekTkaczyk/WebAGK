@@ -7,7 +7,7 @@ using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Insurers.UseCases.Commands.DeleteInsurer;
 
-public class DeleteInsurerHandler(
+internal class DeleteInsurerHandler(
     IInsurerRepository repository,
     IInsurerUnitOfWork unitOfWork) 
     : IRequestHandler<DeleteInsurerCommand> {

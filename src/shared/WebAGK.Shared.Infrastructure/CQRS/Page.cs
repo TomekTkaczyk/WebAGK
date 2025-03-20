@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace WebAGK.Shared.Infrastructure.CQRS;
+﻿namespace WebAGK.Shared.Infrastructure.CQRS;
 
 public sealed record Page<T>(
 	int PageNumber,

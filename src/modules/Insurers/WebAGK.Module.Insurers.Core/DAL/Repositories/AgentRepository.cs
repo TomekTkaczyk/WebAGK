@@ -4,7 +4,7 @@ using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Insurers.Core.DAL.Repositories;
 
-public class AgentRepository(InsurersDbContext dbContext) 
+internal class AgentRepository(InsurersDbContext dbContext) 
     : Repository<Agent, InsurersDbContext>(dbContext), IAgentRepository{
     
 }

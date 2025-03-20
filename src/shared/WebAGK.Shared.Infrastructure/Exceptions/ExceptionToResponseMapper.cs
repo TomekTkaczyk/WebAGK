@@ -8,10 +8,10 @@ internal class ExceptionToResponseMapper : IExceptionToResponseMapper
 	{
 
 		switch(exception) {
-			case WebAgkException ex:
-				ex.Error.Message = ex.Message;
-				ex.Error.Status = (int)GetStatusCode(ex.Error.Status);
-				return new ExceptionResponse(ex.Error, GetStatusCode(ex.Error.Status));
+			case WebAgkException _ex:
+				_ex.Error.Message = _ex.Message;
+				_ex.Error.Status = (int)GetStatusCode(_ex.Error.Status);
+				return new ExceptionResponse(_ex.Error, GetStatusCode(_ex.Error.Status));
 
 			default:
 				return new ExceptionResponse(new ApiError()

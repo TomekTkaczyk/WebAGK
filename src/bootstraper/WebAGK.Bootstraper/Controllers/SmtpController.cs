@@ -12,9 +12,9 @@ public class SmtpController(IOptionsMonitor<SmtpOptions> optionsMonitor) : Contr
 	[HttpGet]
 	public async Task<IActionResult> Get()
 	{
-		var options = optionsMonitor.CurrentValue;
+		var _optionsoptions = optionsMonitor.CurrentValue;
 		await Task.CompletedTask;
 
-		return Ok(JsonSerializer.Serialize(options));
+		return Ok(JsonSerializer.Serialize(_optionsoptions));
 	}
 }

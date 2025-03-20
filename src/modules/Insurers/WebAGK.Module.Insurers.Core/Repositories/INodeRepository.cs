@@ -1,8 +1,9 @@
 using WebAGK.Module.Insurers.Core.Entities;
 using WebAGK.Shared.Abstractions.Repositories;
+using WebAGK.Shared.Infrastructure.Entities;
 
 namespace WebAGK.Module.Insurers.Core.Repositories;
 
-public interface INodeRepository : IRepository<Node> {
+internal interface INodeRepository : IRepository<Node<Agent>> {
     
 }

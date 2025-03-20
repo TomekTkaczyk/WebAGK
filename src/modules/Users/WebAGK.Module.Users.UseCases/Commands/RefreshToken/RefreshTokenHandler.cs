@@ -31,7 +31,7 @@ internal class RefreshTokenHandler(
 		}
 		else {
 			throw new UnauthorisedException();
-		};
+		}
 
 		if (_sub is null) {
 			throw new UnauthorisedException();

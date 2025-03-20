@@ -34,6 +34,23 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Structure",
+                schema: "Insurers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ConcurrencyStamp = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Structure", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Insurers",
                 schema: "Insurers",
                 columns: table => new
@@ -41,6 +58,7 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    StructureId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
@@ -51,20 +69,25 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Insurers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Insurers_Structure_StructureId",
+                        column: x => x.StructureId,
+                        principalSchema: "Insurers",
+                        principalTable: "Structure",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Structure",
+                name: "Nodes",
                 schema: "Insurers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    InsurerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AgentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ValueId = table.Column<Guid>(type: "uuid", nullable: true),
                     ParentId = table.Column<Guid>(type: "uuid", nullable: true),
                     Left = table.Column<int>(type: "integer", nullable: false),
                     Right = table.Column<int>(type: "integer", nullable: false),
-                    NodeId = table.Column<Guid>(type: "uuid", nullable: true),
+                    StructureId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
@@ -73,66 +96,61 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Structure", x => x.Id);
+                    table.PrimaryKey("PK_Nodes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Structure_Agents_AgentId",
-                        column: x => x.AgentId,
+                        name: "FK_Nodes_Agents_ValueId",
+                        column: x => x.ValueId,
                         principalSchema: "Insurers",
                         principalTable: "Agents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Structure_Insurers_InsurerId",
-                        column: x => x.InsurerId,
+                        name: "FK_Nodes_Nodes_ParentId",
+                        column: x => x.ParentId,
                         principalSchema: "Insurers",
-                        principalTable: "Insurers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Nodes",
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Structure_Structure_NodeId",
-                        column: x => x.NodeId,
+                        name: "FK_Nodes_Structure_StructureId",
+                        column: x => x.StructureId,
                         principalSchema: "Insurers",
                         principalTable: "Structure",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Structure_Structure_ParentId",
-                        column: x => x.ParentId,
-                        principalSchema: "Insurers",
-                        principalTable: "Structure",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Structure_AgentId",
+                name: "IX_Insurers_StructureId",
                 schema: "Insurers",
-                table: "Structure",
-                column: "AgentId");
+                table: "Insurers",
+                column: "StructureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Structure_InsurerId",
+                name: "IX_Nodes_ParentId",
                 schema: "Insurers",
-                table: "Structure",
-                column: "InsurerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Structure_NodeId",
-                schema: "Insurers",
-                table: "Structure",
-                column: "NodeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Structure_ParentId",
-                schema: "Insurers",
-                table: "Structure",
+                table: "Nodes",
                 column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Nodes_StructureId",
+                schema: "Insurers",
+                table: "Nodes",
+                column: "StructureId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Nodes_ValueId",
+                schema: "Insurers",
+                table: "Nodes",
+                column: "ValueId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Structure",
+                name: "Insurers",
+                schema: "Insurers");
+
+            migrationBuilder.DropTable(
+                name: "Nodes",
                 schema: "Insurers");
 
             migrationBuilder.DropTable(
@@ -140,7 +158,7 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                 schema: "Insurers");
 
             migrationBuilder.DropTable(
-                name: "Insurers",
+                name: "Structure",
                 schema: "Insurers");
         }
     }

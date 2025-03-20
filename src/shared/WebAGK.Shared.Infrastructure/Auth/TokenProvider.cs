@@ -24,88 +24,88 @@ internal sealed class TokenProvider : ITokenProvider
 
 	public string GenerateAccessToken(Guid userId, IDictionary<string, IEnumerable<string>> claims)
 	{
-		var now = _clock.CurrentDate();
-		var formattedClaims = new Dictionary<string, object>();
+		var _now = _clock.CurrentDate();
+		var _formattedClaims = new Dictionary<string, object>();
 
 		if(claims is not null) {
-			foreach(var claim in claims) {
-				if(claim.Value is IEnumerable<string> enumerable) {
-					formattedClaims[claim.Key] = enumerable.Count() == 1 ? enumerable.First() : enumerable.ToArray();
+			foreach(var _claim in claims) {
+				if(_claim.Value is IEnumerable<string> _enumerable) {
+					_formattedClaims[_claim.Key] = _enumerable.Count() == 1 ? _enumerable.First() : _enumerable.ToArray();
 				}
 				else {
-					formattedClaims[claim.Key] = claim.Value;
+					_formattedClaims[_claim.Key] = _claim.Value;
 				}
 			}
 		}
 
-		var tokenDescriptor = new SecurityTokenDescriptor
+		var _tokenDescriptor = new SecurityTokenDescriptor
 		{
 			Subject = new ClaimsIdentity(
 			[
 				new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
 				new Claim(JwtRegisteredClaimNames.UniqueName, userId.ToString()),
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-				new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString()),
+				new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(_now).ToUnixTimeSeconds().ToString()),
 			]),
 			Issuer = "WebAGK",
-			Expires = now.Add(_options.Expiry),
+			Expires = _now.Add(_options.Expiry),
 			SigningCredentials = _credentials,
-			Claims = formattedClaims,
+			Claims = _formattedClaims,
 		};
 
-		var handler = new JsonWebTokenHandler();
-		var token = handler.CreateToken(tokenDescriptor);
+		var _handler = new JsonWebTokenHandler();
+		var _token = _handler.CreateToken(_tokenDescriptor);
 
-		return token;
+		return _token;
 	}
 
 	public string GenerateConfirmEmailToken(Guid userId, string email)
 	{
-		var now = _clock.CurrentDate();
+		var _now = _clock.CurrentDate();
 
-		var tokenDescriptor = new SecurityTokenDescriptor
+		var _tokenDescriptor = new SecurityTokenDescriptor
 		{
 			Subject = new ClaimsIdentity(
 			[
 				new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
 				new Claim(JwtRegisteredClaimNames.UniqueName, userId.ToString()),
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-				new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString()),
+				new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(_now).ToUnixTimeSeconds().ToString()),
 				new Claim("email", email),
 			]),
 			Issuer = "WebAGK",
-			Expires = now.Add(_options.EmailConfirmExpiry != default ? _options.EmailConfirmExpiry : TimeSpan.FromHours(1)),
+			Expires = _now.Add(_options.EmailConfirmExpiry != default ? _options.EmailConfirmExpiry : TimeSpan.FromHours(1)),
 			SigningCredentials = _credentials,
 		};
 
-		var handler = new JsonWebTokenHandler();
-		var token = handler.CreateToken(tokenDescriptor);
+		var _handler = new JsonWebTokenHandler();
+		var _token = _handler.CreateToken(_tokenDescriptor);
 
-		return token;
+		return _token;
 	}
 
 	public string GenerateRefreshToken(Guid userId)
 	{
-		var now = _clock.CurrentDate();
+		var _now = _clock.CurrentDate();
 
-		var tokenDescriptor = new SecurityTokenDescriptor
+		var _tokenDescriptor = new SecurityTokenDescriptor
 		{
 			Subject = new ClaimsIdentity(
 			[
 				new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
 				new Claim(JwtRegisteredClaimNames.UniqueName, userId.ToString()),
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-				new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString()),
+				new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(_now).ToUnixTimeSeconds().ToString()),
 			]),
 			Issuer = "WebAGK",
-			Expires = now.Add(_options.RefreshExpiry),
+			Expires = _now.Add(_options.RefreshExpiry),
 			SigningCredentials = _credentials,
 		};
 
-		var handler = new JsonWebTokenHandler();
-		var token = handler.CreateToken(tokenDescriptor);
+		var _handler = new JsonWebTokenHandler();
+		var _token = _handler.CreateToken(_tokenDescriptor);
 
-		return token;
+		return _token;
 	}
 
 

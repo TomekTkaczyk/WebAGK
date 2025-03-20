@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -29,10 +28,10 @@ namespace WebAGK.Shared.Infrastructure;
 
 public static class Extensions
 {
-	private const string _corsPolicy = "cors";
-	private const string _corsFrontUrlHeaderPolicy = "cors-fronturl-header";
-	private const string _docsVersion = "v0.01";
-	private const string _titleApi = "WebAGK API";
+	private const string CorsPolicy = "cors";
+	private const string CorsFrontUrlHeaderPolicy = "cors-fronturl-header";
+	private const string DocsVersion = "v0.01";
+	private const string TitleApi = "WebAGK API";
 
 	public static IServiceCollection AddInfrastructure(
 		this IServiceCollection services,
@@ -60,14 +59,14 @@ public static class Extensions
 
 		services.AddCors(cors =>
 		{
-			cors.AddPolicy(name:_corsPolicy, x =>
+			cors.AddPolicy(name:CorsPolicy, x =>
 			{
 				x.WithOrigins(configuration.GetSection("AllowedHost").Get<string>())
 				 .AllowCredentials()
 				 .WithMethods("POST", "PUT", "DELETE")
 				 .WithHeaders("Content-Type", "Authorization");
 			});
-			cors.AddPolicy(name: _corsFrontUrlHeaderPolicy, x =>
+			cors.AddPolicy(name: CorsFrontUrlHeaderPolicy, x =>
 			{
 				x.WithOrigins(configuration.GetSection("AllowedHost").Get<string>())
 				 .AllowCredentials()
@@ -103,10 +102,10 @@ public static class Extensions
 		services.AddSwaggerGen(swagger =>
 		{
 			swagger.CustomSchemaIds(x => x.FullName!.Replace("+","-"));
-			swagger.SwaggerDoc(_docsVersion, new OpenApiInfo 
+			swagger.SwaggerDoc(DocsVersion, new OpenApiInfo 
 			{ 
-				Title = _titleApi,
-				Version = _docsVersion,
+				Title = TitleApi,
+				Version = DocsVersion,
 			});
 
 			var _securityScheme = new OpenApiSecurityScheme
@@ -206,13 +205,13 @@ public static class Extensions
 			app.UseSwaggerUI(x =>
 			{
 				x.RoutePrefix = "docs/swagger";
-				x.SwaggerEndpoint($"/swagger/{_docsVersion}/swagger.json", _titleApi);
+				x.SwaggerEndpoint($"/swagger/{DocsVersion}/swagger.json", TitleApi);
 			});
 			app.UseReDoc(x =>
 			{
 				x.RoutePrefix = "docs";
-				x.SpecUrl($"/swagger/{_docsVersion}/swagger.json");
-				x.DocumentTitle = _titleApi;
+				x.SpecUrl($"/swagger/{DocsVersion}/swagger.json");
+				x.DocumentTitle = TitleApi;
 			});
 		}
 		
@@ -220,7 +219,7 @@ public static class Extensions
 		app.UseAuthentication();
 
 		app.UseRouting();
-		app.UseCors(_corsPolicy);
+		app.UseCors(CorsPolicy);
 		app.UseAuthorization();
 
 		return app;

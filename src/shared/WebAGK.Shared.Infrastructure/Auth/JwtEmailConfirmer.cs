@@ -39,17 +39,18 @@ internal class JwtEmailConfirmer(AuthOptions options, IClock clock) : IEmailConf
 			return false;
 		}
 
-		var handler = new JwtSecurityTokenHandler();
-		var token = handler.ReadJwtToken(received) 
+		var _handler = new JwtSecurityTokenHandler();
+		var _token = _handler.ReadJwtToken(received) 
 			?? throw new InvalidEmailTokenException();
 
-		if(token.ValidTo < clock.CurrentDate()){
+		if(_token.ValidTo < clock.CurrentDate()){
 			throw new InvalidEmailTokenException();
 		}
 
-		var claim = token.Claims.FirstOrDefault(x => x.Type.Equals("email"));
-		var emailFromToken = claim.Value;
-		if(emailFromToken is null || !emailFromToken.Equals(email)) {
+		var _claim = _token.Claims.FirstOrDefault(x => x.Type.Equals("email"));
+		if (_claim == null) return true;
+		var _emailFromToken = _claim.Value;
+		if(_emailFromToken is null || !_emailFromToken.Equals(email)) {
 			throw new InvalidEmailTokenException();
 		}
 
@@ -58,30 +59,30 @@ internal class JwtEmailConfirmer(AuthOptions options, IClock clock) : IEmailConf
 
 	private string CreateToken(Guid userId, string email)
 	{
-		var now = clock.CurrentDate();
+		var _now = clock.CurrentDate();
 		if(options.EmailConfirmExpiry.TotalSeconds < 1) {
 			options.EmailConfirmExpiry = TimeSpan.FromDays(1);
 		}
-		var expires = now.Add(options.EmailConfirmExpiry);
-		var claims = new List<Claim> {
+		var _expires = _now.Add(options.EmailConfirmExpiry);
+		var _claims = new List<Claim> {
 			new("id", userId.ToString()),
 			new("email", email),
 			new("code", GenerateVerificationCode())
 		};
 
-		var jwt = new JwtSecurityToken(
+		var _jwt = new JwtSecurityToken(
 			userId.ToString(),
-			expires: expires,
-			claims: claims);
+			expires: _expires,
+			claims: _claims);
 
-		ConfirmToken = new JwtSecurityTokenHandler().WriteToken(jwt);
+		ConfirmToken = new JwtSecurityTokenHandler().WriteToken(_jwt);
 
 		return ConfirmToken;
 	}
 
 	private static string GenerateVerificationCode()
 	{
-		var rnd = new Random();
-		return rnd.Next(100000, 999999).ToString();
+		var _rnd = new Random();
+		return _rnd.Next(100000, 999999).ToString();
 	}
 }

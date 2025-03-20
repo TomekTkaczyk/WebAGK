@@ -9,7 +9,7 @@ internal class ContextFactory(IHttpContextAccessor httpContextAccessor) : IConte
 
 	public IContext Create()
 	{
-		var httpContext = _httpContextAccessor.HttpContext;
-		return httpContext is null ? Context.Empty : new Context(httpContext);
+		var _httpContext = _httpContextAccessor.HttpContext;
+		return _httpContext is null ? Context.Empty : new Context(_httpContext);
 	}
 }

@@ -4,5 +4,5 @@ using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Insurers.Core.DAL.Repositories;
 
-public class InsurerRepository(InsurersDbContext dbContext)
+internal class InsurerRepository(InsurersDbContext dbContext)
     : Repository<Insurer, InsurersDbContext>(dbContext), IInsurerRepository;

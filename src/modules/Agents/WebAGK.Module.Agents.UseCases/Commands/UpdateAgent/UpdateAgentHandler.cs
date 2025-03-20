@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Agents.Core.Entities;
 using WebAGK.Module.Agents.Core.Exceptions;
 using WebAGK.Module.Agents.Core.Repositories;
-using WebAGK.Module.Agents.Core.Validators;
 using WebAGK.Shared.Abstractions.Exceptions;
 using WebAGK.Shared.Infrastructure.Repositories;
 

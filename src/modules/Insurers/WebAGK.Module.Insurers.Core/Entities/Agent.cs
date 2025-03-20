@@ -3,7 +3,7 @@ using WebAGK.Shared.Infrastructure.Entities;
 
 namespace WebAGK.Module.Insurers.Core.Entities;
 
-public class Agent : ActiveStatusEntity {
+internal class Agent : ActiveStatusEntity {
     public string Name { get; private set; }
 
     public static Agent Create(AgentDto agent) {

@@ -1,13 +1,12 @@
-﻿using MediatR;
+﻿using System.IdentityModel.Tokens.Jwt;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using WebAGK.Module.Users.Core.Entities;
 using WebAGK.Module.Users.Core.Exceptions;
 using WebAGK.Module.Users.Core.Repositories;
 using WebAGK.Shared.Abstractions.Auth;
 using WebAGK.Shared.Abstractions.Services;
 using WebAGK.Shared.Infrastructure.Exceptions;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.EntityFrameworkCore;
-using WebAGK.Module.Users.Core.Entities;
-using WebAGK.Shared.Abstractions.Repositories;
 using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Users.UseCases.Commands.ConfirmEmail;
@@ -23,7 +22,7 @@ internal class ConfirmEmailHandler(
 		var _idClaim = _confirmToken.Claims.FirstOrDefault(c => c.Type == "sub")?.Value
 			?? throw new InvalidEmailTokenException();
 
-		if(!Guid.TryParse(_idClaim, out Guid id)) {
+		if(!Guid.TryParse(_idClaim, out var _id)) {
 			throw new InvalidEmailTokenException();
 		}
 
@@ -31,7 +30,7 @@ internal class ConfirmEmailHandler(
 			?? throw new InvalidEmailTokenException();
 
 		var _user = await repository
-            .Get(new ByIdSpecification<User>(id))
+            .Get(new ByIdSpecification<User>(_id))
             .SingleOrDefaultAsync(cancellationToken)
 			?? throw new InvalidEmailTokenException();
 

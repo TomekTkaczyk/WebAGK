@@ -6,21 +6,21 @@ namespace WebAGK.Shared.Infrastructure.Auth;
 internal class TokenValidator(IClock clock) : ITokenValidator
 {
 	private JwtSecurityToken _jwt;
-	private bool isValid;
+	private bool _isValid;
 
 	public ITokenValidator GetToken(string token)
 	{
-		var handler = new JwtSecurityTokenHandler();
-		_jwt = handler.CanReadToken(token) ? handler.ReadJwtToken(token) : null;
-		isValid = true;
+		var _handler = new JwtSecurityTokenHandler();
+		_jwt = _handler.CanReadToken(token) ? _handler.ReadJwtToken(token) : null;
+		_isValid = true;
 
 		return this;
 	}
 
 	public ITokenValidator HasValidUser(Guid userId)
 	{
-		var sub = _jwt.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;
-		isValid &= sub != null && sub == userId.ToString();
+		var _sub = _jwt.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;
+		_isValid &= _sub != null && _sub == userId.ToString();
 
 		return this;
 	}
@@ -28,17 +28,17 @@ internal class TokenValidator(IClock clock) : ITokenValidator
 	public ITokenValidator IsNotExpired()
 	{
 		if(_jwt is null) {
-			isValid = false;
+			_isValid = false;
 			return this;
 		}
-		var exp = _jwt.Claims.FirstOrDefault(x => x.Type == "exp")?.Value;
-		if(exp != null && long.TryParse(exp, out var expUnixSecons)) {
-			var expirationDate = DateTimeOffset.FromUnixTimeSeconds(expUnixSecons).UtcDateTime;
-			var now = clock.CurrentDate;
-			isValid &= expirationDate > now();
+		var _exp = _jwt.Claims.FirstOrDefault(x => x.Type == "exp")?.Value;
+		if(_exp != null && long.TryParse(_exp, out var _expUnixSecons)) {
+			var _expirationDate = DateTimeOffset.FromUnixTimeSeconds(_expUnixSecons).UtcDateTime;
+			var _now = clock.CurrentDate;
+			_isValid &= _expirationDate > _now();
 		}
 		else {
-			isValid = false;
+			_isValid = false;
 		}
 
 		return this;
@@ -46,6 +46,6 @@ internal class TokenValidator(IClock clock) : ITokenValidator
 
 	public bool Validate()
 	{
-		return isValid;
+		return _isValid;
 	}
 }

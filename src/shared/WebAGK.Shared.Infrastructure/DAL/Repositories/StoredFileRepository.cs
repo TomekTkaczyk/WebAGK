@@ -36,20 +36,20 @@ internal class StoredFileRepository : IStoredFileRepository
 	}
 	
 	public async Task<Guid> AddAsync(IFormFile file, CancellationToken cancellationToken) {
-		var storedFile = new StoredFile();
-		var fileInfo = new FileInfo(file.FileName);
-		var filePath = Path.Combine(_filesFolder, storedFile.Id.ToString() + fileInfo.Extension);
-		await using var stream = new FileStream(filePath, FileMode.Create);
-		await file.CopyToAsync(stream, cancellationToken);
+		var _storedFile = new StoredFile();
+		var _fileInfo = new FileInfo(file.FileName);
+		var _filePath = Path.Combine(_filesFolder, _storedFile.Id.ToString() + _fileInfo.Extension);
+		await using var _stream = new FileStream(_filePath, FileMode.Create);
+		await file.CopyToAsync(_stream, cancellationToken);
 
-		storedFile.FileName = file.FileName;
-		storedFile.FileStoragePath = filePath;
-		storedFile.FileStorageName = storedFile.Id.ToString() + Path.GetExtension(file.FileName);
+		_storedFile.FileName = file.FileName;
+		_storedFile.FileStoragePath = _filePath;
+		_storedFile.FileStorageName = _storedFile.Id + Path.GetExtension(file.FileName);
 	
-		await _storedFiles.AddAsync(storedFile, cancellationToken);
+		await _storedFiles.AddAsync(_storedFile, cancellationToken);
 		await _context.SaveChangesAsync(cancellationToken);
 	
-		return storedFile.Id;	
+		return _storedFile.Id;	
 	}
 		
 	public async Task<IStoredFile> GetAsync(Guid id, CancellationToken cancellationToken) 
@@ -64,16 +64,16 @@ internal class StoredFileRepository : IStoredFileRepository
 	}
 	
 	public async Task<(byte[], string, string)> GetFileAsync(Guid id, CancellationToken cancellationToken) {
-		var file = await _storedFiles.SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
+		var _file = await _storedFiles.SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
 			?? throw new FileNotFoundException();
 
-		if (!File.Exists(file.FileStoragePath)) throw new FileNotFoundException(file.FileName);
+		if (!File.Exists(_file.FileStoragePath)) throw new FileNotFoundException(_file.FileName);
 		
-		var provider = new FileExtensionContentTypeProvider();
-		if(!provider.TryGetContentType(file.FileStorageName, out var contentType)) {
-			contentType = "application/octet-stream";
+		var _provider = new FileExtensionContentTypeProvider();
+		if(!_provider.TryGetContentType(_file.FileStorageName, out var _contentType)) {
+			_contentType = "application/octet-stream";
 		}
-		var bytes = await File.ReadAllBytesAsync(file.FileStorageName, cancellationToken);
-		return (bytes, contentType, file.FileName);
+		var _bytes = await File.ReadAllBytesAsync(_file.FileStorageName, cancellationToken);
+		return (_bytes, _contentType, _file.FileName);
 	}
 }

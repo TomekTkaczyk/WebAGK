@@ -11,68 +11,68 @@ public class TokenProviderTests(TestFixture testFixture) : IClassFixture<TestFix
 	[Fact]
 	public void Provider_GenerateAccessToken_return_valid_token()
 	{
-		var id = Guid.NewGuid();
-		var claims = new Dictionary<string, IEnumerable<string>>
+		var _id = Guid.NewGuid();
+		var _claims = new Dictionary<string, IEnumerable<string>>
 		{
 			{ "role", ["someRole"] },
 			{ "permissions", ["someClaim1", "someClaim2", "someClaim3"] },
 			{ "otherclaim", ["someOtherClaim1"] }
 		};
 
-		var accessToken = _provider.GenerateAccessToken(id, claims);
+		var _accessToken = _provider.GenerateAccessToken(_id, _claims);
 
-		Assert.NotNull(accessToken);
-		Assert.NotEmpty(accessToken);
-		if(!_handler.CanReadToken(accessToken)) {
+		Assert.NotNull(_accessToken);
+		Assert.NotEmpty(_accessToken);
+		if(!_handler.CanReadToken(_accessToken)) {
 			throw new InvalidOperationException("Token cannot be read or is invalid.");
 		}
-		var token = _handler.ReadJsonWebToken(accessToken);
-		Assert.Equal(id.ToString(),token.GetClaim("sub").Value);
-		Assert.Equal("someRole",token.GetClaim("role").Value);
+		var _token = _handler.ReadJsonWebToken(_accessToken);
+		Assert.Equal(_id.ToString(),_token.GetClaim("sub").Value);
+		Assert.Equal("someRole",_token.GetClaim("role").Value);
 
-		var claimsArray = token.Claims.Where(x => x.Type.Equals("permissions")).Select(x => x.Value).ToList();
-		Assert.Equal(3, claimsArray.Count);
-		Assert.Contains("someClaim1", claimsArray);
-		Assert.Contains("someClaim2", claimsArray);
-		Assert.Contains("someClaim3", claimsArray);
+		var _claimsArray = _token.Claims.Where(x => x.Type.Equals("permissions")).Select(x => x.Value).ToList();
+		Assert.Equal(3, _claimsArray.Count);
+		Assert.Contains("someClaim1", _claimsArray);
+		Assert.Contains("someClaim2", _claimsArray);
+		Assert.Contains("someClaim3", _claimsArray);
 
-		claimsArray = token.Claims.Where(x => x.Type.Equals("otherclaim")).Select(x => x.Value).ToList();
-		Assert.Single(claimsArray);
-		Assert.Contains("someOtherClaim1", claimsArray);
+		_claimsArray = _token.Claims.Where(x => x.Type.Equals("otherclaim")).Select(x => x.Value).ToList();
+		Assert.Single(_claimsArray);
+		Assert.Contains("someOtherClaim1", _claimsArray);
 	}
 
 	[Fact]
 	public void Provider_GenerateConfirmEmailToken_return_valid_token()
 	{
-		var id = Guid.NewGuid();
-		var email = "somemail@email.io";
-		var confirmEmailToken = _provider.GenerateConfirmEmailToken(id, email);
+		var _id = Guid.NewGuid();
+		var _email = "somemail@email.io";
+		var _confirmEmailToken = _provider.GenerateConfirmEmailToken(_id, _email);
 
-		Assert.NotNull(confirmEmailToken);
-		Assert.NotEmpty(confirmEmailToken);
-		if(!_handler.CanReadToken(confirmEmailToken)) {
+		Assert.NotNull(_confirmEmailToken);
+		Assert.NotEmpty(_confirmEmailToken);
+		if(!_handler.CanReadToken(_confirmEmailToken)) {
 			throw new InvalidOperationException("Token cannot be read or is invalid.");
 		}
-		var token = _handler.ReadJsonWebToken(confirmEmailToken);
-		var emailClaim = token.GetClaim("email").Value;
-		Assert.Equal(id.ToString(), token.GetClaim("sub").Value);
-		Assert.NotNull(emailClaim);
-		Assert.Equal(email, emailClaim);
+		var _token = _handler.ReadJsonWebToken(_confirmEmailToken);
+		var _emailClaim = _token.GetClaim("email").Value;
+		Assert.Equal(_id.ToString(), _token.GetClaim("sub").Value);
+		Assert.NotNull(_emailClaim);
+		Assert.Equal(_email, _emailClaim);
 	}
 
 	[Fact]
 	public void Provider_GenerateRefreshToken_return_valid_token()
 	{
-		var id = Guid.NewGuid();
-		var refreshToken = _provider.GenerateRefreshToken(id);
+		var _id = Guid.NewGuid();
+		var _refreshToken = _provider.GenerateRefreshToken(_id);
 
-		Assert.NotNull(refreshToken);
-		Assert.NotEmpty(refreshToken);
-		if(!_handler.CanReadToken(refreshToken)) {
+		Assert.NotNull(_refreshToken);
+		Assert.NotEmpty(_refreshToken);
+		if(!_handler.CanReadToken(_refreshToken)) {
 			throw new InvalidOperationException("Token cannot be read or is invalid.");
 		}
-		var token = _handler.ReadJsonWebToken(refreshToken);
-		Assert.Equal(id.ToString(), token.GetClaim("sub").Value);
+		var _token = _handler.ReadJsonWebToken(_refreshToken);
+		Assert.Equal(_id.ToString(), _token.GetClaim("sub").Value);
 	}
 }
 

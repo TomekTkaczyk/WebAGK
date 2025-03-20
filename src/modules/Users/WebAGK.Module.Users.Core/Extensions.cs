@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WebAGK.Shared.Infrastructure.Database;
 using WebAGK.Module.Users.Core.DAL;
-using WebAGK.Module.Users.Core.DAL.Repositories;
 using WebAGK.Module.Users.Core.Entities;
-using WebAGK.Module.Users.Core.Repositories;
 using WebAGK.Module.Users.Core.Services;
+using WebAGK.Shared.Infrastructure.Database;
 
 namespace WebAGK.Module.Users.Core;
 

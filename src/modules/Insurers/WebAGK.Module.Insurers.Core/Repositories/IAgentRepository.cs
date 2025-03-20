@@ -3,4 +3,4 @@ using WebAGK.Shared.Abstractions.Repositories;
 
 namespace WebAGK.Module.Insurers.Core.Repositories;
 
-public interface IAgentRepository : IRepository<Agent>;
+internal interface IAgentRepository : IRepository<Agent>;

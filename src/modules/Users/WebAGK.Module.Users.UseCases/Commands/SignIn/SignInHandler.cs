@@ -23,13 +23,13 @@ internal class SignInHandler(
 			.SingleOrDefaultAsync(cancellationToken)
 			?? throw new InvalidCredentialsException();
 
-		if(passwordHasher.VerifyHashedPassword(default, _user.Password, request.Password) is not PasswordVerificationResult.Success) {
+		if(passwordHasher.VerifyHashedPassword(null!, _user.Password, request.Password) is not PasswordVerificationResult.Success) {
 			throw new InvalidCredentialsException();
 		}
 
 		var _claims = new Dictionary<string, IEnumerable<string>>
 		{
-			{ "role", new[] { _user.Role } },
+			{ "role", [_user.Role] },
 			{ "permissions", _user.GetPermissions() }
 		};
 

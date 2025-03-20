@@ -4,7 +4,7 @@ using WebAGK.Module.Insurers.Core.Entities;
 
 namespace WebAGK.Module.Insurers.Core.DAL.Configurations;
 
-public class InsurerConfiguration : IEntityTypeConfiguration<Insurer> {
+internal class InsurerConfiguration : IEntityTypeConfiguration<Insurer> {
     public void Configure(EntityTypeBuilder<Insurer> builder)
     {
         builder.ToTable("Insurers");
@@ -16,12 +16,8 @@ public class InsurerConfiguration : IEntityTypeConfiguration<Insurer> {
 
         builder.Property(i => i.Description)
             .HasMaxLength(500);
-
-        builder.HasMany(i => i.Structure)
-            .WithOne(n => n.Insurer)
-            .HasForeignKey(n => n.InsurerId)
-            .IsRequired();
-
+        
+        
         
         // builder.OwnsMany(n => n.Structure, nodeBuilder => {
         //     nodeBuilder.ToTable("Structure");

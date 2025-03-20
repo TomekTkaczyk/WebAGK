@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Users.Core.Entities;
 using WebAGK.Module.Users.Core.Exceptions;
 using WebAGK.Module.Users.Core.Repositories;
-using WebAGK.Shared.Abstractions.Repositories;
 using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Users.UseCases.Commands.ChangePassword;

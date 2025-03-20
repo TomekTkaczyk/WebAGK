@@ -2,7 +2,6 @@
 using WebAGK.Module.Users.Core.DTO;
 using WebAGK.Module.Users.Core.Exceptions;
 using WebAGK.Module.Users.Core.Repositories;
-using WebAGK.Shared.Abstractions.Repositories;
 using WebAGK.Shared.Abstractions.Services;
 
 namespace WebAGK.Module.Users.Core.Services;

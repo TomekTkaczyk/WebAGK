@@ -12,7 +12,7 @@ using WebAGK.Module.Insurers.Core.DAL;
 namespace WebAGK.Module.Insurers.Core.DAL.Migrations
 {
     [DbContext(typeof(InsurersDbContext))]
-    [Migration("20250316214030_Init")]
+    [Migration("20250320085557_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -93,18 +93,20 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<Guid?>("StructureId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("StructureId");
 
                     b.ToTable("Insurers", "Insurers");
                 });
 
-            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Node", b =>
+            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Structure", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AgentId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ConcurrencyStamp")
@@ -116,7 +118,30 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("InsurerId")
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Structure", "Insurers");
+                });
+
+            modelBuilder.Entity("WebAGK.Shared.Infrastructure.Entities.Node<WebAGK.Module.Insurers.Core.Entities.Agent>", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedBy")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Left")
@@ -128,64 +153,63 @@ namespace WebAGK.Module.Insurers.Core.DAL.Migrations
                     b.Property<Guid>("ModifiedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("NodeId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Right")
                         .HasColumnType("integer");
 
+                    b.Property<Guid?>("StructureId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ValueId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
-
-                    b.HasIndex("AgentId");
-
-                    b.HasIndex("InsurerId");
-
-                    b.HasIndex("NodeId");
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Structure", "Insurers");
-                });
+                    b.HasIndex("StructureId");
 
-            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Node", b =>
-                {
-                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Agent", "Agent")
-                        .WithMany()
-                        .HasForeignKey("AgentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasIndex("ValueId");
 
-                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Insurer", "Insurer")
-                        .WithMany("Structure")
-                        .HasForeignKey("InsurerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Node", null)
-                        .WithMany("Nodes")
-                        .HasForeignKey("NodeId");
-
-                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Node", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Agent");
-
-                    b.Navigation("Insurer");
-
-                    b.Navigation("Parent");
+                    b.ToTable("Nodes", "Insurers");
                 });
 
             modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Insurer", b =>
                 {
+                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Structure", "Structure")
+                        .WithMany()
+                        .HasForeignKey("StructureId");
+
                     b.Navigation("Structure");
                 });
 
-            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Node", b =>
+            modelBuilder.Entity("WebAGK.Shared.Infrastructure.Entities.Node<WebAGK.Module.Insurers.Core.Entities.Agent>", b =>
+                {
+                    b.HasOne("WebAGK.Shared.Infrastructure.Entities.Node<WebAGK.Module.Insurers.Core.Entities.Agent>", "Parent")
+                        .WithMany("Nodes")
+                        .HasForeignKey("ParentId");
+
+                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Structure", null)
+                        .WithMany("Nodes")
+                        .HasForeignKey("StructureId");
+
+                    b.HasOne("WebAGK.Module.Insurers.Core.Entities.Agent", "Value")
+                        .WithMany()
+                        .HasForeignKey("ValueId");
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("Value");
+                });
+
+            modelBuilder.Entity("WebAGK.Module.Insurers.Core.Entities.Structure", b =>
+                {
+                    b.Navigation("Nodes");
+                });
+
+            modelBuilder.Entity("WebAGK.Shared.Infrastructure.Entities.Node<WebAGK.Module.Insurers.Core.Entities.Agent>", b =>
                 {
                     b.Navigation("Nodes");
                 });

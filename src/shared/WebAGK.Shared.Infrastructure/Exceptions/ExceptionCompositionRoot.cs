@@ -7,20 +7,20 @@ internal class ExceptionCompositionRoot(IServiceProvider serviceProvider) : IExc
 	private readonly IServiceProvider _serviceProvider = serviceProvider;
 
 	public ExceptionResponse Map(Exception exception) {
-		using(var scope = _serviceProvider.CreateScope()) {
-			var mappers = scope.ServiceProvider.GetServices<IExceptionToResponseMapper>();
-			var nonDefaultMappers = mappers.Where(x => x is not ExceptionToResponseMapper).ToArray();
-			var result = nonDefaultMappers
+		using(var _scope = _serviceProvider.CreateScope()) {
+			var _mappers = _scope.ServiceProvider.GetServices<IExceptionToResponseMapper>();
+			var _nonDefaultMappers = _mappers.Where(x => x is not ExceptionToResponseMapper).ToArray();
+			var _result = _nonDefaultMappers
 				.Select(x => x.Map(exception))
 				.SingleOrDefault(x => x is not null);
 
-			if(result is not null) {
-				return result;
+			if(_result is not null) {
+				return _result;
 			}
 
-			var defaultMapper = mappers.SingleOrDefault(x => x is ExceptionToResponseMapper);
+			var _defaultMapper = _mappers.SingleOrDefault(x => x is ExceptionToResponseMapper);
 
-			return defaultMapper?.Map(exception);
+			return _defaultMapper?.Map(exception);
 		}
 	}
 }

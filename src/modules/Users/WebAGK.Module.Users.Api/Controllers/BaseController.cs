@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebAGK.Shared.Infrastructure.Api;
 
 namespace WebAGK.Module.Users.Api.Controllers;
 

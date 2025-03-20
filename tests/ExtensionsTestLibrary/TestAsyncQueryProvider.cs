@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
-using System.Reflection;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace ExtensionsTests;
 

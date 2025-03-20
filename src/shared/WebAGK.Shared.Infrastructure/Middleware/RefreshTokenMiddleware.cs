@@ -7,14 +7,14 @@ internal class RefreshTokenMiddleware(RequestDelegate next, ITokenValidator toke
 	public async Task InvokeAsync(HttpContext context)
 	{
 		if(context.Request.Path.StartsWithSegments("/users-module/Account/refresh-token")) {
-			var refreshToken = context.Request.Cookies["refreshtoken"];
-			if(!tokenValidator.GetToken(refreshToken)
+			var _refreshToken = context.Request.Cookies["refreshtoken"];
+			if(!tokenValidator.GetToken(_refreshToken)
 				.IsNotExpired()
 				.Validate()) {
 				context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 				await context.Response.WriteAsync("Refresh token is missing.");
 				return;
-			};
+			}
 		}
 		await next(context);
 	}

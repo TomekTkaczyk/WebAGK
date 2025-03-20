@@ -8,31 +8,31 @@ public class OrSpecification<T>(params Specification<T>[] specifications) : Spec
 		?? throw new ArgumentNullException(nameof(specifications));
 
 	public override Expression<Func<T, bool>> AsPredicateExpression() {
-		Expression<Func<T, bool>> resultingExpression = null;
+		Expression<Func<T, bool>> _resultingExpression = null;
 
-		foreach(var specification in _specifications) {
-			if(resultingExpression is null) {
-				resultingExpression = specification;
+		foreach(var _specification in _specifications) {
+			if(_resultingExpression is null) {
+				_resultingExpression = _specification;
 				continue;
 			}
 
-			resultingExpression = Combine(resultingExpression, specification);
+			_resultingExpression = Combine(_resultingExpression, _specification);
 		}
 
-		return resultingExpression;
+		return _resultingExpression;
 	}
 
 	private static Expression<Func<T, bool>> Combine(Expression<Func<T, bool>> leftExpression, Expression<Func<T, bool>> rightExpression) {
-		var parameter = Expression.Parameter(typeof(T));
+		var _parameter = Expression.Parameter(typeof(T));
 
-		var leftVisitor = new ReplaceExpressionVisitor(leftExpression.Parameters[0], parameter);
-		var left = leftVisitor.Visit(leftExpression.Body);
+		var _leftVisitor = new ReplaceExpressionVisitor(leftExpression.Parameters[0], _parameter);
+		var _left = _leftVisitor.Visit(leftExpression.Body);
 
-		var rightVisitor = new ReplaceExpressionVisitor(rightExpression.Parameters[0], parameter);
-		var right = rightVisitor.Visit(rightExpression.Body);
+		var _rightVisitor = new ReplaceExpressionVisitor(rightExpression.Parameters[0], _parameter);
+		var _right = _rightVisitor.Visit(rightExpression.Body);
 
 		return Expression.Lambda<Func<T, bool>>(
-			Expression.Or(left, right), parameter);
+			Expression.Or(_left, _right), _parameter);
 	}
 
 	private class ReplaceExpressionVisitor(Expression oldValue, Expression newValue)
@@ -42,10 +42,7 @@ public class OrSpecification<T>(params Specification<T>[] specifications) : Spec
 		private readonly Expression _newValue = newValue;
 
 		public override Expression Visit(Expression node) {
-			if(node == _oldValue)
-				return _newValue;
-
-			return base.Visit(node);
+			return node == _oldValue ? _newValue : base.Visit(node);
 		}
 	}
 }

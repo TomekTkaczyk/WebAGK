@@ -9,5 +9,5 @@ public sealed class SmtpOptions
     public bool DefaultCredentials { get; set; }
     public string Account { get; set; }
     public string Password { get; set; }
-    public bool SSL { get; set; }
+    public bool Ssl { get; set; }
 }
