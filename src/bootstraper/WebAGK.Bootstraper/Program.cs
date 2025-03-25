@@ -1,4 +1,6 @@
+using WebAGK.Shared.Abstractions;
 using WebAGK.Shared.Infrastructure;
+using WebAGK.Shared.Infrastructure.Messaging;
 using WebAGK.Shared.Infrastructure.Modules;
 using WebAGK.Shared.Infrastructure.Services;
 
@@ -60,6 +62,8 @@ public static class Program
 
 			return context.Response.WriteAsJsonAsync(_permissions);
 		});
+		
+		Message.InitializeClock(_app.Services.GetRequiredService<IClock>());
 
 		_assemblies.Clear();
 		_modules.Clear();

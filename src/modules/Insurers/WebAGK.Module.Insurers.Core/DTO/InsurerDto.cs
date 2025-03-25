@@ -9,10 +9,10 @@ internal sealed record InsurerDto (
     bool ActiveStatus,
     ICollection<NodeDto> Structure = null) {
 
-    internal static ICollection<NodeDto> GetStructure(ICollection<Node<Agent>> nodes) {
-        nodes = nodes.OrderBy(x => x.Value.Name).ToList();
+    internal static ICollection<NodeDto> GetStructure(IReadOnlyCollection<Node> nodes) {
+        nodes = nodes.OrderBy(x => x.Agent.Name).ToList();
         return (from _node in nodes ?? [] select new NodeDto(
-                new AgentDto(_node.Value.Id, _node.Value.Name, _node.Value.ActiveStatus), 
+                new AgentDto(_node.Agent.Id, _node.Agent.Name, _node.Agent.ActiveStatus), 
                 _node.Left, 
                 _node.Right, 
                 GetStructure(_node.Nodes))).ToList();

@@ -7,13 +7,11 @@ namespace WebAGK.Module.Insurers.Core.DAL.Configurations;
 internal class AgentConfiguration : IEntityTypeConfiguration<Agent> {
     public void Configure(EntityTypeBuilder<Agent> builder)
     {
-        // Podstawowa konfiguracja
-        builder.ToTable("Agents"); // Możesz zmienić nazwę tabeli
-        builder.HasKey(a => a.Id); // Klucz główny
+        builder.ToTable("Agents");
+        builder.HasKey(a => a.Id);
 
-        // Kolumna Name
         builder.Property(a => a.Name)
             .IsRequired()
-            .HasMaxLength(100); // Maksymalna długość dla imienia
+            .HasMaxLength(100);
     }
 }

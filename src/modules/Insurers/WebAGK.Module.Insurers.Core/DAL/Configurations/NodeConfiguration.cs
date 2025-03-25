@@ -5,23 +5,26 @@ using WebAGK.Shared.Infrastructure.Entities;
 
 namespace WebAGK.Module.Insurers.Core.DAL.Configurations;
 
-internal class NodeConfiguration : IEntityTypeConfiguration<Node<Agent>>
+internal class NodeConfiguration : IEntityTypeConfiguration<Node>
 {
-    public void Configure(EntityTypeBuilder<Node<Agent>> builder)
+    public void Configure(EntityTypeBuilder<Node> builder)
     {
         builder.ToTable("Nodes");
-        
         builder.HasKey(n => n.Id);
         
-        // builder.HasOne(n => n.Value)
-        //     .WithMany()
-        //     .HasForeignKey(n => n.Value.Id)
-        //     .IsRequired();
-        //
-        // builder.HasOne(n => n.Parent)
-        //     .WithMany()
-        //     .HasForeignKey(n => n.Parent.Id)
-        //     .IsRequired(false)
-        //     .OnDelete(DeleteBehavior.Restrict); // Brak kaskady, Parent może być NULL
+        builder.HasOne(x => x.Agent)
+            .WithMany()
+            .HasForeignKey(x => x.AgentId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.HasOne(x => x.Structure)
+            .WithMany(x => x.Nodes)
+            .HasForeignKey(x => x.StructureId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasOne(x => x.Parent)
+            .WithMany(x => x.Nodes)
+            .HasForeignKey(x => x.ParentId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

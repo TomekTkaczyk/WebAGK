@@ -3,4 +3,7 @@ using WebAGK.Shared.Abstractions.Repositories;
 
 namespace WebAGK.Module.Insurers.Core.Repositories;
 
-internal interface IInsurerRepository : IRepository<Insurer>;
+internal interface IInsurerRepository 
+    : IRepository<Insurer> {
+    void ClearStructure(Insurer insurer);
+}

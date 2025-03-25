@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using WebAGK.Shared.Abstractions;
 using WebAGK.Shared.Abstractions.Auth;
+using WebAGK.Shared.Abstractions.Messaging;
 using WebAGK.Shared.Abstractions.Modules;
 using WebAGK.Shared.Abstractions.Repositories;
 using WebAGK.Shared.Abstractions.Services;
@@ -19,6 +20,7 @@ using WebAGK.Shared.Infrastructure.DAL;
 using WebAGK.Shared.Infrastructure.DAL.Repositories;
 using WebAGK.Shared.Infrastructure.Database;
 using WebAGK.Shared.Infrastructure.Exceptions;
+using WebAGK.Shared.Infrastructure.Messaging.Brokers;
 using WebAGK.Shared.Infrastructure.Middleware;
 using WebAGK.Shared.Infrastructure.Modules;
 using WebAGK.Shared.Infrastructure.Services;
@@ -153,13 +155,8 @@ public static class Extensions
 			.Where(x => x.GetName().Name.StartsWith("WebAGK", StringComparison.InvariantCultureIgnoreCase))
 			.ToList();
 		services.AddScoped<IStoredFileRepository, StoredFileRepository>();
+		services.AddScoped<IMessageBus, MessageBus>();
 
-		// services.Scan(scan => scan
-		// 	.FromAssemblies(_assemblies)
-		// 	.AddClasses(classes => classes.AssignableTo(typeof(IUnitOfWork)))
-		// 	.AsImplementedInterfaces()
-		// 	.WithScopedLifetime());
-		//
 		var _uow = _assemblies
 			.SelectMany(a => a.GetTypes())
 			.Where(t => t.IsClass && !t.IsAbstract)

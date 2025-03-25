@@ -1,9 +1,10 @@
 using WebAGK.Module.Insurers.Core.Entities;
 using WebAGK.Module.Insurers.Core.Repositories;
-using WebAGK.Shared.Infrastructure.Entities;
 using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Insurers.Core.DAL.Repositories;
 
-internal class NodeRepository(InsurersDbContext dbContext)
-    : Repository<Node, InsurersDbContext>(dbContext), INodeRepository;
+internal class StructureRepository(
+    INodeRepository nodeRepository,
+    InsurersDbContext dbContext)
+    : Repository<Structure, InsurersDbContext>(dbContext), IStructureRepository;

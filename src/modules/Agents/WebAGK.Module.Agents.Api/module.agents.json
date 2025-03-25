@@ -2,7 +2,7 @@
   "modules": {
     "agents": {
       "name": "Agents",
-      "enabled": true
+      "enabled": false
     }
   }
 }

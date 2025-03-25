@@ -2,7 +2,7 @@
   "modules": {
     "users": {
       "name": "Users",
-      "enabled": true
+      "enabled": false
     }
   }
 }

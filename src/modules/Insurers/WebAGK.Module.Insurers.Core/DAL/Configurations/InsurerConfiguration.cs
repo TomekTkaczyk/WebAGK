@@ -16,28 +16,10 @@ internal class InsurerConfiguration : IEntityTypeConfiguration<Insurer> {
 
         builder.Property(i => i.Description)
             .HasMaxLength(500);
-        
-        
-        
-        // builder.OwnsMany(n => n.Structure, nodeBuilder => {
-        //     nodeBuilder.ToTable("Structure");
-        //     nodeBuilder.HasKey(x => new { x.InsurerId, ValueId = x.AgentId });
-        //     
-        //     nodeBuilder.WithOwner()
-        //         .HasForeignKey(n => n.InsurerId);
-        //     
-        //     nodeBuilder.HasOne(n => n.Agent)
-        //         .WithMany()
-        //         .HasForeignKey(n => n.AgentId)
-        //         .IsRequired();
-        //     
-        //     nodeBuilder.HasOne(n => n.Parent)
-        //         .WithMany()
-        //         .HasForeignKey(n => n.ParentId)
-        //         .IsRequired(false);
-        //     
-        //     nodeBuilder.Property(n => n.Left);
-        //     nodeBuilder.Property(n => n.Right);
-        // });
+
+        builder.HasOne(x => x.Structure)
+            .WithOne()
+            .HasForeignKey<Structure>(i => i.Id)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

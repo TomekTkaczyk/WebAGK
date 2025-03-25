@@ -41,11 +41,15 @@ internal class AgentConfiguration : IEntityTypeConfiguration<Agent>
 				value => JsonSerializer.Deserialize<Address>(value, SerializerOptions));
 		
 		builder.HasIndex(x => x.PersonalId)
-			.HasFilter(@"PersonalId IS NOT NULL")
+			.HasFilter("""
+			           "PersonalId" IS NOT NULL
+			           """)
 			.IsUnique();
 		
 		builder.HasIndex(x => x.TaxId)
-			.HasFilter(@"TaxId IS NOT NULL")
+			.HasFilter("""
+			           "TaxId" IS NOT NULL
+			           """)
 			.IsUnique();
 	}
 }

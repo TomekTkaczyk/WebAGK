@@ -66,6 +66,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentsTests", "tests\Module
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionsTestLibrary", "tests\ExtensionsTestLibrary\ExtensionsTestLibrary.csproj", "{78226F97-2265-4135-B965-29A1FA30F0F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebaAGK.Module.Insurer.Application", "src\modules\Insurers\WebaAGK.Module.Insurer.Application\WebaAGK.Module.Insurer.Application.csproj", "{4DE89268-DCDF-475E-98F4-EFD0AEDE5D97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -150,6 +152,10 @@ Global
 		{78226F97-2265-4135-B965-29A1FA30F0F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78226F97-2265-4135-B965-29A1FA30F0F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78226F97-2265-4135-B965-29A1FA30F0F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DE89268-DCDF-475E-98F4-EFD0AEDE5D97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DE89268-DCDF-475E-98F4-EFD0AEDE5D97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DE89268-DCDF-475E-98F4-EFD0AEDE5D97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DE89268-DCDF-475E-98F4-EFD0AEDE5D97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -182,6 +188,7 @@ Global
 		{303EA36E-3CDE-4FEF-8A46-309D636AFB5F} = {ACA6DB62-98D1-4440-9733-FEC9DDA9691A}
 		{D1B2FE59-9640-4264-B984-BB73EAF32A05} = {7F5085C6-62D1-496E-B46D-F6F01FE54484}
 		{78226F97-2265-4135-B965-29A1FA30F0F9} = {7946FEE0-BF8C-4702-B5AE-DB8A46094A71}
+		{4DE89268-DCDF-475E-98F4-EFD0AEDE5D97} = {ACA6DB62-98D1-4440-9733-FEC9DDA9691A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BF09D59-9778-48BC-9B37-74A570C5541D}

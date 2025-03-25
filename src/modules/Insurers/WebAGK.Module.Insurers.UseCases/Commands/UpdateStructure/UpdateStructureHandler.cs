@@ -4,13 +4,14 @@ using WebAGK.Module.Insurers.Core.DTO;
 using WebAGK.Module.Insurers.Core.Entities;
 using WebAGK.Module.Insurers.Core.Repositories;
 using WebAGK.Module.Insurers.UseCases.Queries.GetInsurer;
-using WebAGK.Shared.Infrastructure.Entities;
 using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Insurers.UseCases.Commands.UpdateStructure;
 
 internal sealed class UpdateStructureHandler(
     IInsurerRepository insurerRepository,
+    IStructureRepository structureRepository,
+    INodeRepository nodeRepository,
     IAgentRepository agentRepository,
     IInsurerUnitOfWork unitOfWork) : IRequestHandler<UpdateStructureCommand> {
     
@@ -18,26 +19,32 @@ internal sealed class UpdateStructureHandler(
         var _insurer = await insurerRepository
            .Get(new ByIdSpecification<Insurer>(request.Id))
            .Include(x => x.Structure)
+           .ThenInclude(x => x.Nodes)
+           .ThenInclude(x => x.Agent)
            .SingleOrDefaultAsync(cancellationToken)
             ?? throw new InsurerNotFoundException(request.Id);
 
-        _insurer.Structure.ClearStructure();
-        var _nodes = await GetStructure(request.Structure);
+        _insurer.Structure.Clear();
+        var _nodes = await GetStructure(_insurer.Structure, request.Structure);
         foreach (var _node in _nodes) {
             _insurer.Structure.AddNode(_node);
+            nodeRepository.Add(_node);
         }
+        _insurer.Structure.RenumberingStructure();
+        insurerRepository.Update(_insurer);
+        
         await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task<ICollection<Node<Agent>>> GetStructure(ICollection<NodeDto> nodes, Node<Agent> parent = null) {
-        var _result = new List<Node<Agent>>();
+    private async Task<ICollection<Node>> GetStructure(Structure structure, ICollection<NodeDto> nodes, Node parent = null) {
+        var _result = new List<Node>();
         
         foreach (var _nodeDto in nodes) {
             var _agent = await agentRepository.Get(new ByIdSpecification<Agent>(_nodeDto.Agent.Id)).SingleOrDefaultAsync();
-            var _node = new Node<Agent>(_agent, parent);
-            var _nodes = await GetStructure(_nodeDto.Nodes, _node);
+            var _node = new Node(structure, _agent, parent);
+            var _nodes = await GetStructure(structure, _nodeDto.Nodes, _node);
             foreach (var _child in _nodes) {
-                _node.Nodes.Add(_child);
+                _node.AddNode(_child);
             }
             _result.Add(_node);
         }

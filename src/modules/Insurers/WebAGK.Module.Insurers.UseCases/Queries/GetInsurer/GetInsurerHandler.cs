@@ -16,6 +16,8 @@ internal class GetInsurerHandler(
         var _insurer = await insurerRepository
             .Get(new ByIdSpecification<Insurer>(request.Id))
             .Include(i => i.Structure)
+            .ThenInclude(x => x.Nodes)
+            .ThenInclude(x => x.Agent)
             .SingleOrDefaultAsync(cancellationToken)
             ?? throw new InsurerNotFoundException(request.Id);
 
@@ -23,7 +25,8 @@ internal class GetInsurerHandler(
         return new InsurerDto(
             _insurer.Id, 
             _insurer.Name, 
-            _insurer.ActiveStatus);
+            _insurer.ActiveStatus,
+            InsurerDto.GetStructure(_insurer.Structure.Nodes));
     }
 }
 
