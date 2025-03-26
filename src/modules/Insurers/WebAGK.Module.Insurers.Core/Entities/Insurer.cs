@@ -7,6 +7,7 @@ internal class Insurer : ActiveStatusEntity {
     public string Name { get; set; }
     public string Description { get; set; }
     public Structure Structure { get; private set; } = new();
+    
 
     private Insurer(string name) {
         Name = name;

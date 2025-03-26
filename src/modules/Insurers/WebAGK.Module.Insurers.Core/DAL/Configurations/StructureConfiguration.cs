@@ -9,9 +9,6 @@ internal class StructureConfiguration : IEntityTypeConfiguration<Structure>{
         builder.ToTable("Structures");
         builder.HasKey(n => n.Id);
         
-        // builder.HasOne(s => s.Nodes)
-        //     .WithOne()
-        //     .HasForeignKey(n => n.StructureId)
-        //     .OnDelete(DeleteBehavior.Cascade);
+
     }
 }

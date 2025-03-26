@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Insurers.Core.Entities;
 using WebAGK.Module.Insurers.Core.Events;
+using WebAGK.Module.Insurers.Core.Events.InsurerCreated;
 using WebAGK.Module.Insurers.Core.Exceptions;
 using WebAGK.Module.Insurers.Core.Repositories;
 using WebAGK.Shared.Abstractions;

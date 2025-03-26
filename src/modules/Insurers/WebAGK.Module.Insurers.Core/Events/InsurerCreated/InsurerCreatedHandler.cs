@@ -5,7 +5,7 @@ using WebAGK.Module.Insurers.Core.Repositories;
 using WebAGK.Shared.Abstractions.Repositories;
 using WebAGK.Shared.Infrastructure.Repositories;
 
-namespace WebAGK.Module.Insurers.Core.Events;
+namespace WebAGK.Module.Insurers.Core.Events.InsurerCreated;
 
 internal class InsurerCreatedHandler(
     IAgentRepository agentRepository,

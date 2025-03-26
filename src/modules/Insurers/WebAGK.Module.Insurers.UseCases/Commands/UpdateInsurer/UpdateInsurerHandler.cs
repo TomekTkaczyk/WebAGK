@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WebAGK.Module.Insurers.Core.Entities;
 using WebAGK.Module.Insurers.Core.Events;
+using WebAGK.Module.Insurers.Core.Events.InsurerUpdated;
 using WebAGK.Module.Insurers.Core.Repositories;
 using WebAGK.Module.Insurers.UseCases.Queries.GetInsurer;
 using WebAGK.Shared.Abstractions;
@@ -28,6 +29,6 @@ internal sealed class UpdateInsurerHandler(
         repository.Update(_insurer);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         
-        await messageBus.PublishAsync(new InsurerUpdatedEvent(_insurer.Id));
+        await messageBus.PublishAsync(new InsurerUpdatedEvent(_insurer.Id, _insurer.Name));
     }
 }

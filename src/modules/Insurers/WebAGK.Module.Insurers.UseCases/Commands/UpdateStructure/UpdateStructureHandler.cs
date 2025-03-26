@@ -4,6 +4,7 @@ using WebAGK.Module.Insurers.Core.DTO;
 using WebAGK.Module.Insurers.Core.Entities;
 using WebAGK.Module.Insurers.Core.Repositories;
 using WebAGK.Module.Insurers.UseCases.Queries.GetInsurer;
+using WebAGK.Shared.Abstractions.Messaging;
 using WebAGK.Shared.Infrastructure.Repositories;
 
 namespace WebAGK.Module.Insurers.UseCases.Commands.UpdateStructure;
@@ -13,14 +14,14 @@ internal sealed class UpdateStructureHandler(
     IStructureRepository structureRepository,
     INodeRepository nodeRepository,
     IAgentRepository agentRepository,
+    IMessageBus messageBus,
     IInsurerUnitOfWork unitOfWork) : IRequestHandler<UpdateStructureCommand> {
     
     public async Task Handle(UpdateStructureCommand request, CancellationToken cancellationToken) {
         var _insurer = await insurerRepository
            .Get(new ByIdSpecification<Insurer>(request.Id))
            .Include(x => x.Structure)
-           .ThenInclude(x => x.Nodes)
-           .ThenInclude(x => x.Agent)
+           .ThenInclude(x => x.Nodes.Where(n => n.ParentId == null))
            .SingleOrDefaultAsync(cancellationToken)
             ?? throw new InsurerNotFoundException(request.Id);
 
